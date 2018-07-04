@@ -11,8 +11,11 @@ import {
   View,
   Button
 } from 'react-native';
+//import AudioRecorderView from "./AudioRecorderNativeView";
 
-import AudioBridgeNative  from './AudioBridgeNativeModule'
+//import AudioBridgeNative  from './AudioBridgeNativeModule'
+
+import AudioRecorderUIView from './AudioRecorderNativeView'
 
 type Props = {};
 export default class App extends Component<Props> {
@@ -25,7 +28,7 @@ export default class App extends Component<Props> {
 
     if (recording) {
       this.setState({ values: [], recording: false });
-      AudioBridgeNative.exampleMethod("test")
+      //AudioBridgeNative.exampleMethod("test")
     } else {
       this.setState({ recording: true });
     }
@@ -34,6 +37,8 @@ export default class App extends Component<Props> {
   render() {
     const { recording } = this.state;
 
+    //console.log(AudioBridge);
+
     return (
       <View style={styles.container}>
         <Button
@@ -41,6 +46,7 @@ export default class App extends Component<Props> {
           onPress={this.handlePress}
           title={recording ? "Stop recording" : "Start recording"}
         />
+        <AudioRecorderUIView style={styles.custom}/>
       </View>
     );
   }
@@ -52,5 +58,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  custom: {
+    flex: 1,
+    backgroundColor: 'black',
+    height: 100,
+    width: 100
   }
 });

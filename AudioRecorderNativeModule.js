@@ -2,12 +2,12 @@
 
 import { NativeModules } from 'react-native'
 
-const { AudioBridge } = NativeModules;
+const { AudioRecorder } = NativeModules
 
 export default {
   exampleMethod () {
-    return AudioBridge.exampleMethod()
+    return AudioRecorder.exampleMethod()
   },
 
-  EXAMPLE_CONSTANT: AudioBridge.EXAMPLE_CONSTANT
+  EXAMPLE_CONSTANT: AudioRecorder.EXAMPLE_CONSTANT
 }

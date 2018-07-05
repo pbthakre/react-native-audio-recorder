@@ -7,7 +7,10 @@
 //
 
 #import "AudioRecorderUI.h"
-#import <MapKit/MapKit.h>
+
+@import AudioKit;
+@import AudioKitUI;
+@import UIKit;
 
 @implementation AudioRecorderUI
 
@@ -20,9 +23,13 @@
 }
 
 -(void) setUp {
-  NSLog(@"Map Setup");
-  MKMapView * map = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 200, 300)];
-  [self addSubview:map];
+  NSLog(@"View Setup");
+  //MKMapView * map = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 200, 300)];
+  
+  UIView * myview = [[UIView alloc] initWithFrame:CGRectMake(0, 50, 320, 430)];
+  [myview setBackgroundColor:[UIColor yellowColor]];
+  
+  [self addSubview:myview];
 }
 
 @end

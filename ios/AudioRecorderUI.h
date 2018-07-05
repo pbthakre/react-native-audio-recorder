@@ -3,14 +3,12 @@
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 04.07.18.
-//  Copyright © 2018 Facebook. All rights reserved.
+//  Copyright © 2018 Crowdio. All rights reserved.
 //
 
 #ifndef AudioRecorderUI_h
 #define AudioRecorderUI_h
 
-
-// MyCustomUI.h
 #import <UIKit/UIKit.h>
 
 @interface AudioRecorderUI : UIView

@@ -1,4 +1,10 @@
-// MyCustomUI.m
+//
+//  AudioRecorderUI.m
+//  reactnativeaudiorecorder
+//
+//  Created by Michael Andorfer on 04.07.18.
+//  Copyright © 2018 Crowdio. All rights reserved.
+//
 
 #import "AudioRecorderUI.h"
 #import <MapKit/MapKit.h>

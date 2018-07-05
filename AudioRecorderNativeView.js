@@ -1,5 +1,3 @@
-//  Created by react-native-create-bridge
-
 import React, { Component } from 'react'
 import { requireNativeComponent } from 'react-native'
 
@@ -13,4 +11,4 @@ export default class AudioRecorderUIView extends Component {
 
 AudioRecorderUIView.propTypes = {
   //exampleProp: React.PropTypes.any
-}
+};

@@ -11,9 +11,6 @@ import {
   View,
   Button
 } from 'react-native';
-//import AudioRecorderView from "./AudioRecorderNativeView";
-
-//import AudioBridgeNative  from './AudioBridgeNativeModule'
 
 import AudioRecorderUIView from './AudioRecorderNativeView'
 
@@ -28,7 +25,6 @@ export default class App extends Component<Props> {
 
     if (recording) {
       this.setState({ values: [], recording: false });
-      //AudioBridgeNative.exampleMethod("test")
     } else {
       this.setState({ recording: true });
     }
@@ -36,8 +32,6 @@ export default class App extends Component<Props> {
 
   render() {
     const { recording } = this.state;
-
-    //console.log(AudioBridge);
 
     return (
       <View style={styles.container}>

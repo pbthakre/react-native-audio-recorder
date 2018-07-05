@@ -1,8 +1,6 @@
-//  Created by react-native-create-bridge
+import { NativeModules } from 'react-native';
 
-import { NativeModules } from 'react-native'
-
-const { AudioRecorder } = NativeModules
+const { AudioRecorder } = NativeModules;
 
 export default {
   exampleMethod () {

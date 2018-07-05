@@ -24,10 +24,10 @@
 //@end
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+//#import <UIKit/UIKit.h>
 
 #import <React/RCTViewManager.h>
-#import <React/RCTBridge.h>
+//#import <React/RCTBridge.h>
 
 @interface AudioRecorderManager : RCTViewManager <RCTBridgeModule>
 {

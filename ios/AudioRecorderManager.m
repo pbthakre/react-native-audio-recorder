@@ -29,18 +29,20 @@
 //RCT_EXPORT_MODULE();
 
 #import "AudioRecorderManager.h"
+#import "AudioRecorderUI.h"
 
-@interface AudioRecorderManager()
+//@interface AudioRecorderManager()
 
 
-@end
+//@end
 
 @implementation AudioRecorderManager RCT_EXPORT_MODULE()
 @synthesize bridge = _bridge;
 
 - (UIView *)view
 {
-  return [UIView new];
+  AudioRecorderUI * myUi = [[AudioRecorderUI alloc] init];
+  return myUi;
 }
 
 @end

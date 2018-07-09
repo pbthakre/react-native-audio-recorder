@@ -10,7 +10,7 @@
 
 import AudioKit
 import Foundation
-// import AudioKitUI
+import AudioKitUI
 import UIKit
 
 class AudioRecorderViewController: UIViewController {

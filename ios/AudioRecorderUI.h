@@ -6,6 +6,8 @@
 //  Copyright © 2018 Crowdio. All rights reserved.
 //
 
+// This file is the header file for Native UI of Audio Recorder
+
 #ifndef AudioRecorderUI_h
 #define AudioRecorderUI_h
 

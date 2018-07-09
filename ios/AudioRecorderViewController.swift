@@ -6,13 +6,7 @@
 //  Copyright © 2018 Facebook. All rights reserved.
 //
 
-//
-//  AppDelegate.swift
-//  Recorder
-//
-//  Created by Aurelius Prochazka, revision history on Github.
-//  Copyright © 2018 AudioKit. All rights reserved.
-//
+// This file is the swift file for Native UI Controller of Audio Recorder
 
 import AudioKit
 import Foundation

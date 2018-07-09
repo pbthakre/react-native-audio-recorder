@@ -6,6 +6,8 @@
 //  Copyright © 2018 Facebook. All rights reserved.
 //
 
+// This file is the header file for Native UI Controller of Audio Recorder
+
 #ifndef AudioRecorderViewController_h
 #define AudioRecorderViewController_h
 

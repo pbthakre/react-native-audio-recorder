@@ -6,6 +6,8 @@
 //  Copyright © 2018 Crowdio. All rights reserved.
 //
 
+// This file is the main file for Native UI of Audio Recorder
+
 #import "AudioRecorderUI.h"
 #import "reactnativeaudiorecorder-Swift.h"
 

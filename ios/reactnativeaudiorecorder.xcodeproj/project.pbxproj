@@ -455,13 +455,13 @@
 			isa = PBXGroup;
 			children = (
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
-				7478BBF020F349210087F47D /* AudioRecorderViewController.h */,
-				7478BBF120F34F170087F47D /* AudioRecorderViewController.m */,
-				7478BBBC20F254530087F47D /* AudioRecorderViewController.swift */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				7478B86620ED0A310087F47D /* AudioRecorderUI.h */,
 				7478B86720ED0A7F0087F47D /* AudioRecorderUI.m */,
+				7478BBF020F349210087F47D /* AudioRecorderViewController.h */,
+				7478BBF120F34F170087F47D /* AudioRecorderViewController.m */,
+				7478BBBC20F254530087F47D /* AudioRecorderViewController.swift */,
 				7478B86320ECE7B60087F47D /* AudioRecorderManager.h */,
 				7478B86420ECE7B60087F47D /* AudioRecorderManager.m */,
 				7478BBBE20F2618E0087F47D /* AudioRecorderBridge.h */,

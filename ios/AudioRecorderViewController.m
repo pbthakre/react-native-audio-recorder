@@ -6,6 +6,8 @@
 //  Copyright © 2018 Facebook. All rights reserved.
 //
 
+// This file is the main file for Native UI Controller of Audio Recorder
+
 #import <Foundation/Foundation.h>
 
 #import "reactnativeaudiorecorder-Swift.h"
@@ -19,7 +21,6 @@
 
 - (void)viewDidLoad {
   [super viewDidLoad];
-  // AudioRecorderViewController * mc = [AudioRecorderViewController new];
 }
 
 @end

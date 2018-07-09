@@ -11,4 +11,4 @@ export default class AudioRecorderUIView extends Component {
 
 AudioRecorderUIView.propTypes = {
   //exampleProp: React.PropTypes.any
-};
+}

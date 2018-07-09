@@ -25,6 +25,8 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		7478B86520ECE7B60087F47D /* AudioRecorderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7478B86420ECE7B60087F47D /* AudioRecorderManager.m */; };
 		7478B86820ED0A7F0087F47D /* AudioRecorderUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 7478B86720ED0A7F0087F47D /* AudioRecorderUI.m */; };
+		7478BBBD20F254530087F47D /* AudioRecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478BBBC20F254530087F47D /* AudioRecorderViewController.swift */; };
+		7478BBF220F34F170087F47D /* AudioRecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7478BBF120F34F170087F47D /* AudioRecorderViewController.m */; };
 		74BE8DD220ECB560007E7968 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -326,6 +328,11 @@
 		7478B86420ECE7B60087F47D /* AudioRecorderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioRecorderManager.m; sourceTree = "<group>"; };
 		7478B86620ED0A310087F47D /* AudioRecorderUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioRecorderUI.h; sourceTree = "<group>"; };
 		7478B86720ED0A7F0087F47D /* AudioRecorderUI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioRecorderUI.m; sourceTree = "<group>"; };
+		7478BB9620F254510087F47D /* reactnativeaudiorecorder-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "reactnativeaudiorecorder-Bridging-Header.h"; sourceTree = "<group>"; };
+		7478BBBC20F254530087F47D /* AudioRecorderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioRecorderViewController.swift; sourceTree = "<group>"; };
+		7478BBBE20F2618E0087F47D /* AudioRecorderBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioRecorderBridge.h; sourceTree = "<group>"; };
+		7478BBF020F349210087F47D /* AudioRecorderViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioRecorderViewController.h; sourceTree = "<group>"; };
+		7478BBF120F34F170087F47D /* AudioRecorderViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioRecorderViewController.m; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		89616C66E8A327350D11C0A9 /* Pods-reactnativeaudiorecorder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-reactnativeaudiorecorder.debug.xcconfig"; path = "Pods/Target Support Files/Pods-reactnativeaudiorecorder/Pods-reactnativeaudiorecorder.debug.xcconfig"; sourceTree = "<group>"; };
@@ -448,16 +455,21 @@
 			isa = PBXGroup;
 			children = (
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
+				7478BBF020F349210087F47D /* AudioRecorderViewController.h */,
+				7478BBF120F34F170087F47D /* AudioRecorderViewController.m */,
+				7478BBBC20F254530087F47D /* AudioRecorderViewController.swift */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				7478B86620ED0A310087F47D /* AudioRecorderUI.h */,
 				7478B86720ED0A7F0087F47D /* AudioRecorderUI.m */,
 				7478B86320ECE7B60087F47D /* AudioRecorderManager.h */,
 				7478B86420ECE7B60087F47D /* AudioRecorderManager.m */,
+				7478BBBE20F2618E0087F47D /* AudioRecorderBridge.h */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				7478BB9620F254510087F47D /* reactnativeaudiorecorder-Bridging-Header.h */,
 			);
 			name = reactnativeaudiorecorder;
 			sourceTree = "<group>";
@@ -638,6 +650,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = M944G5L26R;
+						LastSwiftMigration = 0940;
 					};
 				};
 			};
@@ -1041,6 +1054,8 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				7478B86520ECE7B60087F47D /* AudioRecorderManager.m in Sources */,
+				7478BBBD20F254530087F47D /* AudioRecorderViewController.swift in Sources */,
+				7478BBF220F34F170087F47D /* AudioRecorderViewController.m in Sources */,
 				7478B86820ED0A7F0087F47D /* AudioRecorderUI.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -1072,6 +1087,7 @@
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = M944G5L26R;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1094,6 +1110,7 @@
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = M944G5L26R;
@@ -1115,10 +1132,13 @@
 			baseConfigurationReference = 89616C66E8A327350D11C0A9 /* Pods-reactnativeaudiorecorder.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = M944G5L26R;
 				INFOPLIST_FILE = reactnativeaudiorecorder/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1127,7 +1147,11 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = at.crowdio.reactnativeaudiorecorder;
 				PRODUCT_NAME = reactnativeaudiorecorder;
+				SWIFT_OBJC_BRIDGING_HEADER = "reactnativeaudiorecorder-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				djfkdfjk = "";
 			};
 			name = Debug;
 		};
@@ -1136,9 +1160,12 @@
 			baseConfigurationReference = 1585233D78472B323693EB18 /* Pods-reactnativeaudiorecorder.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = M944G5L26R;
 				INFOPLIST_FILE = reactnativeaudiorecorder/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1147,6 +1174,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = at.crowdio.reactnativeaudiorecorder;
 				PRODUCT_NAME = reactnativeaudiorecorder;
+				SWIFT_OBJC_BRIDGING_HEADER = "reactnativeaudiorecorder-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

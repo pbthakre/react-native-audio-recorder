@@ -12,7 +12,8 @@ import {
   Button
 } from 'react-native';
 
-import AudioRecorderUIView from './AudioRecorderNativeView'
+// import AudioRecorderUIView from './AudioRecorderNativeView'
+import AudioRecorderNative from './AudioRecorderNativeModule'
 
 type Props = {};
 export default class App extends Component<Props> {
@@ -27,6 +28,8 @@ export default class App extends Component<Props> {
       this.setState({ values: [], recording: false });
     } else {
       this.setState({ recording: true });
+      //Console.log(AudioRecorderNative);
+      AudioRecorderNative.exampleMethod()
     }
   };
 
@@ -40,7 +43,7 @@ export default class App extends Component<Props> {
           onPress={this.handlePress}
           title={recording ? "Stop recording" : "Start recording"}
         />
-        <AudioRecorderUIView style={styles.custom}/>
+
       </View>
     );
   }

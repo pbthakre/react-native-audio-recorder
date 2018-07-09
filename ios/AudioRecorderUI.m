@@ -7,6 +7,7 @@
 //
 
 #import "AudioRecorderUI.h"
+#import "reactnativeaudiorecorder-Swift.h"
 
 @import AudioKit;
 @import AudioKitUI;

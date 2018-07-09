@@ -1,11 +1,11 @@
 import { NativeModules } from 'react-native';
 
-const { AudioRecorder } = NativeModules;
+const { AudioRecorderBridge } = NativeModules;
 
 export default {
   exampleMethod () {
-    return AudioRecorder.exampleMethod()
-  },
+    return AudioRecorderBridge.exampleMethod();
+  }
 
-  EXAMPLE_CONSTANT: AudioRecorder.EXAMPLE_CONSTANT
+  //EXAMPLE_CONSTANT: AudioRecorder.EXAMPLE_CONSTANT
 }

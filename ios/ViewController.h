@@ -15,8 +15,8 @@
 
 @class AudioRecorderViewController;
 
-@interface AudioRecorderViewController: UIViewController
- - (void) sayHello;
+@interface ViewController: UIViewController
+- (AudioRecorderViewController *) Test;
 @end
 
 #endif /* AudioRecorderViewController_h */

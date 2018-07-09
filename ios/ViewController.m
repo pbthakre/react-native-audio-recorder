@@ -10,13 +10,13 @@
 
 #import <Foundation/Foundation.h>
 
+#import "ViewController.h"
 #import "reactnativeaudiorecorder-Swift.h"
-#import "AudioRecorderViewController.h"
 
-@implementation AudioRecorderViewController
+@implementation ViewController: UIViewController
 
--(void)sayHello {
-  printf("Hello");
+-(AudioRecorderViewController *)Test {
+    AudioRecorderViewController *myController = [[AudioRecorderViewController alloc] init];
 }
 
 - (void)viewDidLoad {

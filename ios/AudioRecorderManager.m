@@ -31,7 +31,7 @@
 
 //#import "reactnativeaudiorecorder-Swift.h"
 #import "AudioRecorderBridge.h"
-// #import "ViewController.h"
+#import "AudioRecorderViewController.h"
 
 // @implementation AudioRecorderManager
 @implementation AudioRecorderBridge
@@ -54,8 +54,8 @@ RCT_EXPORT_MODULE()
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 RCT_EXPORT_METHOD(exampleMethod)
 {
-  //ViewController* testViewController = [[ViewController alloc] init];
-  //[testViewController mainButtonTouched];
+  ViewController* testViewController = [[ViewController alloc] init];
+  [testViewController Test];
   [self emitMessageToRN:@"EXAMPLE_EVENT" :nil];
 }
 

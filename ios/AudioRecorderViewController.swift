@@ -9,24 +9,24 @@
 // This file is the swift file for Native UI Controller of Audio Recorder
 
 import Foundation
-import AudioKit
-import AudioKitUI
+// import AudioKit
+// import AudioKitUI
 import UIKit
 
 @objc open class AudioRecorderViewController: UIViewController {
 
-  var micMixer: AKMixer!
-  var recorder: AKNodeRecorder!
-  var player: AKPlayer!
-  var tape: AKAudioFile!
-  var micBooster: AKBooster!
-  var moogLadder: AKMoogLadder!
-  var delay: AKDelay!
-  var mainMixer: AKMixer!
-  
-  let mic = AKMicrophone()
-  
-  var state = State.readyToRecord
+//  var micMixer: AKMixer!
+//  var recorder: AKNodeRecorder!
+//  var player: AKPlayer!
+//  var tape: AKAudioFile!
+//  var micBooster: AKBooster!
+//  var moogLadder: AKMoogLadder!
+//  var delay: AKDelay!
+//  var mainMixer: AKMixer!
+//
+//  let mic = AKMicrophone()
+//
+//  var state = State.readyToRecord
   
   // @IBOutlet private var inputPlot: AKNodeOutputPlot!
   // @IBOutlet private var outputPlot: AKOutputWaveformPlot!
@@ -38,66 +38,66 @@ import UIKit
   // @IBOutlet private weak var loopButton: UIButton!
   // @IBOutlet private weak var moogLadderTitle: UILabel!
   
-  enum State {
-    case readyToRecord
-    case recording
-    case readyToPlay
-    case playing
-    
-  }
-  
-  func Test() {
+//  enum State {
+//    case readyToRecord
+//    case recording
+//    case readyToPlay
+//    case playing
+//
+//  }
+//
+  @objc func Test() {
     print("Test")
   }
-  
-  func mainButtonTouched(sender: UIButton) {
-    switch state {
-    case .readyToRecord :
-      // infoLabel.text = "Recording"
-      // mainButton.setTitle("Stop", for: .normal)
-      state = .recording
-      // microphone will be monitored while recording
-      // only if headphones are plugged
-      if AKSettings.headPhonesPlugged {
-        micBooster.gain = 1
-      }
-      do {
-        try recorder.record()
-      } catch { print("Errored recording.") }
-      
-    case .recording :
-      // Microphone monitoring is muted
-      micBooster.gain = 0
-      tape = recorder.audioFile!
-      player.load(audioFile: tape)
-      
-      if let _ = player.audioFile?.duration {
-        recorder.stop()
-        tape.exportAsynchronously(name: "TempTestFile.m4a",
-                                  baseDir: .documents,
-                                  exportFormat: .m4a) {_, exportError in
-                                    if let error = exportError {
-                                      print("Export Failed \(error)")
-                                    } else {
-                                      print("Export succeeded")
-                                    }
-        }
-        // setupUIForPlaying ()
-      }
-    case .readyToPlay :
-      player.play()
-      // infoLabel.text = "Playing..."
-      // mainButton.setTitle("Stop", for: .normal)
-      state = .playing
-    case .playing :
-      player.stop()
-      // setupUIForPlaying()
-    }
-  }
-  
-  struct Constants {
-    static let empty = ""
-  }
+//
+//  func mainButtonTouched(sender: UIButton) {
+//    switch state {
+//    case .readyToRecord :
+//      // infoLabel.text = "Recording"
+//      // mainButton.setTitle("Stop", for: .normal)
+//      state = .recording
+//      // microphone will be monitored while recording
+//      // only if headphones are plugged
+//      if AKSettings.headPhonesPlugged {
+//        micBooster.gain = 1
+//      }
+//      do {
+//        try recorder.record()
+//      } catch { print("Errored recording.") }
+//
+//    case .recording :
+//      // Microphone monitoring is muted
+//      micBooster.gain = 0
+//      tape = recorder.audioFile!
+//      player.load(audioFile: tape)
+//
+//      if let _ = player.audioFile?.duration {
+//        recorder.stop()
+//        tape.exportAsynchronously(name: "TempTestFile.m4a",
+//                                  baseDir: .documents,
+//                                  exportFormat: .m4a) {_, exportError in
+//                                    if let error = exportError {
+//                                      print("Export Failed \(error)")
+//                                    } else {
+//                                      print("Export succeeded")
+//                                    }
+//        }
+//        // setupUIForPlaying ()
+//      }
+//    case .readyToPlay :
+//      player.play()
+//      // infoLabel.text = "Playing..."
+//      // mainButton.setTitle("Stop", for: .normal)
+//      state = .playing
+//    case .playing :
+//      player.stop()
+//      // setupUIForPlaying()
+//    }
+//  }
+//
+//  struct Constants {
+//    static let empty = ""
+//  }
   
 //  func setupButtonNames() {
 //    resetButton.setTitle(Constants.empty, for: UIControlState.disabled)

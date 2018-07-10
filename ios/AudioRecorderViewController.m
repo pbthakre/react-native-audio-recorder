@@ -13,16 +13,17 @@
 #import "AudioRecorderViewController.h"
 #import <reactnativeaudiorecorder-Swift.h>
 
-@interface ViewController ()
-
-@end
-
-@implementation ViewController
+@implementation ViewController : UIViewController
 - (void)viewDidLoad {
   [super viewDidLoad];
   
   AudioRecorderViewController *myView = [[AudioRecorderViewController alloc] init];
-  
+  [myView Test];
+}
+
+- (void)Test {
+  AudioRecorderViewController *myView = [[AudioRecorderViewController alloc] init];
+  [myView Test];
 }
 
 @end

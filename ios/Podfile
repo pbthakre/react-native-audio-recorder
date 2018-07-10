@@ -90,4 +90,12 @@ post_install do |installer|
     change_lines_in_file('../node_modules/react-native/Libraries/WebSocket/RCTReconnectingWebSocket.m') do |lines|
         lines.map { |line| line.include?("#import <fishhook/fishhook.h>") ? '#import "fishhook.h"' : line }
     end
+
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = "YES"
+        end
+    end
+
+    `sed -i '' 's,ALWAYS_SEARCH_USER_PATHS = YES,,g' "Pods/Target Support Files/CorePlot/CorePlot.xcconfig"`
 end

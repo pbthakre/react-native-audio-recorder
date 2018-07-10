@@ -33,6 +33,8 @@ target 'reactnativeaudiorecorder' do
   # Explicitly include Yoga if you are using RN >= 0.42.0
   pod 'yoga', :path => '../node_modules/react-native/ReactCommon/yoga'
 
+  pod 'ReactNativePermissions', :path => '../node_modules/react-native-permissions'
+
   # Third party deps podspec link
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'

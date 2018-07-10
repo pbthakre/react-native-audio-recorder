@@ -26,6 +26,7 @@
 		7478B86520ECE7B60087F47D /* AudioRecorderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7478B86420ECE7B60087F47D /* AudioRecorderManager.m */; };
 		7478BD5620F3A46B0087F47D /* AudioRecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478BD5520F3A46B0087F47D /* AudioRecorderViewController.swift */; };
 		7478BD5A20F3A5B20087F47D /* AudioRecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7478BD5920F3A5B10087F47D /* AudioRecorderViewController.m */; };
+		7478BDAA20F4AB860087F47D /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7478BDA920F4AA290087F47D /* libReactNativePermissions.a */; };
 		74BE8DD220ECB560007E7968 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -277,6 +278,13 @@
 			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
 			remoteInfo = "RCTAnimation-tvOS";
 		};
+		7478BDA820F4AA290087F47D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7478BD7F20F4AA280087F47D /* ReactNativePermissions.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9D23B34F1C767B80008B4819;
+			remoteInfo = ReactNativePermissions;
+		};
 		78C398B81ACF4ADC00677621 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */;
@@ -331,6 +339,7 @@
 		7478BD5720F3A4EA0087F47D /* reactnativeaudiorecorder-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "reactnativeaudiorecorder-Swift.h"; sourceTree = "<group>"; };
 		7478BD5820F3A5B10087F47D /* AudioRecorderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecorderViewController.h; sourceTree = "<group>"; };
 		7478BD5920F3A5B10087F47D /* AudioRecorderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioRecorderViewController.m; sourceTree = "<group>"; };
+		7478BD7F20F4AA280087F47D /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../../../../../Downloads/Crowdio/node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		89616C66E8A327350D11C0A9 /* Pods-reactnativeaudiorecorder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-reactnativeaudiorecorder.debug.xcconfig"; path = "Pods/Target Support Files/Pods-reactnativeaudiorecorder/Pods-reactnativeaudiorecorder.debug.xcconfig"; sourceTree = "<group>"; };
@@ -350,6 +359,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7478BDAA20F4AB860087F47D /* libReactNativePermissions.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				74BE8DD220ECB560007E7968 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -495,6 +505,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7478BD7F20F4AA280087F47D /* ReactNativePermissions.xcodeproj */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 				3D16184D62A29B380AC5E651 /* Pods_reactnativeaudiorecorder.framework */,
 			);
@@ -506,6 +517,14 @@
 			children = (
 				5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */,
 				5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7478BD8020F4AA280087F47D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7478BDA920F4AA290087F47D /* libReactNativePermissions.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -709,6 +728,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = 7478BD8020F4AA280087F47D /* Products */;
+					ProjectRef = 7478BD7F20F4AA280087F47D /* ReactNativePermissions.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -958,6 +981,13 @@
 			remoteRef = 5E9157341DD0AC6500FF2AA8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		7478BDA920F4AA290087F47D /* libReactNativePermissions.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativePermissions.a;
+			remoteRef = 7478BDA820F4AA290087F47D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		78C398B91ACF4ADC00677621 /* libRCTLinking.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1025,6 +1055,7 @@
 				"${BUILT_PRODUCTS_DIR}/DoubleConversion/DoubleConversion.framework",
 				"${BUILT_PRODUCTS_DIR}/Folly/folly.framework",
 				"${BUILT_PRODUCTS_DIR}/React/React.framework",
+				"${BUILT_PRODUCTS_DIR}/ReactNativePermissions/ReactNativePermissions.framework",
 				"${BUILT_PRODUCTS_DIR}/glog/glog.framework",
 				"${BUILT_PRODUCTS_DIR}/yoga/yoga.framework",
 			);
@@ -1033,6 +1064,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DoubleConversion.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/folly.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativePermissions.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/yoga.framework",
 			);

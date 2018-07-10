@@ -9,5 +9,7 @@
 #ifndef reactnativeaudiorecorder_Swift_h
 #define reactnativeaudiorecorder_Swift_h
 
+#import "AudioRecorderViewController.h"
+
 
 #endif /* reactnativeaudiorecorder_Swift_h */

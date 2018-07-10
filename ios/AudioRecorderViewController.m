@@ -8,19 +8,21 @@
 
 // This file is the main file for Native UI Controller of Audio Recorder
 
-#import <Foundation/Foundation.h>
+//#import <Foundation/Foundation.h>
 
-#import "ViewController.h"
-#import "reactnativeaudiorecorder-Swift.h"
+#import "AudioRecorderViewController.h"
+#import <reactnativeaudiorecorder-Swift.h>
 
-@implementation ViewController: UIViewController
+@interface ViewController ()
 
--(AudioRecorderViewController *)Test {
-    AudioRecorderViewController *myController = [[AudioRecorderViewController alloc] init];
-}
+@end
 
+@implementation ViewController
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  AudioRecorderViewController *myView = [[AudioRecorderViewController alloc] init];
+  
 }
 
 @end

@@ -56,7 +56,7 @@ RCT_EXPORT_METHOD(exampleMethod)
 {
   //ViewController* testViewController = [[ViewController alloc] init];
   //[testViewController mainButtonTouched];
-  //[self emitMessageToRN:@"EXAMPLE_EVENT" :nil];
+  [self emitMessageToRN:@"EXAMPLE_EVENT" :nil];
 }
 
 #pragma mark - Private methods

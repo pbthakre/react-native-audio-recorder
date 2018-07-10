@@ -9,7 +9,6 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-#import "reactnativeaudiorecorder-Swift.h"
 
 @implementation AppDelegate
 

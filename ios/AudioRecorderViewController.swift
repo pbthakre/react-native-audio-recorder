@@ -13,7 +13,7 @@ import AudioKit
 import AudioKitUI
 import UIKit
 
-@objc class AudioRecorderViewController: UIViewController {
+@objc open class AudioRecorderViewController: UIViewController {
 
   var micMixer: AKMixer!
   var recorder: AKNodeRecorder!
@@ -46,15 +46,11 @@ import UIKit
     
   }
   
-  @objc func Test() {
+  func Test() {
     print("Test")
   }
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-  }
-  
-  @objc func mainButtonTouched(sender: UIButton) {
+  func mainButtonTouched(sender: UIButton) {
     switch state {
     case .readyToRecord :
       // infoLabel.text = "Recording"

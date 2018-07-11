@@ -16,7 +16,8 @@
 @class AudioRecorderViewController;
 
 @interface ViewController : UIViewController
-- (void)Test;
+- (void)setupRecorder;
+- (void)mainButtonTouched;
 @end
 
 #endif /* AudioRecorderViewController_h */

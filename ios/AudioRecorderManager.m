@@ -37,6 +37,8 @@
 @implementation AudioRecorderBridge
 @synthesize bridge = _bridge;
 
+ViewController *myViewController;
+
 RCT_EXPORT_MODULE()
 
 //- (UIView *)view
@@ -50,13 +52,21 @@ RCT_EXPORT_MODULE()
   return [[UIView alloc] init];
 }
 
++ (void) initialize {
+  myViewController = [[ViewController alloc] init];
+}
+
+RCT_EXPORT_METHOD(setupRecorder)
+{
+  ViewController* myViewController = [[ViewController alloc] init];
+  [myViewController setupRecorder];
+}
+
 // Export methods to a native module
 // https://facebook.github.io/react-native/docs/native-modules-ios.html
 RCT_EXPORT_METHOD(exampleMethod)
 {
-  ViewController* testViewController = [[ViewController alloc] init];
-  [testViewController Test];
-  [self emitMessageToRN:@"EXAMPLE_EVENT" :nil];
+  [myViewController mainButtonTouched];
 }
 
 #pragma mark - Private methods

@@ -22,17 +22,29 @@ type Props = {};
 export default class App extends Component<Props> {
   state = {
     microphonePermission: null,
-    recording: false
+    recording: false,
+    playing: false,
+    recordCount: 0
   };
 
-  handlePress = () => {
-    const { recording } = this.state;
+  handlePressRecording = () => {
+    const { recording, recordCount } = this.state;
 
     if (recording) {
       this.setState({ values: [], recording: false });
     } else {
-      this.setState({ recording: true });
-      //Console.log(AudioRecorderNative);
+      this.setState({ recording: true, recordCount: recordCount + 1 });
+      AudioRecorderNative.exampleMethod()
+    }
+  };
+
+  handlePressPlaying = () => {
+    const { playing } = this.state;
+
+    if (playing) {
+      this.setState({ values: [], playing: false });
+    } else {
+      this.setState({ playing: true });
       AudioRecorderNative.exampleMethod()
     }
   };
@@ -56,7 +68,7 @@ export default class App extends Component<Props> {
           onPress: () => console.log("Permission denied"),
           style: "cancel"
         },
-        this.state.microphonePermission == "undetermined"
+        this.state.microphonePermission === "undetermined"
           ? { text: "OK", onPress: this.requestPermission }
           : { text: "Open Settings", onPress: Permissions.openSettings }
       ]
@@ -71,18 +83,29 @@ export default class App extends Component<Props> {
         this.showPermissionAlert();
       }
     });
+
+    AudioRecorderNative.setupRecorder();
   };
 
   render() {
-    const { microphonePermission, recording } = this.state;
+    const { microphonePermission, recording, playing, recordCount } = this.state;
 
     return (
       <View style={styles.container}>
         {microphonePermission === "authorized" && (
           <Button
             style={styles.button}
-            onPress={this.handlePress}
+            onPress={this.handlePressRecording}
             title={recording ? "Stop recording" : "Start recording"}
+            disabled={playing}
+          />
+        )}
+        {microphonePermission === "authorized" && (
+          <Button
+            style={styles.button}
+            onPress={this.handlePressPlaying}
+            title={playing ? "Stop playing" : "Start playing"}
+            disabled={recording || recordCount == 0}
           />
         )}
       </View>

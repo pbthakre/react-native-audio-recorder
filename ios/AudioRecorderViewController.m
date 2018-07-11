@@ -14,16 +14,28 @@
 #import <reactnativeaudiorecorder-Swift.h>
 
 @implementation ViewController : UIViewController
+  AudioRecorderViewController *myAudioRecorderViewController;
+
 - (void)viewDidLoad {
   [super viewDidLoad];
-  
-  AudioRecorderViewController *myView = [[AudioRecorderViewController alloc] init];
-  [myView Test];
 }
 
-- (void)Test {
-  AudioRecorderViewController *myView = [[AudioRecorderViewController alloc] init];
-  [myView Test];
+- (UIView *)view
+{
+  return [[UIView alloc] init];
+}
+
++ (void) initialize {
+  myAudioRecorderViewController = [[AudioRecorderViewController alloc] init];
+}
+
+- (void)setupRecorder {
+  //AudioRecorderViewController *myAudioRecorderViewController = [[AudioRecorderViewController alloc] init];
+  [myAudioRecorderViewController setupRecorder];
+}
+
+- (void)mainButtonTouched {
+  [myAudioRecorderViewController mainButtonTouched];
 }
 
 @end

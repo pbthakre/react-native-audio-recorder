@@ -20,12 +20,18 @@ import AudioRecorderNative from './AudioRecorderNativeModule'
 
 type Props = {};
 export default class App extends Component<Props> {
+
   state = {
     microphonePermission: null,
     recording: false,
     playing: false,
     recordCount: 0
   };
+
+  constructor(props) {
+    super(props);
+    this.subscription = null;
+  }
 
   handlePressRecording = () => {
     const { recording, recordCount } = this.state;
@@ -85,7 +91,7 @@ export default class App extends Component<Props> {
     });
 
     const audioRecorderBridgeEmitter = AudioRecorderNative.getEmitter();
-    const subscription = audioRecorderBridgeEmitter.addListener(
+    this.subscription = audioRecorderBridgeEmitter.addListener(
       'TestEvent',
       (reminder) => console.log(reminder.name)
     );
@@ -94,7 +100,7 @@ export default class App extends Component<Props> {
   };
 
   componentWillUnmount() {
-    // this._eventSubscription && this._eventSubscription.remove();
+    this.subscription.remove();
   }
 
   render() {

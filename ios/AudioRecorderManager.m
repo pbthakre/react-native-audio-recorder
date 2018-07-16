@@ -22,17 +22,39 @@
 @synthesize bridge = _bridge;
 
 ViewController *myViewController;
+AudioRecorderBridge *myAudioRecorderBridge;
 
-RCT_EXPORT_MODULE()
-
-- (UIView *)view
-{
-  return [[UIView alloc] init];
++ (id)allocWithZone:(NSZone *)zone {
+  static AudioRecorderBridge *sharedInstance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    sharedInstance = [super allocWithZone:zone];
+  });
+  return sharedInstance;
 }
 
 + (void) initialize {
+  myAudioRecorderBridge = [AudioRecorderBridge allocWithZone: nil];
   myViewController = [[ViewController alloc] init];
 }
+
+- (NSArray<NSString *> *)supportedEvents
+{
+  return @[@"TestEvent"];
+}
+
+- (void) audioRecorderEvent
+{
+  [myAudioRecorderBridge sendNotificationToReactNative];
+}
+
+- (void) sendNotificationToReactNative
+{
+    [self sendEventWithName:@"TestEvent" body:@{@"name": @"Test completed"}];
+}
+
+
+RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(setupRecorder)
 {

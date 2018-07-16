@@ -14,6 +14,9 @@
 #import “React/RCTBridgeModule.h” // Required when used as a Pod in a Swift project
 #endif
 
-@interface AudioRecorderBridge : NSObject <RCTBridgeModule>
+#import <React/RCTEventEmitter.h>
+
+@interface AudioRecorderBridge : RCTEventEmitter <RCTBridgeModule>
   // Define class properties here with @property
+- (void) audioRecorderEvent;
 @end

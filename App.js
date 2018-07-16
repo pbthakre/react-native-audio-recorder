@@ -84,8 +84,18 @@ export default class App extends Component<Props> {
       }
     });
 
+    const audioRecorderBridgeEmitter = AudioRecorderNative.getEmitter();
+    const subscription = audioRecorderBridgeEmitter.addListener(
+      'TestEvent',
+      (reminder) => console.log(reminder.name)
+    );
+
     AudioRecorderNative.setupRecorder();
   };
+
+  componentWillUnmount() {
+    // this._eventSubscription && this._eventSubscription.remove();
+  }
 
   render() {
     const { microphonePermission, recording, playing, recordCount } = this.state;

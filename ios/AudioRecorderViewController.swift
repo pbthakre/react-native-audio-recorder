@@ -32,7 +32,6 @@ import UIKit
     case recording
     case readyToPlay
     case playing
-    
   }
   
   @objc func setupRecorder() {
@@ -87,6 +86,9 @@ import UIKit
   }
   
   @objc func mainButtonTouched() {
+    let myAudioRecorderManager = AudioRecorderBridge();
+    myAudioRecorderManager.audioRecorderEvent();
+    
     switch state {
     case .readyToRecord:
       state = .recording

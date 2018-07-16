@@ -30,7 +30,6 @@
 }
 
 - (void)setupRecorder {
-  //AudioRecorderViewController *myAudioRecorderViewController = [[AudioRecorderViewController alloc] init];
   [myAudioRecorderViewController setupRecorder];
 }
 

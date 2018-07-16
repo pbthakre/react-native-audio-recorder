@@ -3,7 +3,7 @@
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 05.07.18.
-//  Copyright © 2018 Facebook. All rights reserved.
+//
 //
 
 // This file is the swift file for Native UI Controller of Audio Recorder
@@ -27,16 +27,6 @@ import UIKit
   
   var state = State.readyToRecord
   
-//  @IBOutlet private var inputPlot: AKNodeOutputPlot!
-//  @IBOutlet private var outputPlot: AKOutputWaveformPlot!
-//  @IBOutlet private weak var infoLabel: UILabel!
-//  @IBOutlet private weak var resetButton: UIButton!
-//  @IBOutlet private weak var mainButton: UIButton!
-//  @IBOutlet private weak var frequencySlider: AKSlider!
-//  @IBOutlet private weak var resonanceSlider: AKSlider!
-//  @IBOutlet private weak var loopButton: UIButton!
-//  @IBOutlet private weak var moogLadderTitle: UILabel!
-  
   enum State {
     case readyToRecord
     case recording
@@ -46,11 +36,6 @@ import UIKit
   }
   
   @objc func setupRecorder() {
-    //super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
-    
-    // setupButtonNames()
-    
     // Clean tempFiles !
     AKAudioFile.cleanTempDirectory()
     
@@ -66,7 +51,6 @@ import UIKit
     AKSettings.defaultToSpeaker = true
     
     // Patching
-    // inputPlot.node = mic
     micMixer = AKMixer(mic)
     micBooster = AKBooster(micMixer)
     
@@ -90,7 +74,7 @@ import UIKit
       AKLog("AudioKit did not start!")
     }
     
-    setupUIForRecording()
+    setupForRecording()
   }
   
   // CallBack triggered when playing has ended
@@ -98,25 +82,24 @@ import UIKit
   // will be triggered by a background thread
   func playingEnded() {
     DispatchQueue.main.async {
-      self.setupUIForPlaying ()
+      self.setupForPlaying ()
     }
   }
   
   @objc func mainButtonTouched() {
     switch state {
     case .readyToRecord :
-      // infoLabel.text = "Recording"
-      // mainButton.setTitle("Stop", for: .normal)
       state = .recording
+      
       // microphone will be monitored while recording
       // only if headphones are plugged
       if AKSettings.headPhonesPlugged {
         micBooster.gain = 1
       }
+      
       do {
         try recorder.record()
       } catch { print("Errored recording.") }
-      
     case .recording :
       // Microphone monitoring is muted
       micBooster.gain = 0
@@ -134,16 +117,14 @@ import UIKit
                                       print("Export succeeded")
                                     }
         }
-        setupUIForPlaying ()
+        setupForPlaying ()
       }
     case .readyToPlay :
       player.play()
-      // infoLabel.text = "Playing..."
-      // mainButton.setTitle("Stop", for: .normal)
       state = .playing
     case .playing :
       player.stop()
-      setupUIForPlaying()
+      setupForPlaying()
     }
   }
   
@@ -151,25 +132,13 @@ import UIKit
     static let empty = ""
   }
   
-  func setupUIForRecording () {
+  func setupForRecording () {
     state = .readyToRecord
-    // infoLabel.text = "Ready to record"
-    // mainButton.setTitle("Record", for: .normal)
-    // resetButton.isEnabled = false
-    // resetButton.isHidden = true
     micBooster.gain = 0
-    // setSliders(active: false)
   }
   
-  func setupUIForPlaying () {
-    // let recordedDuration = player != nil ? player.audioFile?.duration  : 0
-    // infoLabel.text = "Recorded: \(String(format: "%0.1f", recordedDuration!)) seconds"
-    // mainButton.setTitle("Play", for: .normal)
+  func setupForPlaying () {
     state = .readyToPlay
-    // resetButton.isHidden = false
-    // resetButton.isEnabled = true
-    // frequencySlider.value = moogLadder.cutoffFrequency
-    // resonanceSlider.value = moogLadder.resonance
   }
   
   func resetButtonTouched(sender: UIButton) {
@@ -179,6 +148,6 @@ import UIKit
     } catch { print("Errored resetting.") }
     
     // try? player.replaceFile((recorder.audioFile)!)
-    setupUIForRecording()
+    setupForRecording()
   }
 }

@@ -3,7 +3,7 @@
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 08.07.18.
-//  Copyright © 2018 Facebook. All rights reserved.
+//  Copyright © 2018 Crowdio. All rights reserved.
 //
 
 #if __has_include(<React/RCTBridgeModule.h>)
@@ -16,7 +16,7 @@
 
 #import <React/RCTEventEmitter.h>
 
+// Define which methods and properties have to be implemented in AudioRecorderBridge
 @interface AudioRecorderBridge : RCTEventEmitter <RCTBridgeModule>
-  // Define class properties here with @property
 - (void) audioRecorderEvent;
 @end

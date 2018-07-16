@@ -3,38 +3,29 @@
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 09.07.18.
-//  Copyright © 2018 Facebook. All rights reserved.
+//  Copyright © 2018 Crowdio. All rights reserved.
 //
-
-// This file is the main file for Native UI Controller of Audio Recorder
-
-//#import <Foundation/Foundation.h>
 
 #import "AudioRecorderViewController.h"
 #import <reactnativeaudiorecorder-Swift.h>
 
+// Bridges between our AudioRecorderBridge written in Objective-C and our AudioRecorderView Controller written in Swift
 @implementation ViewController : UIViewController
   AudioRecorderViewController *myAudioRecorderViewController;
 
-- (void)viewDidLoad {
-  [super viewDidLoad];
-}
+  // Instantiate AudioRecorderViewController
+  + (void) initialize {
+    myAudioRecorderViewController = [[AudioRecorderViewController alloc] init];
+  }
 
-- (UIView *)view
-{
-  return [[UIView alloc] init];
-}
+  // Calls the the appropriate method in our Swift class
+  - (void) setupRecorder {
+    [myAudioRecorderViewController setupRecorder];
+  }
 
-+ (void) initialize {
-  myAudioRecorderViewController = [[AudioRecorderViewController alloc] init];
-}
-
-- (void)setupRecorder {
-  [myAudioRecorderViewController setupRecorder];
-}
-
-- (void)mainButtonTouched {
-  [myAudioRecorderViewController mainButtonTouched];
-}
+  // Calls the the appropriate method in our Swift class
+  - (void) mainButtonTouched {
+    [myAudioRecorderViewController mainButtonTouched];
+  }
 
 @end

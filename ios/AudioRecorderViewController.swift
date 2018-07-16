@@ -3,17 +3,15 @@
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 05.07.18.
+//  Copyright © 2018 Crowdio. All rights reserved.
 //
-//
-
-// This file is the swift file for Native UI Controller of Audio Recorder
 
 import Foundation
 import AudioKit
 import AudioKitUI
 import UIKit
 
-@objc open class AudioRecorderViewController: UIViewController {
+@objc open class AudioRecorderViewController : UIViewController {
   var micMixer: AKMixer!
   var recorder: AKNodeRecorder!
   var player: AKPlayer!

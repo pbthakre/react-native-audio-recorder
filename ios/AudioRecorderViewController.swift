@@ -88,7 +88,7 @@ import UIKit
   
   @objc func mainButtonTouched() {
     switch state {
-    case .readyToRecord :
+    case .readyToRecord:
       state = .recording
       
       // microphone will be monitored while recording
@@ -100,7 +100,7 @@ import UIKit
       do {
         try recorder.record()
       } catch { print("Errored recording.") }
-    case .recording :
+    case .recording:
       // Microphone monitoring is muted
       micBooster.gain = 0
       tape = recorder.audioFile!
@@ -117,12 +117,12 @@ import UIKit
                                       print("Export succeeded")
                                     }
         }
-        setupForPlaying ()
+        setupForPlaying()
       }
-    case .readyToPlay :
+    case .readyToPlay:
       player.play()
       state = .playing
-    case .playing :
+    case .playing:
       player.stop()
       setupForPlaying()
     }

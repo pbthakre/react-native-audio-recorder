@@ -23,14 +23,22 @@ import UIKit
   
   let mic = AKMicrophone()
   
-  var state = State.readyToRecord
+  // 0: notReady
+  // 1: readyToRecord
+  // 2: recording
+  // 3: readyToPlay
+  // 4: playing
+  var state: Int = 0;
   
-  enum State {
-    case readyToRecord
-    case recording
-    case readyToPlay
-    case playing
-  }
+  // Access AudioRecorderBridge to send events to React
+  let myAudioRecorderBridge: AudioRecorderBridge = AudioRecorderBridge();
+  
+//  enum State {
+//    case readyToRecord
+//    case recording
+//    case readyToPlay
+//    case playing
+//  }
   
   @objc func setupRecorder() {
     // Clean tempFiles !
@@ -83,13 +91,11 @@ import UIKit
     }
   }
   
-  @objc func mainButtonTouched() {
-    let myAudioRecorderManager = AudioRecorderBridge();
-    myAudioRecorderManager.audioRecorderEvent();
-    
+  @objc func triggerRecorderEvent() {
     switch state {
-    case .readyToRecord:
-      state = .recording
+    case 1:
+      state = 2
+      myAudioRecorderBridge.stateChanged(to: 2);
       
       // microphone will be monitored while recording
       // only if headphones are plugged
@@ -99,8 +105,12 @@ import UIKit
       
       do {
         try recorder.record()
-      } catch { print("Errored recording.") }
-    case .recording:
+      } catch {
+        print("Errored recording.")
+        state = 1
+        myAudioRecorderBridge.stateChanged(to: 1);
+      }
+    case 2:
       // Microphone monitoring is muted
       micBooster.gain = 0
       tape = recorder.audioFile!
@@ -119,12 +129,16 @@ import UIKit
         }
         setupForPlaying()
       }
-    case .readyToPlay:
+    case 3:
       player.play()
-      state = .playing
-    case .playing:
+      state = 4
+      myAudioRecorderBridge.stateChanged(to: 4);
+    case 4:
       player.stop()
-      setupForPlaying()
+      setupForRecording()
+    default:
+      state = 1
+      myAudioRecorderBridge.stateChanged(to: 1);
     }
   }
   
@@ -133,21 +147,23 @@ import UIKit
   }
   
   func setupForRecording () {
-    state = .readyToRecord
+    state = 1
+    myAudioRecorderBridge.stateChanged(to: 1);
     micBooster.gain = 0
   }
   
   func setupForPlaying () {
-    state = .readyToPlay
+    state = 3
+    myAudioRecorderBridge.stateChanged(to: 3);
   }
   
-  func resetButtonTouched(sender: UIButton) {
-    player.stop()
-    do {
-      try recorder.reset()
-    } catch { print("Errored resetting.") }
-    
-    // try? player.replaceFile((recorder.audioFile)!)
-    setupForRecording()
-  }
+//  func resetButtonTouched(sender: UIButton) {
+//    player.stop()
+//    do {
+//      try recorder.reset()
+//    } catch { print("Errored resetting.") }
+//
+//    // try? player.replaceFile((recorder.audioFile)!)
+//    setupForRecording()
+//  }
 }

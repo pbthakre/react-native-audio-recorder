@@ -13,8 +13,8 @@ export default {
     return AudioRecorderBridge.setupRecorder();
   },
 
-  exampleMethod () {
-    return AudioRecorderBridge.exampleMethod();
+  triggerRecorderEvent () {
+    return AudioRecorderBridge.triggerRecorderEvent();
   }
 
   //EXAMPLE_CONSTANT: AudioRecorder.EXAMPLE_CONSTANT

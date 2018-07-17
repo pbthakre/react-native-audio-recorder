@@ -21,11 +21,16 @@ import AudioRecorderNative from './AudioRecorderNativeModule'
 type Props = {};
 export default class App extends Component<Props> {
 
+  // recorderState
+  // 0: notReady
+  // 1: readyToRecord
+  // 2: recording
+  // 3: readyToPlay
+  // 4: playing
+
   state = {
     microphonePermission: null,
-    recording: false,
-    playing: false,
-    recordCount: 0
+    recorderState: 0
   };
 
   constructor(props) {
@@ -33,26 +38,8 @@ export default class App extends Component<Props> {
     this.subscription = null;
   }
 
-  handlePressRecording = () => {
-    const { recording, recordCount } = this.state;
-
-    if (recording) {
-      this.setState({ values: [], recording: false });
-    } else {
-      this.setState({ recording: true, recordCount: recordCount + 1 });
-      AudioRecorderNative.exampleMethod()
-    }
-  };
-
-  handlePressPlaying = () => {
-    const { playing } = this.state;
-
-    if (playing) {
-      this.setState({ values: [], playing: false });
-    } else {
-      this.setState({ playing: true });
-      AudioRecorderNative.exampleMethod()
-    }
+  triggerRecorderEvent = () => {
+    AudioRecorderNative.triggerRecorderEvent();
   };
 
   requestPermission = () => {
@@ -66,7 +53,7 @@ export default class App extends Component<Props> {
 
   showPermissionAlert = () => {
     Alert.alert(
-      "Record audio",
+      "Microphone Permission Request",
       "Audvise requires microphone permission to record audio",
       [
         {
@@ -81,6 +68,21 @@ export default class App extends Component<Props> {
     );
   };
 
+  renderRecorderStateText() {
+    switch(this.state.recorderState) {
+      case 1:
+        return 'Ready for recording';
+      case 2:
+        return 'Recording';
+      case 3:
+        return 'Ready for playing';
+      case 4:
+        return 'Playing';
+      default:
+        return 'Not ready for recording';
+    }
+  }
+
   componentDidMount = async () => {
     const microphonePermission = await Permissions.check("microphone");
 
@@ -91,9 +93,10 @@ export default class App extends Component<Props> {
     });
 
     const audioRecorderBridgeEmitter = AudioRecorderNative.getEmitter();
-    this.subscription = audioRecorderBridgeEmitter.addListener(
-      'TestEvent',
-      (reminder) => console.log(reminder.name)
+    this.subscription = audioRecorderBridgeEmitter.addListener('recorderStateChangedTo', (event) => {
+        console.log('Recorder State changed to: ' + event.state);
+        this.setState({ recorderState: event.state });
+      }
     );
 
     AudioRecorderNative.setupRecorder();
@@ -104,24 +107,25 @@ export default class App extends Component<Props> {
   }
 
   render() {
-    const { microphonePermission, recording, playing, recordCount } = this.state;
+    const { microphonePermission, recorderState, recording, playing } = this.state;
 
     return (
       <View style={styles.container}>
+        <Text>Recorder State: {this.renderRecorderStateText()}</Text>
         {microphonePermission === "authorized" && (
           <Button
             style={styles.button}
-            onPress={this.handlePressRecording}
-            title={recording ? "Stop recording" : "Start recording"}
-            disabled={playing}
+            onPress={this.triggerRecorderEvent}
+            title={recorderState == 1 ? "Start Recording" : "Stop Recording"}
+            disabled={recorderState == 0 || recorderState >= 3}
           />
         )}
         {microphonePermission === "authorized" && (
           <Button
             style={styles.button}
-            onPress={this.handlePressPlaying}
-            title={playing ? "Stop playing" : "Start playing"}
-            disabled={recording || recordCount == 0}
+            onPress={this.triggerRecorderEvent}
+            title={recorderState == 3 ? "Start Playing" : "Stop Playing"}
+            disabled={recorderState < 3}
           />
         )}
       </View>

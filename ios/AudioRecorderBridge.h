@@ -18,5 +18,5 @@
 
 // Define which methods and properties have to be implemented in AudioRecorderBridge
 @interface AudioRecorderBridge : RCTEventEmitter <RCTBridgeModule>
-- (void) audioRecorderEvent;
+  - (void) stateChangedTo: (int)state;
 @end

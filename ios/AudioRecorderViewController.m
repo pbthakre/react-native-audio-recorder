@@ -24,8 +24,8 @@
   }
 
   // Calls the the appropriate method in our Swift class
-  - (void) mainButtonTouched {
-    [myAudioRecorderViewController mainButtonTouched];
+  - (void) triggerRecorderEvent {
+    [myAudioRecorderViewController triggerRecorderEvent];
   }
 
 @end

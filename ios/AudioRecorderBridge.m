@@ -39,15 +39,17 @@
   }
 
   // Define which event(-names) are supported
-  - (NSArray<NSString *> *)supportedEvents
-  {
-    return @[@"TestEvent"];
+  - (NSArray<NSString *> *)supportedEvents {
+    return @[@"recorderStateChangedTo"];
   }
 
-  - (void) audioRecorderEvent
-  {
+  - (void) audioRecorderEvent {
     // [myAudioRecorderBridge sendNotificationToReactNative];
-    [self sendEventWithName:@"TestEvent" body:@{@"name": @"Test completed"}];
+    //[self sendEventWithName:@"TestEvent" body:@{@"name": @"Test completed"}];
+  }
+
+  - (void) stateChangedTo: (int)state {
+    [self sendEventWithName:@"recorderStateChangedTo" body:@{@"state": [NSNumber numberWithInt: state]}];
   }
 
   // Make this native module available to React
@@ -60,9 +62,9 @@
     [myViewController setupRecorder];
   }
 
-  // Make exampleMethod available to React
-  RCT_EXPORT_METHOD(exampleMethod)
+  // Make initiateRecorderAction available to React
+  RCT_EXPORT_METHOD(triggerRecorderEvent)
   {
-    [myViewController mainButtonTouched];
+    [myViewController triggerRecorderEvent];
   }
 @end

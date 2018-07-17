@@ -33,13 +33,6 @@ import UIKit
   // Access AudioRecorderBridge to send events to React
   let myAudioRecorderBridge: AudioRecorderBridge = AudioRecorderBridge();
   
-//  enum State {
-//    case readyToRecord
-//    case recording
-//    case readyToPlay
-//    case playing
-//  }
-  
   @objc func setupRecorder() {
     // Clean tempFiles !
     AKAudioFile.cleanTempDirectory()
@@ -94,9 +87,6 @@ import UIKit
   @objc func triggerRecorderEvent() {
     switch state {
     case 1:
-      state = 2
-      myAudioRecorderBridge.stateChanged(to: 2);
-      
       // microphone will be monitored while recording
       // only if headphones are plugged
       if AKSettings.headPhonesPlugged {
@@ -104,11 +94,11 @@ import UIKit
       }
       
       do {
-        try recorder.record()
+        try recorder.record();
+        state = 2
+        myAudioRecorderBridge.stateChanged(to: 2);
       } catch {
         print("Errored recording.")
-        state = 1
-        myAudioRecorderBridge.stateChanged(to: 1);
       }
     case 2:
       // Microphone monitoring is muted

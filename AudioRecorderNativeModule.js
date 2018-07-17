@@ -16,6 +16,4 @@ export default {
   triggerRecorderEvent () {
     return AudioRecorderBridge.triggerRecorderEvent();
   }
-
-  //EXAMPLE_CONSTANT: AudioRecorder.EXAMPLE_CONSTANT
 }

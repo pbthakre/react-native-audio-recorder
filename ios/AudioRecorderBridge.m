@@ -43,11 +43,6 @@
     return @[@"recorderStateChangedTo"];
   }
 
-  - (void) audioRecorderEvent {
-    // [myAudioRecorderBridge sendNotificationToReactNative];
-    //[self sendEventWithName:@"TestEvent" body:@{@"name": @"Test completed"}];
-  }
-
   - (void) stateChangedTo: (int)state {
     [self sendEventWithName:@"recorderStateChangedTo" body:@{@"state": [NSNumber numberWithInt: state]}];
   }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { requireNativeComponent } from 'react-native'
 
-const AudioRecorderUI = requireNativeComponent('AudioRecorder', null);
+const AudioRecorderUI = requireNativeComponent('AudioRecorderUI', null);
 
 export default class AudioRecorderUIView extends Component {
   render () {

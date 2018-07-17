@@ -15,6 +15,7 @@
 #endif
 
 #import <React/RCTEventEmitter.h>
+#import <React/RCTViewManager.h>
 
 // Define which methods and properties have to be implemented in AudioRecorderBridge
 @interface AudioRecorderBridge : RCTEventEmitter <RCTBridgeModule>

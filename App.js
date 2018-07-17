@@ -15,7 +15,7 @@ import {
 
 import Permissions from 'react-native-permissions';
 
-// import AudioRecorderUIView from './AudioRecorderNativeView'
+import AudioRecorderUIView from './AudioRecorderNativeView'
 import AudioRecorderNative from './AudioRecorderNativeModule'
 
 type Props = {};
@@ -107,10 +107,11 @@ export default class App extends Component<Props> {
   }
 
   render() {
-    const { microphonePermission, recorderState, recording, playing } = this.state;
+    const { microphonePermission, recorderState } = this.state;
 
     return (
       <View style={styles.container}>
+        <AudioRecorderUIView style={styles.native}/>
         <Text>Recorder State: {this.renderRecorderStateText()}</Text>
         {microphonePermission === "authorized" && (
           <Button
@@ -139,6 +140,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+  },
+  native: {
+    flex: 1
   },
   custom: {
     flex: 1,

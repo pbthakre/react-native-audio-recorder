@@ -20,6 +20,8 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		285B5D4606953F61C641A195 /* Pods_reactnativeaudiorecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28EADD2D162C2D2786644A86 /* Pods_reactnativeaudiorecorder.framework */; };
 		744B4DFC20FC90260078776A /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		744B4DFF20FDEAA70078776A /* AudioRecorderUIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 744B4DFE20FDEAA60078776A /* AudioRecorderUIManager.m */; };
+		744B4E0220FDF6FD0078776A /* AudioRecorderUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 744B4E0120FDF6FD0078776A /* AudioRecorderUIView.m */; };
 		7478B86520ECE7B60087F47D /* AudioRecorderBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 7478B86420ECE7B60087F47D /* AudioRecorderBridge.m */; };
 		7478BD5620F3A46B0087F47D /* AudioRecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7478BD5520F3A46B0087F47D /* AudioRecorderViewController.swift */; };
 		7478BD5A20F3A5B20087F47D /* AudioRecorderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7478BD5920F3A5B10087F47D /* AudioRecorderViewController.m */; };
@@ -328,6 +330,10 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		744B4DF420FC70370078776A /* reactnativeaudiorecorder-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "reactnativeaudiorecorder-Bridging-Header.h"; sourceTree = "<group>"; };
+		744B4DFD20FDEAA60078776A /* AudioRecorderUIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecorderUIManager.h; sourceTree = "<group>"; };
+		744B4DFE20FDEAA60078776A /* AudioRecorderUIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioRecorderUIManager.m; sourceTree = "<group>"; };
+		744B4E0020FDF6FD0078776A /* AudioRecorderUIView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioRecorderUIView.h; sourceTree = "<group>"; };
+		744B4E0120FDF6FD0078776A /* AudioRecorderUIView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioRecorderUIView.m; sourceTree = "<group>"; };
 		7478B86420ECE7B60087F47D /* AudioRecorderBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioRecorderBridge.m; sourceTree = "<group>"; };
 		7478BBBE20F2618E0087F47D /* AudioRecorderBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioRecorderBridge.h; sourceTree = "<group>"; };
 		7478BD5520F3A46B0087F47D /* AudioRecorderViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioRecorderViewController.swift; sourceTree = "<group>"; };
@@ -454,6 +460,10 @@
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
+				744B4E0020FDF6FD0078776A /* AudioRecorderUIView.h */,
+				744B4E0120FDF6FD0078776A /* AudioRecorderUIView.m */,
+				744B4DFD20FDEAA60078776A /* AudioRecorderUIManager.h */,
+				744B4DFE20FDEAA60078776A /* AudioRecorderUIManager.m */,
 				7478BBBE20F2618E0087F47D /* AudioRecorderBridge.h */,
 				7478B86420ECE7B60087F47D /* AudioRecorderBridge.m */,
 				7478BD5520F3A46B0087F47D /* AudioRecorderViewController.swift */,
@@ -1068,7 +1078,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				7478BD5620F3A46B0087F47D /* AudioRecorderViewController.swift in Sources */,
+				744B4E0220FDF6FD0078776A /* AudioRecorderUIView.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				744B4DFF20FDEAA70078776A /* AudioRecorderUIManager.m in Sources */,
 				7478B86520ECE7B60087F47D /* AudioRecorderBridge.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				7478BD5A20F3A5B20087F47D /* AudioRecorderViewController.m in Sources */,

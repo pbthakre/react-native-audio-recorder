@@ -24,6 +24,22 @@ export default class AudioRecorder extends Component<Props> {
     AudioRecorderNative.triggerRecorderEvent();
   };
 
+  startRecording = () => {
+    AudioRecorderNative.triggerRecorderEvent();
+  };
+
+  stopRecording = () => {
+    AudioRecorderNative.triggerRecorderEvent();
+  };
+
+  startPlaying = () => {
+    AudioRecorderNative.triggerRecorderEvent();
+  };
+
+  stopPlaying = () => {
+    AudioRecorderNative.triggerRecorderEvent();
+  };
+
   requestPermission = () => {
     Permissions.request("microphone").then(response => {
       console.log(response);

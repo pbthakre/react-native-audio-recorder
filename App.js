@@ -66,21 +66,37 @@ export default class App extends Component<Props> {
       <View style={styles.container}>
         <AudioRecorder ref={ this.setRecorderRef } recorderState={this.changeRecorderState.bind(this)}/>
         {!!recorderRef &&
-          <View>
+          <View style={styles.innerContainer}>
             <Text>Recorder State: {recorderState} -> {this.renderRecorderStateText(recorderState)}</Text>
 
-            <Button
-              style={styles.button}
-              onPress={recorderRef.triggerRecorderEvent}
-              title={recorderState === 1 ? "Start Recording" : "Stop Recording"}
-              disabled={recorderState === 0 || recorderState >= 3}
-            />
-            <Button
-              style={styles.button}
-              onPress={recorderRef.triggerRecorderEvent}
-              title={recorderState === 3 ? "Start Playing" : "Stop Playing"}
-              disabled={recorderState < 3}
-            />
+            {recorderState === 1 &&
+              <Button
+                style={styles.button}
+                onPress={recorderRef.startRecording}
+                title={"Start Recording"}
+              />
+            }
+            {recorderState === 2 &&
+              <Button
+                style={styles.button}
+                onPress={recorderRef.stopRecording}
+                title={"Stop Recording"}
+              />
+            }
+            {recorderState === 3 &&
+              <Button
+                style={styles.button}
+                onPress={recorderRef.startPlaying}
+                title={"Start Playing"}
+              />
+            }
+            {recorderState === 4 &&
+              <Button
+                style={styles.button}
+                onPress={recorderRef.stopPlaying}
+                title={"Stop Playing"}
+              />
+            }
           </View>
         }
       </View>
@@ -93,6 +109,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F5FCFF'
+  },
+  innerContainer: {
+    position: 'absolute'
   }
 });

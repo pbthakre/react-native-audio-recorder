@@ -1,20 +1,14 @@
 import React, { Component } from "react";
 import {
   StyleSheet,
-  View,
-  Alert
+  View
 } from 'react-native';
 
 import AudioRecorderUIView from './AudioRecorderNativeView'
 import AudioRecorderNative from "./AudioRecorderNativeModule";
-import Permissions from "react-native-permissions";
 
 type Props = {};
 export default class AudioRecorder extends Component<Props> {
-  state = {
-    microphonePermission: null
-  };
-
   constructor(props) {
     super(props);
     this.recorderStateChangedToSubscription = null;
@@ -37,41 +31,7 @@ export default class AudioRecorder extends Component<Props> {
     AudioRecorderNative.triggerRecorderEvent();
   };
 
-  requestPermission = () => {
-    Permissions.request("microphone").then(response => {
-      console.log(response);
-      // Returns once the user has chosen to 'allow' or to 'not allow' access
-      // Response is one of: 'authorized', 'denied', 'restricted', or 'undetermined'
-      this.setState({ microphonePermission: response });
-    });
-  };
-
-  showPermissionAlert = () => {
-    Alert.alert(
-      "Microphone Permission Request",
-      "Audvise requires microphone permission to record audio",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Permission denied"),
-          style: "cancel"
-        },
-        this.state.microphonePermission === "undetermined"
-          ? { text: "OK", onPress: this.requestPermission }
-          : { text: "Open Settings", onPress: Permissions.openSettings }
-      ]
-    );
-  };
-
   componentDidMount = async () => {
-    const microphonePermission = await Permissions.check("microphone");
-
-    this.setState({ microphonePermission }, () => {
-      if (microphonePermission === "undetermined") {
-        this.showPermissionAlert();
-      }
-    });
-
     const audioRecorderBridgeEmitter = AudioRecorderNative.getEmitter();
     this.recorderStateChangedToSubscription = audioRecorderBridgeEmitter.addListener('recorderStateChangedTo', (event) => {
         // recorderState

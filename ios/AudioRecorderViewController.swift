@@ -115,7 +115,10 @@ import UIKit
       
       if let _ = player.audioFile?.duration {
         recorder.stop()
-        tape.exportAsynchronously(name: "TempTestFile.m4a",
+        
+        let fileName = UUID().uuidString + ".m4a"
+        
+        tape.exportAsynchronously(name: fileName,
                                   baseDir: .documents,
                                   exportFormat: .m4a) {_, exportError in
                                     if let error = exportError {
@@ -124,7 +127,13 @@ import UIKit
                                       print("Export succeeded")
                                     }
         }
+        
         setupForPlaying()
+        
+        if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+          // Send the file url of the last recorded file to react native
+          myAudioRecorderBridge.lastRecordedFileUrlChanged(to: documentsPathString + fileName)
+        }
       }
     case 3:
       player.play()

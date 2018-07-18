@@ -17,12 +17,9 @@ export default class AudioRecorder extends Component<Props> {
 
   constructor(props) {
     super(props);
-    this.subscription = null;
+    this.recorderStateChangedToSubscription = null;
+    this.lastRecordedFileUrlChangedSubscription = null;
   }
-
-  triggerRecorderEvent = () => {
-    AudioRecorderNative.triggerRecorderEvent();
-  };
 
   startRecording = () => {
     AudioRecorderNative.triggerRecorderEvent();
@@ -76,7 +73,7 @@ export default class AudioRecorder extends Component<Props> {
     });
 
     const audioRecorderBridgeEmitter = AudioRecorderNative.getEmitter();
-    this.subscription = audioRecorderBridgeEmitter.addListener('recorderStateChangedTo', (event) => {
+    this.recorderStateChangedToSubscription = audioRecorderBridgeEmitter.addListener('recorderStateChangedTo', (event) => {
         // recorderState
         // 0: notReady
         // 1: readyToRecord
@@ -89,11 +86,18 @@ export default class AudioRecorder extends Component<Props> {
       }
     );
 
+    this.lastRecordedFileUrlChangedSubscription = audioRecorderBridgeEmitter.addListener('lastRecordedFileUrlChangedTo', (event) => {
+        console.log(event.fileUrl);
+        this.props.lastRecordedFileUrl(event.fileUrl);
+      }
+    );
+
     AudioRecorderNative.setupRecorder();
   };
 
   componentWillUnmount() {
-    this.subscription.remove();
+    this.recorderStateChangedToSubscription.remove();
+    this.lastRecordedFileUrlChangedSubscription.remove();
   }
 
   render() {

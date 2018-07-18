@@ -25,7 +25,8 @@ export default class App extends Component<Props> {
 
   state = {
     recorderRef: null,
-    recorderState: 0
+    recorderState: 0,
+    lastRecordedFileUrl: null
   };
 
   constructor(props) {
@@ -35,6 +36,12 @@ export default class App extends Component<Props> {
   changeRecorderState(state) {
     this.setState({
       recorderState: state
+    });
+  }
+
+  changeLastRecordedFileUrl(fileUrl) {
+    this.setState({
+      lastRecordedFileUrl: fileUrl
     });
   }
 
@@ -64,11 +71,14 @@ export default class App extends Component<Props> {
 
     return (
       <View style={styles.container}>
-        <AudioRecorder ref={ this.setRecorderRef } recorderState={this.changeRecorderState.bind(this)}/>
+        <AudioRecorder
+          ref={ this.setRecorderRef }
+          recorderState={this.changeRecorderState.bind(this)}
+          lastRecordedFileUrl={this.changeLastRecordedFileUrl.bind(this)}
+        />
+
         {!!recorderRef &&
           <View style={styles.innerContainer}>
-            <Text>Recorder State: {recorderState} -> {this.renderRecorderStateText(recorderState)}</Text>
-
             {recorderState === 1 &&
               <Button
                 style={styles.button}
@@ -97,6 +107,8 @@ export default class App extends Component<Props> {
                 title={"Stop Playing"}
               />
             }
+
+            <Text>Recorder State: {recorderState} -> {this.renderRecorderStateText(recorderState)}</Text>
           </View>
         }
       </View>

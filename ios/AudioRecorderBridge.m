@@ -40,11 +40,16 @@
 
   // Define which event(-names) are supported
   - (NSArray<NSString *> *)supportedEvents {
-    return @[@"recorderStateChangedTo"];
+    return @[@"recorderStateChangedTo", @"lastRecordedFileUrlChangedTo"];
   }
 
   - (void) stateChangedTo: (int)state {
     [self sendEventWithName:@"recorderStateChangedTo" body:@{@"state": [NSNumber numberWithInt: state]}];
+  }
+
+  // Send the file url (location) of the last recorded file to React Native
+  - (void) lastRecordedFileUrlChangedTo: (NSString*)fileUrl {
+    [self sendEventWithName:@"lastRecordedFileUrlChangedTo" body:@{@"fileUrl": fileUrl}];
   }
 
   // Make this native module available to React

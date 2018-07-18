@@ -11,38 +11,24 @@ type Props = {};
 export default class AudioRecorder extends Component<Props> {
   constructor(props) {
     super(props);
-    this.recorderStateChangedToSubscription = null;
+    this.isRecorderEventSuccessfullSubscription = null;
     this.lastRecordedFileUrlChangedSubscription = null;
   }
 
   startRecording = () => {
-    AudioRecorderNative.triggerRecorderEvent();
+    AudioRecorderNative.startRecording();
   };
 
   stopRecording = () => {
-    AudioRecorderNative.triggerRecorderEvent();
-  };
-
-  startPlaying = () => {
-    AudioRecorderNative.triggerRecorderEvent();
-  };
-
-  stopPlaying = () => {
-    AudioRecorderNative.triggerRecorderEvent();
+    AudioRecorderNative.stopRecording();
   };
 
   componentDidMount = async () => {
     const audioRecorderBridgeEmitter = AudioRecorderNative.getEmitter();
-    this.recorderStateChangedToSubscription = audioRecorderBridgeEmitter.addListener('recorderStateChangedTo', (event) => {
-        // recorderState
-        // 0: notReady
-        // 1: readyToRecord
-        // 2: recording
-        // 3: readyToPlay
-        // 4: playing
-
-        console.log('Recorder State changed to: ' + event.state);
-        this.props.recorderState(event.state);
+    this.isRecorderEventSuccessfullSubscription = audioRecorderBridgeEmitter.addListener('isRecorderEventSuccessfull', (event) => {
+        if (!event.success) {
+          throw new Error("Something went wrong with recorder event");
+        }
       }
     );
 
@@ -56,7 +42,7 @@ export default class AudioRecorder extends Component<Props> {
   };
 
   componentWillUnmount() {
-    this.recorderStateChangedToSubscription.remove();
+    this.isRecorderEventSuccessfullSubscription.remove();
     this.lastRecordedFileUrlChangedSubscription.remove();
   }
 

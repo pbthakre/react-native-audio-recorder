@@ -17,7 +17,8 @@
 // Define which methods and properties have to be implemented in ViewController of AudioBridge
 @interface ViewController : UIViewController
   - (void) setupRecorder;
-  - (void) triggerRecorderEvent;
+  - (void) startRecording;
+  - (void) stopRecording;
 @end
 
 #endif /* AudioRecorderViewController_h */

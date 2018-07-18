@@ -19,6 +19,8 @@
 
 // Define which methods and properties have to be implemented in AudioRecorderBridge
 @interface AudioRecorderBridge : RCTEventEmitter <RCTBridgeModule>
-  - (void) recorderStateChangedTo: (int)state;
+  - (void) isRecorderEventSuccessfull: (BOOL)success;
   - (void) lastRecordedFileUrlChangedTo: (NSString*)fileUrl;
+  - (void) startRecording;
+  - (void) stopRecording;
 @end

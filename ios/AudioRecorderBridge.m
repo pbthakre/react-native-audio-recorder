@@ -40,11 +40,11 @@
 
   // Define which event(-names) are supported
   - (NSArray<NSString *> *)supportedEvents {
-    return @[@"recorderStateChangedTo", @"lastRecordedFileUrlChangedTo"];
+    return @[@"isRecorderEventSuccessfull", @"lastRecordedFileUrlChangedTo"];
   }
 
-  - (void) recorderStateChangedTo: (int)state {
-    [self sendEventWithName:@"recorderStateChangedTo" body:@{@"state": [NSNumber numberWithInt: state]}];
+  - (void) isRecorderEventSuccessfull: (BOOL)success {
+    [self sendEventWithName:@"isRecorderEventSuccessfull" body:@{@"success": [NSNumber numberWithBool: success]}];
   }
 
   // Send the file url (location) of the last recorded file to React Native
@@ -56,15 +56,18 @@
   RCT_EXPORT_MODULE()
 
   // Make setupRecorder method available to React
-  RCT_EXPORT_METHOD(setupRecorder)
-  {
+  RCT_EXPORT_METHOD(setupRecorder) {
     ViewController *myViewController = [[ViewController alloc] init];
     [myViewController setupRecorder];
   }
 
-  // Make initiateRecorderAction available to React
-  RCT_EXPORT_METHOD(triggerRecorderEvent)
-  {
-    [myViewController triggerRecorderEvent];
+  // Make startRecording available to React
+  RCT_EXPORT_METHOD(startRecording) {
+    [myViewController startRecording];
+  }
+
+  // Make stopRecording available to React
+  RCT_EXPORT_METHOD(stopRecording) {
+    [myViewController stopRecording];
   }
 @end

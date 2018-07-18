@@ -13,7 +13,11 @@ export default {
     return AudioRecorderBridge.setupRecorder();
   },
 
-  triggerRecorderEvent () {
-    return AudioRecorderBridge.triggerRecorderEvent();
+  startRecording() {
+    return AudioRecorderBridge.startRecording();
+  },
+
+  stopRecording() {
+    return AudioRecorderBridge.stopRecording();
   }
 }

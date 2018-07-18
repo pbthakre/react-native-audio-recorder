@@ -24,8 +24,12 @@
   }
 
   // Calls the the appropriate method in our Swift class
-  - (void) triggerRecorderEvent {
-    [myAudioRecorderViewController triggerRecorderEvent];
+  - (void) startRecording {
+    [myAudioRecorderViewController startRecording];
   }
 
+  // Calls the the appropriate method in our Swift class
+  - (void) stopRecording {
+    [myAudioRecorderViewController stopRecording];
+  }
 @end

@@ -43,7 +43,7 @@
     return @[@"recorderStateChangedTo", @"lastRecordedFileUrlChangedTo"];
   }
 
-  - (void) stateChangedTo: (int)state {
+  - (void) recorderStateChangedTo: (int)state {
     [self sendEventWithName:@"recorderStateChangedTo" body:@{@"state": [NSNumber numberWithInt: state]}];
   }
 

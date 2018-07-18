@@ -103,7 +103,7 @@ import UIKit
       do {
         try recorder.record();
         state = 2
-        myAudioRecorderBridge.stateChanged(to: 2);
+        myAudioRecorderBridge.recorderStateChanged(to: 2);
       } catch {
         print("Errored recording.")
       }
@@ -138,13 +138,13 @@ import UIKit
     case 3:
       player.play()
       state = 4
-      myAudioRecorderBridge.stateChanged(to: 4);
+      myAudioRecorderBridge.recorderStateChanged(to: 4);
     case 4:
       player.stop()
       setupForRecording()
     default:
       state = 1
-      myAudioRecorderBridge.stateChanged(to: 1);
+      myAudioRecorderBridge.recorderStateChanged(to: 1);
     }
   }
   
@@ -154,13 +154,13 @@ import UIKit
   
   func setupForRecording () {
     state = 1
-    myAudioRecorderBridge.stateChanged(to: 1);
+    myAudioRecorderBridge.recorderStateChanged(to: 1);
     micBooster.gain = 0
   }
   
   func setupForPlaying () {
     state = 3
-    myAudioRecorderBridge.stateChanged(to: 3);
+    myAudioRecorderBridge.recorderStateChanged(to: 3);
   }
   
 //  func resetButtonTouched(sender: UIButton) {

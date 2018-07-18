@@ -34,6 +34,13 @@ import UIKit
   let myAudioRecorderBridge: AudioRecorderBridge = AudioRecorderBridge();
   
   @objc func setupRecorder() {
+    // Stop AudioKit to prevent errors of duplicate initialization
+    do {
+      try AudioKit.stop()
+    } catch {
+      AKLog("AudioKit did not stop!")
+    }
+    
     // Clean tempFiles !
     AKAudioFile.cleanTempDirectory()
     

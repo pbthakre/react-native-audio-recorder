@@ -15,17 +15,18 @@
 #endif
 
 #import "AudioRecorderBridge.h"
-#import "AudioRecorderViewController.h"
+
+#import <reactnativeaudiorecorder-Swift.h>
 
 // Controls the communication between the Native part and the React part of our application
 @implementation AudioRecorderBridge
-  ViewController *myViewController;
+  AudioRecorderViewController *myAudioRecorderViewController;
   AudioRecorderBridge *myAudioRecorderBridge;
 
   // Instantiate ViewController and AudioRecorderBridge
   + (void) initialize {
     myAudioRecorderBridge = [AudioRecorderBridge allocWithZone: nil];
-    myViewController = [[ViewController alloc] init];
+    myAudioRecorderViewController = [[AudioRecorderViewController alloc] init];
   }
 
   // Creates singleton of AudioRecorderBridge
@@ -57,17 +58,16 @@
 
   // Make setupRecorder method available to React
   RCT_EXPORT_METHOD(setupRecorder) {
-    ViewController *myViewController = [[ViewController alloc] init];
-    [myViewController setupRecorder];
+    [myAudioRecorderViewController setupRecorder];
   }
 
   // Make startRecording available to React
   RCT_EXPORT_METHOD(startRecording) {
-    [myViewController startRecording];
+    [myAudioRecorderViewController startRecording];
   }
 
   // Make stopRecording available to React
   RCT_EXPORT_METHOD(stopRecording) {
-    [myViewController stopRecording];
+    [myAudioRecorderViewController stopRecording];
   }
 @end

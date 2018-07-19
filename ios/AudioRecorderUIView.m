@@ -18,13 +18,6 @@
     return self;
   }
 
-//  -(void) setUp {
-//    UIView * myAudioRecorderUIView = [[UIView alloc] initWithFrame:CGRectMake(-50, -250, 100, 100)];
-//    [myAudioRecorderUIView setBackgroundColor:[UIColor grayColor]];
-//
-//    [self addSubview:myAudioRecorderUIView];
-//  }
-
   - (instancetype)initWithFrame:(CGRect)frame {
     NSLog(@"init with frame: %@", NSStringFromCGRect(frame));
     self = [super initWithFrame:frame];
@@ -44,7 +37,6 @@
   }
 
   - (void)setUp {
-    // self.colors = @[[UIColor redColor], [UIColor greenColor], [UIColor blueColor]];
     self.backgroundColor = [UIColor redColor];
   }
 

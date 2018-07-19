@@ -28,7 +28,7 @@
     [myParentAudioRecorderUIView addSubview:myAudioRecorderUIView];
   }
 
-  // Instantiate ViewController and AudioRecorderBridge
+  // Change background color of view
   - (void) changeBackgroundColor: (UIColor*)color {
     dispatch_sync(dispatch_get_main_queue(), ^{
       myParentAudioRecorderUIView.subviews.firstObject.backgroundColor = color;

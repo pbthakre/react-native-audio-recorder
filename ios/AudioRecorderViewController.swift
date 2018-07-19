@@ -26,6 +26,8 @@ import UIKit
   // Access AudioRecorderBridge to send events to React
   let myAudioRecorderBridge: AudioRecorderBridge = AudioRecorderBridge();
   
+  let myAudioRecorderUIManager: AudioRecorderUIManager = AudioRecorderUIManager();
+  
   @objc func setupRecorder() {
     // Stop AudioKit to prevent errors of duplicate initialization
     do {
@@ -67,6 +69,7 @@ import UIKit
   }
   
   @objc func startRecording() {
+    myAudioRecorderUIManager.changeBackgroundColor(UIColor.green)
     // Microphone will be monitored while recording
     // only if headphones are plugged
     if AKSettings.headPhonesPlugged {

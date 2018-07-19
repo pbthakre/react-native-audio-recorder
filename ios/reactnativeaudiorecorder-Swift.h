@@ -12,5 +12,4 @@
 // Enables Objective-C to access our AudioRecorderViewController Swift class
 #import "AudioRecorderViewController.h"
 
-
 #endif /* reactnativeaudiorecorder_Swift_h */

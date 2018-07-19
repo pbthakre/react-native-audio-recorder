@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MapKit/MapKit.h>
+//#import <MapKit/MapKit.h>
 #import <React/RCTViewManager.h>
 
 @interface AudioRecorderUIManager : RCTViewManager
+  @property (nonatomic) UIView *myParentAudioRecorderUIView;
+  @property (nonatomic) UIView *myAudioRecorderUIView;
 
+  - (void) changeBackgroundColor: (UIColor*)color;
 @end

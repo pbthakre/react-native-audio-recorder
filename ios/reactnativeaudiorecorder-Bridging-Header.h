@@ -4,3 +4,4 @@
 
 // Enables AudioRecorderViewController Swift class to access our Objective-C AudioRecorderBridge class
 #import "AudioRecorderBridge.h"
+#import "AudioRecorderUIManager.h"

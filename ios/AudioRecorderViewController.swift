@@ -69,7 +69,8 @@ import UIKit
   }
   
   @objc func startRecording() {
-    myAudioRecorderUIManager.changeBackgroundColor(UIColor.green)
+    myAudioRecorderUIManager.changeBackgroundColor(UIColor.red)
+    
     // Microphone will be monitored while recording
     // only if headphones are plugged
     if AKSettings.headPhonesPlugged {
@@ -91,6 +92,8 @@ import UIKit
   }
   
   @objc func stopRecording() {
+    myAudioRecorderUIManager.changeBackgroundColor(UIColor.gray)
+    
     // Microphone monitoring is muted
     micBooster.gain = 0
     tape = recorder.audioFile!

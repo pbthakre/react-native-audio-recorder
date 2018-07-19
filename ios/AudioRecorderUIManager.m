@@ -23,9 +23,8 @@
 
   // Instantiate AudioRecorderUIView (parent and child)
   + (void) initialize {
-    myParentAudioRecorderUIView = [[AudioRecorderUIView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
-    myAudioRecorderUIView = [[AudioRecorderUIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-    
+    myParentAudioRecorderUIView = [[AudioRecorderUIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    myAudioRecorderUIView = [[AudioRecorderUIView alloc] initWithFrame:CGRectMake(-50, -250, 100, 100)];
     [myParentAudioRecorderUIView addSubview:myAudioRecorderUIView];
   }
 

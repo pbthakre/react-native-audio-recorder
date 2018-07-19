@@ -37,7 +37,7 @@
   }
 
   - (void)setUp {
-    self.backgroundColor = [UIColor redColor];
+    self.backgroundColor = [UIColor grayColor];
   }
 
   - (void)layoutSubviews {

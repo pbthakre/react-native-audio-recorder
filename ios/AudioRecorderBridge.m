@@ -16,17 +16,19 @@
 
 #import "AudioRecorderBridge.h"
 
-#import <reactnativeaudiorecorder-Swift.h>
+@interface RCT_EXTERN_MODULE(AudioRecorderController, NSObject)
+  RCT_EXTERN_METHOD(setupRecorder);
+  RCT_EXTERN_METHOD(startRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
+  RCT_EXTERN_METHOD(stopRecording);
+@end
 
 // Controls the communication between the Native part and the React part of our application
 @implementation AudioRecorderBridge
-  AudioRecorderViewController *myAudioRecorderViewController;
   AudioRecorderBridge *myAudioRecorderBridge;
 
   // Instantiate ViewController and AudioRecorderBridge
   + (void) initialize {
     myAudioRecorderBridge = [AudioRecorderBridge allocWithZone: nil];
-    myAudioRecorderViewController = [[AudioRecorderViewController alloc] init];
   }
 
   // Creates singleton of AudioRecorderBridge
@@ -39,35 +41,15 @@
     return sharedInstance;
   }
 
-  // Define which event(-names) are supported
-  - (NSArray<NSString *> *)supportedEvents {
-    return @[@"isRecorderEventSuccessfull", @"lastRecordedFileUrlChangedTo"];
-  }
-
-  - (void) isRecorderEventSuccessfull: (BOOL)success {
-    [self sendEventWithName:@"isRecorderEventSuccessfull" body:@{@"success": [NSNumber numberWithBool: success]}];
-  }
-
-  // Send the file url (location) of the last recorded file to React Native
-  - (void) lastRecordedFileUrlChangedTo: (NSString*)fileUrl {
-    [self sendEventWithName:@"lastRecordedFileUrlChangedTo" body:@{@"fileUrl": fileUrl}];
-  }
-
   // Make this native module available to React
   RCT_EXPORT_MODULE()
 
   // Make setupRecorder method available to React
-  RCT_EXPORT_METHOD(setupRecorder) {
-    [myAudioRecorderViewController setupRecorder];
-  }
+  RCT_EXTERN_METHOD(setupRecorder)
 
-  // Make startRecording available to React
-  RCT_EXPORT_METHOD(startRecording) {
-    [myAudioRecorderViewController startRecording];
-  }
+  // Make startRecording method available to React
+  RCT_EXTERN_METHOD(startRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 
   // Make stopRecording available to React
-  RCT_EXPORT_METHOD(stopRecording) {
-    [myAudioRecorderViewController stopRecording];
-  }
+  RCT_EXTERN_METHOD(stopRecording)
 @end

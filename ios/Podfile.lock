@@ -2,17 +2,21 @@ PODS:
   - AudioKit (4.3):
     - AudioKit/UI (= 4.3)
   - AudioKit/UI (4.3)
+  - SwiftyJSON (4.1.0)
 
 DEPENDENCIES:
   - AudioKit (~> 4.2)
+  - SwiftyJSON (~> 4.1)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AudioKit
+    - SwiftyJSON
 
 SPEC CHECKSUMS:
   AudioKit: 95bd2427c1afa7954d71b0c6195a09b87b7448bc
+  SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
 
-PODFILE CHECKSUM: 62b94ce6788d9da721dd3428cfe45d0baccf3700
+PODFILE CHECKSUM: c0d2cbea110f1dbed15729b3a75795aa2ac80b43
 
 COCOAPODS: 1.5.3

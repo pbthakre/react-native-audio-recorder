@@ -1,23 +1,17 @@
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeModules } from 'react-native';
 
-const { AudioRecorderBridge } = NativeModules;
-
-const audioRecorderBridgeEmitter = new NativeEventEmitter(AudioRecorderBridge);
+const { AudioRecorderController } = NativeModules;
 
 export default {
-  getEmitter() {
-    return audioRecorderBridgeEmitter;
-  },
-
   setupRecorder () {
-    return AudioRecorderBridge.setupRecorder();
+    return AudioRecorderController.setupRecorder();
   },
 
   startRecording() {
-    return AudioRecorderBridge.startRecording();
+    return AudioRecorderController.startRecording();
   },
 
   stopRecording() {
-    return AudioRecorderBridge.stopRecording();
+    return AudioRecorderController.stopRecording();
   }
 }

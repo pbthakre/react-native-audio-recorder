@@ -7,11 +7,14 @@
 //
 
 import Foundation
-import AudioKit
-import AudioKitUI
 import UIKit
 
-@objc open class AudioRecorderViewController : UIViewController {
+import AudioKit
+import AudioKitUI
+import SwiftyJSON
+
+@objc(AudioRecorderController)
+open class AudioRecorderController : NSObject {
   var micMixer: AKMixer!
   var recorder: AKNodeRecorder!
   var player: AKPlayer!
@@ -26,6 +29,7 @@ import UIKit
   // Access AudioRecorderBridge to send events to React
   let myAudioRecorderBridge: AudioRecorderBridge = AudioRecorderBridge();
   
+  // Access AudioRecorderUIManager to change native UI
   let myAudioRecorderUIManager: AudioRecorderUIManager = AudioRecorderUIManager();
   
   @objc func setupRecorder() {
@@ -68,8 +72,15 @@ import UIKit
     micBooster.gain = 0
   }
   
-  @objc func startRecording() {
+  @objc func startRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     myAudioRecorderUIManager.changeBackgroundColor(UIColor.red)
+    
+    // Result/Error - Response
+    var jsonArray: JSON = [
+      "success": true,
+      "error": "",
+      "value": ""
+    ]
     
     // Microphone will be monitored while recording
     // only if headphones are plugged
@@ -82,12 +93,14 @@ import UIKit
       try recorder.record();
       
       // Inform bridge/React about success
-      myAudioRecorderBridge.isRecorderEventSuccessfull(true);
+      resolve(jsonArray.rawString());
     } catch {
       print("Errored recording.")
       
       // Inform bridge/React about error
-      myAudioRecorderBridge.isRecorderEventSuccessfull(false);
+      jsonArray["success"] = false
+      jsonArray["error"].stringValue = error.localizedDescription
+      reject("Error", jsonArray.rawString(), error)
     }
   }
   
@@ -114,7 +127,7 @@ import UIKit
       
     if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
       // Send the file url of the last recorded file to react native
-      myAudioRecorderBridge.lastRecordedFileUrlChanged(to: documentsPathString + fileName)
+      // myAudioRecorderBridge.lastRecordedFileUrlChanged(to: documentsPathString + fileName)
     }
   }
 }

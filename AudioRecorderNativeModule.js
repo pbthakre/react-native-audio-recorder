@@ -13,5 +13,13 @@ export default {
 
   stopRecording() {
     return AudioRecorderController.stopRecording();
+  },
+
+  startPlaying() {
+    return AudioRecorderController.startPlaying();
+  },
+
+  stopPlaying() {
+    return AudioRecorderController.stopPlaying();
   }
 }

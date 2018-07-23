@@ -19,17 +19,12 @@ export default class App extends Component<Props> {
   state = {
     recorderRef: null,
     lastRecordedFileUrl: null,
-    isRecording: false
+    isRecording: false,
+    isPlaying: false
   };
 
   constructor(props) {
     super(props);
-  }
-
-  changeLastRecordedFileUrl(fileUrl) {
-    this.setState({
-      lastRecordedFileUrl: fileUrl
-    });
   }
 
   setRecorderRef = (ref) => {
@@ -38,23 +33,22 @@ export default class App extends Component<Props> {
     });
   };
 
-  renderRecorderStateText(isRecording) {
-    if (!isRecording) {
-      return 'Ready for recording';
-    } else {
+  renderRecorderStateText(isRecording, isPlaying) {
+    if (!isRecording && !isPlaying) {
+      return 'Ready for recording/playing';
+    } else if (isRecording && !isPlaying) {
       return 'Recording';
+    } else if (!isRecording && isPlaying) {
+      return 'Playing';
     }
   }
 
   render() {
-    const { recorderRef, isRecording } = this.state;
+    const { recorderRef, isRecording, isPlaying } = this.state;
 
     return (
       <View style={styles.container}>
-        <AudioRecorder
-          ref={ this.setRecorderRef }
-          lastRecordedFileUrl={this.changeLastRecordedFileUrl.bind(this)}
-        />
+        <AudioRecorder ref={ this.setRecorderRef } />
 
         {!!recorderRef &&
           <View style={styles.innerContainer}>
@@ -66,6 +60,7 @@ export default class App extends Component<Props> {
                   this.setState({isRecording: true});
                 }}
                 title={"Start Recording"}
+                disabled={isPlaying}
               />
             }
             {isRecording &&
@@ -78,7 +73,28 @@ export default class App extends Component<Props> {
                 title={"Stop Recording"}
               />
             }
-            <Text>Recorder State: {this.renderRecorderStateText(isRecording)}</Text>
+            {!isPlaying &&
+              <Button
+                style={styles.button}
+                onPress={() => {
+                  recorderRef.startPlaying();
+                  this.setState({isPlaying: true});
+                }}
+                title={"Start Playing"}
+                disabled={isRecording}
+              />
+            }
+            {isPlaying &&
+              <Button
+                style={styles.button}
+                onPress={() => {
+                  recorderRef.stopPlaying();
+                  this.setState({isPlaying: false});
+                }}
+                title={"Stop Playing"}
+              />
+            }
+            <Text>Recorder State: {this.renderRecorderStateText(isRecording, isPlaying)}</Text>
           </View>
         }
       </View>

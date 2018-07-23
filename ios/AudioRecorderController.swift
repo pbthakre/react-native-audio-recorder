@@ -32,6 +32,16 @@ open class AudioRecorderController : NSObject {
   // Access AudioRecorderUIManager to change native UI
   let myAudioRecorderUIManager: AudioRecorderUIManager = AudioRecorderUIManager();
   
+  // CallBack triggered when playing has ended
+  // Must be seipatched on the main queue as completionHandler
+  // will be triggered by a background thread
+  func playingEnded() {
+    DispatchQueue.main.async {
+      //self.setupUIForPlaying ()
+      print("Playing Ended")
+    }
+  }
+  
   @objc func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response
     var jsonArray: JSON = [
@@ -78,6 +88,16 @@ open class AudioRecorderController : NSObject {
     // Will set the level of microphone monitoring
     micBooster.gain = 0
     recorder = try? AKNodeRecorder(node: micMixer)
+    
+    if let file = recorder.audioFile {
+      player = AKPlayer(audioFile: file)
+    }
+    player.isLooping = true
+    player.completionHandler = playingEnded
+    
+    moogLadder = AKMoogLadder(player)
+    
+    mainMixer = AKMixer(moogLadder, micBooster)
     
     AudioKit.output = mainMixer
     do {
@@ -134,7 +154,7 @@ open class AudioRecorderController : NSObject {
     var jsonArray: JSON = [
       "success": true,
       "error": "",
-      "value": ["lastRecorderFilePath": ""]
+      "value": ["lastRecordedFilePath": ""]
     ]
     
     myAudioRecorderUIManager.changeBackgroundColor(UIColor.gray)
@@ -142,31 +162,61 @@ open class AudioRecorderController : NSObject {
     // Microphone monitoring is muted
     micBooster.gain = 0
     tape = recorder.audioFile!
+    player.load(audioFile: tape)
     
-    recorder.stop()
+    if let _ = player.audioFile?.duration {
+      recorder.stop()
       
-    let fileName = UUID().uuidString + ".m4a"
+      let fileName = UUID().uuidString + ".m4a"
       
-    tape.exportAsynchronously(name: fileName,
-                              baseDir: .documents,
-                              exportFormat: .m4a) {_, exportError in
-                                if let error = exportError {
-                                  print("Export Failed \(error)")
-                                  
-                                  // Inform bridge/React about error
-                                  jsonArray["success"] = false
-                                  jsonArray["error"].stringValue = error.localizedDescription
-                                  reject("Error", jsonArray.rawString(), error)
-                                } else {
-                                  print("Export succeeded")
-                                }
+      tape.exportAsynchronously(name: fileName,
+                                baseDir: .documents,
+                                exportFormat: .m4a) {_, exportError in
+                                  if let error = exportError {
+                                    print("Export Failed \(error)")
+                                    
+                                    // Inform bridge/React about error
+                                    jsonArray["success"] = false
+                                    jsonArray["error"].stringValue = error.localizedDescription
+                                    reject("Error", jsonArray.rawString(), error)
+                                  } else {
+                                    print("Export succeeded")
+                                  }
+      }
+      
+      if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+        // Set the file url of the last recorded file
+          jsonArray["value"]["lastRecordedFilePath"].stringValue = documentsPathString + fileName
+      }
     }
-      
-    if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-      // Set the file url of the last recorded file
-      // myAudioRecorderBridge.lastRecordedFileUrlChanged(to: documentsPathString + fileName)
-        jsonArray["value"]["lastRecordedFilePath"].stringValue = documentsPathString
-    }
+    
+    // Inform bridge/React about success
+    resolve(jsonArray.rawString());
+  }
+  
+  @objc func startPlaying(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+    // Result/Error - Response
+    var jsonArray: JSON = [
+      "success": true,
+      "error": "",
+      "value": ""
+    ]
+    
+    player.play()
+    
+    // Inform bridge/React about success
+    resolve(jsonArray.rawString());
+  }
+  
+  @objc func stopPlaying(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+    // Result/Error - Response
+    var jsonArray: JSON = [
+      "success": true,
+      "error": "",
+      "value": ""
+    ]
+    
+    player.stop()
     
     // Inform bridge/React about success
     resolve(jsonArray.rawString());

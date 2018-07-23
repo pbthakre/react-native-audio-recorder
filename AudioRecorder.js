@@ -11,7 +11,6 @@ type Props = {};
 export default class AudioRecorder extends Component<Props> {
   constructor(props) {
     super(props);
-    this.lastRecordedFileUrlChangedSubscription = null;
   }
 
   async startRecording() {
@@ -34,6 +33,26 @@ export default class AudioRecorder extends Component<Props> {
       })
   };
 
+  async startPlaying() {
+    await AudioRecorderNative.startPlaying()
+      .then((result) => {
+        console.log(result); // "Stuff worked!"
+      })
+      .catch(error => {
+        console.log(error.toString());
+      })
+  };
+
+  async stopPlaying() {
+    await AudioRecorderNative.stopPlaying()
+      .then((result) => {
+        console.log(result); // "Stuff worked!"
+      })
+      .catch(error => {
+        console.log(error.toString());
+      })
+  };
+
   componentDidMount = async () => {
     await AudioRecorderNative.setupRecorder()
       .then((result) => {
@@ -43,10 +62,6 @@ export default class AudioRecorder extends Component<Props> {
         console.log(error.toString());
       });
   };
-
-  componentWillUnmount() {
-    // this.lastRecordedFileUrlChangedSubscription.remove();
-  }
 
   render() {
     return (

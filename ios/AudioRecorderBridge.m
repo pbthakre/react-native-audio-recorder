@@ -20,6 +20,8 @@
   RCT_EXTERN_METHOD(setupRecorder: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
   RCT_EXTERN_METHOD(startRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
   RCT_EXTERN_METHOD(stopRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
+  RCT_EXTERN_METHOD(startPlaying: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
+  RCT_EXTERN_METHOD(stopPlaying: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 @end
 
 // Controls the communication between the Native part and the React part of our application
@@ -52,4 +54,10 @@
 
   // Make stopRecording available to React
   RCT_EXTERN_METHOD(stopRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+
+  // Make startPlaying available to React
+  RCT_EXTERN_METHOD(startPlaying: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+
+  // Make stopPlaying available to React
+  RCT_EXTERN_METHOD(stopPlaying: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 @end

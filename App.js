@@ -19,12 +19,14 @@ export default class App extends Component<Props> {
   state = {
     recorderRef: null,
     lastRecordedFileUrl: null,
+    isSetup: false,
     isRecording: false,
     isPlaying: false
   };
 
   constructor(props) {
     super(props);
+    this.recorderRef = React.createRef();
   }
 
   setRecorderRef = (ref) => {
@@ -33,8 +35,10 @@ export default class App extends Component<Props> {
     });
   };
 
-  renderRecorderStateText(isRecording, isPlaying) {
-    if (!isRecording && !isPlaying) {
+  renderRecorderStateText(isSetup, isRecording, isPlaying) {
+    if (!isSetup) {
+      return 'Not ready! Setup ...';
+    } else if (!isRecording && !isPlaying) {
       return 'Ready for recording/playing';
     } else if (isRecording && !isPlaying) {
       return 'Recording';
@@ -43,58 +47,108 @@ export default class App extends Component<Props> {
     }
   }
 
+  componentDidMount = () => {
+    this.recorderRef.setupRecorder()
+      .then((result) => {
+        const parsedResult = JSON.parse(result);
+
+        if (parsedResult['success']) {
+          this.setState({isSetup: true});
+        }
+      })
+      .catch(error => {
+        console.log(error.toString());
+      });
+  };
+
   render() {
-    const { recorderRef, isRecording, isPlaying } = this.state;
+    const { recorderRef, isSetup, isRecording, isPlaying } = this.state;
 
     return (
       <View style={styles.container}>
-        <AudioRecorder ref={ this.setRecorderRef } />
+        <AudioRecorder ref={ (ref) => this.recorderRef = ref} />
 
-        {!!recorderRef &&
+        {!!this.recorderRef &&
           <View style={styles.innerContainer}>
-            {!isRecording &&
+            {isSetup && !isRecording &&
               <Button
                 style={styles.button}
                 onPress={() => {
-                  recorderRef.startRecording();
-                  this.setState({isRecording: true});
+                  recorderRef.startRecording()
+                    .then((result) => {
+                      const parsedResult = JSON.parse(result);
+
+                      if (parsedResult['success']) {
+                        this.setState({isRecording: true});
+                      }
+                    })
+                    .catch(error => {
+                      console.log(error.toString());
+                    })
                 }}
                 title={"Start Recording"}
                 disabled={isPlaying}
               />
             }
-            {isRecording &&
+            {isSetup && isRecording &&
               <Button
                 style={styles.button}
                 onPress={() => {
-                    recorderRef.stopRecording();
-                    this.setState({isRecording: false});
+                  recorderRef.stopRecording()
+                    .then((result) => {
+                      const parsedResult = JSON.parse(result);
+
+                      if (parsedResult['success']) {
+                        this.setState({isRecording: false});
+                      }
+                    })
+                    .catch(error => {
+                      console.log(error.toString());
+                    });
                 }}
                 title={"Stop Recording"}
               />
             }
-            {!isPlaying &&
+            {isSetup && !isPlaying &&
               <Button
                 style={styles.button}
                 onPress={() => {
-                  recorderRef.startPlaying();
-                  this.setState({isPlaying: true});
+                  recorderRef.startPlaying()
+                    .then((result) => {
+                      const parsedResult = JSON.parse(result);
+
+                      if (parsedResult['success']) {
+                        this.setState({isPlaying: true});
+                      }
+                    })
+                    .catch(error => {
+                      console.log(error.toString());
+                    });
                 }}
                 title={"Start Playing"}
                 disabled={isRecording}
               />
             }
-            {isPlaying &&
+            {isSetup && isPlaying &&
               <Button
                 style={styles.button}
                 onPress={() => {
-                  recorderRef.stopPlaying();
-                  this.setState({isPlaying: false});
+                  recorderRef.stopPlaying()
+                    .then((result) => {
+                      const parsedResult = JSON.parse(result);
+
+                      if (parsedResult['success']) {
+                        this.setState({isPlaying: false});
+                      }
+                    })
+                    .catch(error => {
+                      console.log(error.toString());
+                    });
                 }}
                 title={"Stop Playing"}
               />
             }
-            <Text>Recorder State: {this.renderRecorderStateText(isRecording, isPlaying)}</Text>
+            <Text>Recorder State: {this.renderRecorderStateText(isSetup, isRecording, isPlaying)}</Text>
           </View>
         }
       </View>

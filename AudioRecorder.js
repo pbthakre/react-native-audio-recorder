@@ -13,55 +13,24 @@ export default class AudioRecorder extends Component<Props> {
     super(props);
   }
 
-  async startRecording() {
-    await AudioRecorderNative.startRecording()
-      .then((result) => {
-        console.log(result);
-        return result;
-      })
-      .catch(error => {
-        console.log(error.toString());
-      })
+  setupRecorder() {
+    return AudioRecorderNative.setupRecorder();
   };
 
-  async stopRecording() {
-    await AudioRecorderNative.stopRecording()
-      .then((result) => {
-        console.log(result);
-      })
-      .catch(error => {
-        console.log(error.toString());
-      })
+  startRecording() {
+    return AudioRecorderNative.startRecording();
   };
 
-  async startPlaying() {
-    await AudioRecorderNative.startPlaying()
-      .then((result) => {
-        console.log(result);
-      })
-      .catch(error => {
-        console.log(error.toString());
-      })
+  stopRecording() {
+    return AudioRecorderNative.stopRecording();
   };
 
-  async stopPlaying() {
-    await AudioRecorderNative.stopPlaying()
-      .then((result) => {
-        console.log(result);
-      })
-      .catch(error => {
-        console.log(error.toString());
-      })
+  startPlaying() {
+    return AudioRecorderNative.startPlaying();
   };
 
-  componentDidMount = async () => {
-    await AudioRecorderNative.setupRecorder()
-      .then((result) => {
-        console.log(result);
-      })
-      .catch(error => {
-        console.log(error.toString());
-      });
+  stopPlaying() {
+    return AudioRecorderNative.stopPlaying();
   };
 
   render() {

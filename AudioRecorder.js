@@ -16,7 +16,8 @@ export default class AudioRecorder extends Component<Props> {
   async startRecording() {
     await AudioRecorderNative.startRecording()
       .then((result) => {
-        console.log(result); // "Stuff worked!"
+        console.log(result);
+        return result;
       })
       .catch(error => {
         console.log(error.toString());
@@ -26,7 +27,7 @@ export default class AudioRecorder extends Component<Props> {
   async stopRecording() {
     await AudioRecorderNative.stopRecording()
       .then((result) => {
-        console.log(result); // "Stuff worked!"
+        console.log(result);
       })
       .catch(error => {
         console.log(error.toString());
@@ -36,7 +37,7 @@ export default class AudioRecorder extends Component<Props> {
   async startPlaying() {
     await AudioRecorderNative.startPlaying()
       .then((result) => {
-        console.log(result); // "Stuff worked!"
+        console.log(result);
       })
       .catch(error => {
         console.log(error.toString());
@@ -46,7 +47,7 @@ export default class AudioRecorder extends Component<Props> {
   async stopPlaying() {
     await AudioRecorderNative.stopPlaying()
       .then((result) => {
-        console.log(result); // "Stuff worked!"
+        console.log(result);
       })
       .catch(error => {
         console.log(error.toString());

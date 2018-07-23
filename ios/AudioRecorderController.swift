@@ -191,6 +191,8 @@ open class AudioRecorderController : NSObject {
       "value": ""
     ]
     
+    myAudioRecorderUIManager.changeBackgroundColor(UIColor.green)
+    
     player.play()
     
     // Inform bridge/React about success
@@ -204,6 +206,8 @@ open class AudioRecorderController : NSObject {
       "error": "",
       "value": ""
     ]
+    
+    myAudioRecorderUIManager.changeBackgroundColor(UIColor.gray)
     
     player.stop()
     

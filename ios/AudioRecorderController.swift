@@ -32,16 +32,6 @@ open class AudioRecorderController : NSObject {
   // Access AudioRecorderUIManager to change native UI
   let myAudioRecorderUIManager: AudioRecorderUIManager = AudioRecorderUIManager();
   
-  // CallBack triggered when playing has ended
-  // Must be seipatched on the main queue as completionHandler
-  // will be triggered by a background thread
-  func playingEnded() {
-    DispatchQueue.main.async {
-      //self.setupUIForPlaying ()
-      print("Playing Ended")
-    }
-  }
-  
   @objc func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response
     var jsonArray: JSON = [
@@ -93,7 +83,6 @@ open class AudioRecorderController : NSObject {
       player = AKPlayer(audioFile: file)
     }
     player.isLooping = true
-    player.completionHandler = playingEnded
     
     moogLadder = AKMoogLadder(player)
     

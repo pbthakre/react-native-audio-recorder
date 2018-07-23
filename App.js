@@ -74,7 +74,7 @@ export default class App extends Component<Props> {
               <Button
                 style={styles.button}
                 onPress={() => {
-                  recorderRef.startRecording()
+                  this.recorderRef.startRecording()
                     .then((result) => {
                       const parsedResult = JSON.parse(result);
 
@@ -94,7 +94,7 @@ export default class App extends Component<Props> {
               <Button
                 style={styles.button}
                 onPress={() => {
-                  recorderRef.stopRecording()
+                  this.recorderRef.stopRecording()
                     .then((result) => {
                       const parsedResult = JSON.parse(result);
 
@@ -113,7 +113,7 @@ export default class App extends Component<Props> {
               <Button
                 style={styles.button}
                 onPress={() => {
-                  recorderRef.startPlaying()
+                  this.recorderRef.startPlaying()
                     .then((result) => {
                       const parsedResult = JSON.parse(result);
 
@@ -133,7 +133,7 @@ export default class App extends Component<Props> {
               <Button
                 style={styles.button}
                 onPress={() => {
-                  recorderRef.stopPlaying()
+                  this.recorderRef.stopPlaying()
                     .then((result) => {
                       const parsedResult = JSON.parse(result);
 

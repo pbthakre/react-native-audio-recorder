@@ -32,12 +32,24 @@ open class AudioRecorderController : NSObject {
   // Access AudioRecorderUIManager to change native UI
   let myAudioRecorderUIManager: AudioRecorderUIManager = AudioRecorderUIManager();
   
-  @objc func setupRecorder() {
+  @objc func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+    // Result/Error - Response
+    var jsonArray: JSON = [
+      "success": true,
+      "error": "",
+      "value": ""
+    ]
+    
     // Stop AudioKit to prevent errors of duplicate initialization
     do {
       try AudioKit.stop()
     } catch {
       AKLog("AudioKit did not stop!")
+      
+      // Inform bridge/React about error
+      jsonArray["success"] = false
+      jsonArray["error"].stringValue = error.localizedDescription
+      reject("Error", jsonArray.rawString(), error)
     }
     
     // Clean tempFiles !
@@ -50,6 +62,11 @@ open class AudioRecorderController : NSObject {
       try AKSettings.setSession(category: .playAndRecord, with: .allowBluetoothA2DP)
     } catch {
       AKLog("Could not set session category.")
+      
+      // Inform bridge/React about error
+      jsonArray["success"] = false
+      jsonArray["error"].stringValue = error.localizedDescription
+      reject("Error", jsonArray.rawString(), error)
     }
     
     AKSettings.defaultToSpeaker = true
@@ -67,20 +84,28 @@ open class AudioRecorderController : NSObject {
       try AudioKit.start()
     } catch {
       AKLog("AudioKit did not start!")
+      
+      // Inform bridge/React about error
+      jsonArray["success"] = false
+      jsonArray["error"].stringValue = error.localizedDescription
+      reject("Error", jsonArray.rawString(), error)
     }
     
     micBooster.gain = 0
+    
+    // Inform bridge/React about success
+    resolve(jsonArray.rawString());
   }
   
   @objc func startRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
-    myAudioRecorderUIManager.changeBackgroundColor(UIColor.red)
-    
     // Result/Error - Response
     var jsonArray: JSON = [
       "success": true,
       "error": "",
       "value": ""
     ]
+    
+    myAudioRecorderUIManager.changeBackgroundColor(UIColor.red)
     
     // Microphone will be monitored while recording
     // only if headphones are plugged
@@ -104,7 +129,14 @@ open class AudioRecorderController : NSObject {
     }
   }
   
-  @objc func stopRecording() {
+  @objc func stopRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
+    // Result/Error - Response
+    var jsonArray: JSON = [
+      "success": true,
+      "error": "",
+      "value": ["lastRecorderFilePath": ""]
+    ]
+    
     myAudioRecorderUIManager.changeBackgroundColor(UIColor.gray)
     
     // Microphone monitoring is muted
@@ -120,14 +152,23 @@ open class AudioRecorderController : NSObject {
                               exportFormat: .m4a) {_, exportError in
                                 if let error = exportError {
                                   print("Export Failed \(error)")
+                                  
+                                  // Inform bridge/React about error
+                                  jsonArray["success"] = false
+                                  jsonArray["error"].stringValue = error.localizedDescription
+                                  reject("Error", jsonArray.rawString(), error)
                                 } else {
                                   print("Export succeeded")
                                 }
     }
       
     if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-      // Send the file url of the last recorded file to react native
+      // Set the file url of the last recorded file
       // myAudioRecorderBridge.lastRecordedFileUrlChanged(to: documentsPathString + fileName)
+        jsonArray["value"]["lastRecordedFilePath"].stringValue = documentsPathString
     }
+    
+    // Inform bridge/React about success
+    resolve(jsonArray.rawString());
   }
 }

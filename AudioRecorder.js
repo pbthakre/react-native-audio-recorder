@@ -24,12 +24,24 @@ export default class AudioRecorder extends Component<Props> {
       })
   };
 
-  stopRecording = () => {
-    AudioRecorderNative.stopRecording();
+  async stopRecording() {
+    await AudioRecorderNative.stopRecording()
+      .then((result) => {
+        console.log(result); // "Stuff worked!"
+      })
+      .catch(error => {
+        console.log(error.toString());
+      })
   };
 
   componentDidMount = async () => {
-    AudioRecorderNative.setupRecorder();
+    await AudioRecorderNative.setupRecorder()
+      .then((result) => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.log(error.toString());
+      });
   };
 
   componentWillUnmount() {

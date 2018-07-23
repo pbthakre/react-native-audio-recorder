@@ -17,16 +17,16 @@
 #import "AudioRecorderBridge.h"
 
 @interface RCT_EXTERN_MODULE(AudioRecorderController, NSObject)
-  RCT_EXTERN_METHOD(setupRecorder);
+  RCT_EXTERN_METHOD(setupRecorder: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
   RCT_EXTERN_METHOD(startRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
-  RCT_EXTERN_METHOD(stopRecording);
+  RCT_EXTERN_METHOD(stopRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 @end
 
 // Controls the communication between the Native part and the React part of our application
 @implementation AudioRecorderBridge
   AudioRecorderBridge *myAudioRecorderBridge;
 
-  // Instantiate ViewController and AudioRecorderBridge
+  // Instantiate AudioRecorderBridge
   + (void) initialize {
     myAudioRecorderBridge = [AudioRecorderBridge allocWithZone: nil];
   }
@@ -45,11 +45,11 @@
   RCT_EXPORT_MODULE()
 
   // Make setupRecorder method available to React
-  RCT_EXTERN_METHOD(setupRecorder)
+  RCT_EXTERN_METHOD(setupRecorder: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 
   // Make startRecording method available to React
   RCT_EXTERN_METHOD(startRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 
   // Make stopRecording available to React
-  RCT_EXTERN_METHOD(stopRecording)
+  RCT_EXTERN_METHOD(stopRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 @end

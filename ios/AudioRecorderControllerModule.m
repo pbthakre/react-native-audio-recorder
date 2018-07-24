@@ -3,7 +3,7 @@
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 04.07.18.
-//  Copyright © 2018 Crowdio. All rights reserved.
+//  Copyright © 2018 Crowdio GmbH. All rights reserved.
 //
 
 #if __has_include(<React/RCTBridge.h>)
@@ -14,6 +14,7 @@
 #import “React/RCTBridge.h” // Required when used as a Pod in a Swift project
 #endif
 
+// Represents the bridge which enables access to AudioRecorderController in React Native
 @interface RCT_EXTERN_MODULE(AudioRecorderController, NSObject)
   RCT_EXTERN_METHOD(setupRecorder: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
   RCT_EXTERN_METHOD(startRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);

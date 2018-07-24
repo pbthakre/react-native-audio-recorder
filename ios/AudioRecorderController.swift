@@ -3,7 +3,7 @@
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 05.07.18.
-//  Copyright © 2018 Crowdio. All rights reserved.
+//  Copyright © 2018 Crowdio GmbH. All rights reserved.
 //
 
 import Foundation
@@ -13,6 +13,7 @@ import AudioKit
 import AudioKitUI
 import SwiftyJSON
 
+// Represents the AudioRecorderController
 @objc(AudioRecorderController)
 open class AudioRecorderController : NSObject {
   var micMixer: AKMixer!

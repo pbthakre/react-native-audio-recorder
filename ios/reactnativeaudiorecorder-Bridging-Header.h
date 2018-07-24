@@ -1,4 +1,12 @@
 //
+//  AudioRecorderBridge.m
+//  reactnativeaudiorecorder
+//
+//  Created by Michael Andorfer on 04.07.18.
+//  Copyright © 2018 Crowdio GmbH. All rights reserved.
+//
+
+//
 //  Use this file to import your target's public headers that you would like to expose to Swift.
 //
 

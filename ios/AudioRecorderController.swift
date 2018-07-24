@@ -114,8 +114,8 @@ open class AudioRecorderController : NSObject {
     micMixer = AKMixer(mic)
     micBooster = AKBooster(micMixer)
     
-    frequencyTracker = AKFrequencyTracker.init(mic, hopSize: 200, peakCount: 2000)
-    silence = AKBooster(frequencyTracker, gain: 0)
+    // frequencyTracker = AKFrequencyTracker.init(mic, hopSize: 200, peakCount: 2000)
+    // silence = AKBooster(frequencyTracker, gain: 0)
     
     // Will set the level of microphone monitoring
     micBooster.gain = 0

@@ -1,14 +1,18 @@
 import React, { Component } from 'react'
-import { requireNativeComponent } from 'react-native'
+import { requireNativeComponent, Dimensions, StyleSheet } from 'react-native'
 
-const AudioRecorderUI = requireNativeComponent('AudioRecorderUI', null);
+const AudioRecorderView = requireNativeComponent('AudioRecorderView', AudioRecorderUIView);
 
 export default class AudioRecorderUIView extends Component {
   render () {
-    return <AudioRecorderUI />
+    return <AudioRecorderView style={styles.recorder}/>
   }
 }
 
-AudioRecorderUIView.propTypes = {
-  //exampleProp: React.PropTypes.any
-}
+const styles = StyleSheet.create({
+  recorder: {
+    width: Dimensions.get('window').width,
+    height: "20%",
+    backgroundColor: 'red'
+  }
+});

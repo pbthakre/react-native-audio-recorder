@@ -8,6 +8,7 @@
 
 import UIKit
 
+// Represents the our native ui (view) component
 class AudioRecorderView: UIView {
   override init(frame: CGRect) {
     super.init(frame: frame)

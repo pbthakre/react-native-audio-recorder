@@ -16,5 +16,7 @@
 
 #import <React/RCTViewManager.h>
 
+// Represents the bridge which enables access to AudioRecorderView(Manager) in React Native
 @interface RCT_EXTERN_MODULE(AudioRecorderViewManager, RCTViewManager)
+
 @end

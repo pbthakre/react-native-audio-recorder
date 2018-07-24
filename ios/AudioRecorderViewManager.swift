@@ -8,6 +8,7 @@
 
 import Foundation
 
+// Represents the AudioRecorderViewManager which manages our AudioRecorderView Module
 @objc(AudioRecorderViewManager)
 class AudioRecorderViewManager : RCTViewManager {
   override func view() -> UIView! {

@@ -24,13 +24,52 @@ open class AudioRecorderController : NSObject {
   var delay: AKDelay!
   var mainMixer: AKMixer!
   
+//  var frequencyTracker: AKFrequencyTracker!
+//  var silence: AKBooster!
+  
+  var audioInputPlot: EZAudioPlot!
+  
   let mic = AKMicrophone()
   
-  // Access AudioRecorderBridge to send events to React
-  let myAudioRecorderBridge: AudioRecorderBridge = AudioRecorderBridge();
-  
-  // Access AudioRecorderUIManager to change native UI
-  let myAudioRecorderUIManager: AudioRecorderUIManager = AudioRecorderUIManager();
+//  func setupPlot() {
+//    let plot = AKNodeOutputPlot(mic, frame: audioInputPlot.bounds)
+//    plot.plotType = .rolling
+//    plot.shouldFill = true
+//    plot.shouldMirror = true
+//    plot.color = UIColor.blue
+//    audioInputPlot.addSubview(plot)
+//  }
+//  
+//  func updateUI() {
+//    var noteFrequencies = Array<Float>()
+//
+//    if frequencyTracker.amplitude > 0.1 {
+//      // frequencyLabel.text = String(format: "%0.1f", tracker.frequency)
+//
+//      var frequency = Float(frequencyTracker.frequency)
+//      while (frequency > Float(noteFrequencies[noteFrequencies.count-1])) {
+//        frequency = frequency / 2.0
+//      }
+//      while (frequency < Float(noteFrequencies[0])) {
+//        frequency = frequency * 2.0
+//      }
+//
+//      var minDistance: Float = 10000.0
+//      var index = 0
+//
+//      for i in 0..<noteFrequencies.count {
+//        let distance = fabsf(Float(noteFrequencies[i]) - frequency)
+//        if (distance < minDistance){
+//          index = i
+//          minDistance = distance
+//        }
+//      }
+//      let octave = Int(log2f(Float(frequencyTracker.frequency) / frequency))
+//      // noteNameWithSharpsLabel.text = "\(noteNamesWithSharps[index])\(octave)"
+//      // noteNameWithFlatsLabel.text = "\(noteNamesWithFlats[index])\(octave)"
+//    }
+//    // amplitudeLabel.text = String(format: "%0.2f", tracker.amplitude)
+//  }
   
   @objc func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response
@@ -75,6 +114,9 @@ open class AudioRecorderController : NSObject {
     micMixer = AKMixer(mic)
     micBooster = AKBooster(micMixer)
     
+    frequencyTracker = AKFrequencyTracker.init(mic, hopSize: 200, peakCount: 2000)
+    silence = AKBooster(frequencyTracker, gain: 0)
+    
     // Will set the level of microphone monitoring
     micBooster.gain = 0
     recorder = try? AKNodeRecorder(node: micMixer)
@@ -114,8 +156,6 @@ open class AudioRecorderController : NSObject {
       "value": ""
     ]
     
-    myAudioRecorderUIManager.changeBackgroundColor(UIColor.red)
-    
     // Microphone will be monitored while recording
     // only if headphones are plugged
     if AKSettings.headPhonesPlugged {
@@ -145,8 +185,6 @@ open class AudioRecorderController : NSObject {
       "error": "",
       "value": ["lastRecordedFilePath": ""]
     ]
-    
-    myAudioRecorderUIManager.changeBackgroundColor(UIColor.gray)
     
     // Microphone monitoring is muted
     micBooster.gain = 0
@@ -191,8 +229,6 @@ open class AudioRecorderController : NSObject {
       "value": ""
     ]
     
-    myAudioRecorderUIManager.changeBackgroundColor(UIColor.green)
-    
     player.play()
     
     // Inform bridge/React about success
@@ -206,8 +242,6 @@ open class AudioRecorderController : NSObject {
       "error": "",
       "value": ""
     ]
-    
-    myAudioRecorderUIManager.changeBackgroundColor(UIColor.gray)
     
     player.stop()
     

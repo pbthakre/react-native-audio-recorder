@@ -2,9 +2,8 @@
 //  Use this file to import your target's public headers that you would like to expose to Swift.
 //
 
-// Enables AudioRecorderViewController Swift class to access our Objective-C AudioRecorderBridge class
+// Enables AudioRecorderController Swift class to access our Objective-C AudioRecorderBridge class
 #import "AudioRecorderBridge.h"
-#import "AudioRecorderUIManager.h"
 
 #if __has_include(<React/RCTBridgeModule.h>)
 #import <React/RCTBridgeModule.h>

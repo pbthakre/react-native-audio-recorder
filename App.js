@@ -17,8 +17,6 @@ import AudioRecorder from './AudioRecorder';
 type Props = {};
 export default class App extends Component<Props> {
   state = {
-    recorderRef: null,
-    lastRecordedFileUrl: null,
     isSetup: false,
     isRecording: false,
     isPlaying: false
@@ -28,12 +26,6 @@ export default class App extends Component<Props> {
     super(props);
     this.recorderRef = React.createRef();
   }
-
-  setRecorderRef = (ref) => {
-    this.setState(function () {
-      return { recorderRef: ref };
-    });
-  };
 
   renderRecorderStateText(isSetup, isRecording, isPlaying) {
     if (!isSetup) {
@@ -62,7 +54,7 @@ export default class App extends Component<Props> {
   };
 
   render() {
-    const { recorderRef, isSetup, isRecording, isPlaying } = this.state;
+    const { isSetup, isRecording, isPlaying } = this.state;
 
     return (
       <View style={styles.container}>

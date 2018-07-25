@@ -25,8 +25,8 @@ class AudioRecorderViewManager : RCTViewManager {
   var delay: AKDelay!
   var mainMixer: AKMixer!
   
-  //  var frequencyTracker: AKFrequencyTracker!
-  //  var silence: AKBooster!
+  var frequencyTracker: AKFrequencyTracker!
+  var silence: AKBooster!
   
   var audioInputPlot: EZAudioPlot!
   
@@ -50,45 +50,50 @@ class AudioRecorderViewManager : RCTViewManager {
     return false
   }
 
-//  func setupPlot() {
-//    let plot = AKNodeOutputPlot(mic, frame: audioInputPlot.bounds)
-//    plot.plotType = .rolling
-//    plot.shouldFill = true
-//    plot.shouldMirror = true
-//    plot.color = UIColor.blue
-//    audioInputPlot.addSubview(plot)
-//  }
-//
-//  func updateUI() {
-//    var noteFrequencies = Array<Float>()
-//
-//    if frequencyTracker.amplitude > 0.1 {
-//      // frequencyLabel.text = String(format: "%0.1f", tracker.frequency)
-//
-//      var frequency = Float(frequencyTracker.frequency)
-//      while (frequency > Float(noteFrequencies[noteFrequencies.count-1])) {
-//        frequency = frequency / 2.0
-//      }
-//      while (frequency < Float(noteFrequencies[0])) {
-//        frequency = frequency * 2.0
-//      }
-//
-//      var minDistance: Float = 10000.0
-//      var index = 0
-//
-//      for i in 0..<noteFrequencies.count {
-//        let distance = fabsf(Float(noteFrequencies[i]) - frequency)
-//        if (distance < minDistance){
-//          index = i
-//          minDistance = distance
-//        }
-//      }
-//      let octave = Int(log2f(Float(frequencyTracker.frequency) / frequency))
-//      // noteNameWithSharpsLabel.text = "\(noteNamesWithSharps[index])\(octave)"
-//      // noteNameWithFlatsLabel.text = "\(noteNamesWithFlats[index])\(octave)"
-//    }
-//    // amplitudeLabel.text = String(format: "%0.2f", tracker.amplitude)
-//  }
+  func setupPlot() {
+    DispatchQueue.main.async {
+      self.audioInputPlot = EZAudioPlot(frame: CGRect(x: 10, y: 100, width: 300, height: 200))
+      self.currentView?.addSubview(self.audioInputPlot)
+      
+      let plot = AKNodeOutputPlot(self.mic, frame: self.audioInputPlot.bounds)
+      plot.plotType = .rolling
+      plot.shouldFill = true
+      plot.shouldMirror = true
+      plot.color = UIColor.blue
+      self.audioInputPlot.addSubview(plot)
+    }
+  }
+
+  func updateUI() {
+    var noteFrequencies = Array<Float>()
+
+    if frequencyTracker.amplitude > 0.1 {
+      // frequencyLabel.text = String(format: "%0.1f", tracker.frequency)
+
+      var frequency = Float(frequencyTracker.frequency)
+      while (frequency > Float(noteFrequencies[noteFrequencies.count-1])) {
+        frequency = frequency / 2.0
+      }
+      while (frequency < Float(noteFrequencies[0])) {
+        frequency = frequency * 2.0
+      }
+
+      var minDistance: Float = 10000.0
+      var index = 0
+
+      for i in 0..<noteFrequencies.count {
+        let distance = fabsf(Float(noteFrequencies[i]) - frequency)
+        if (distance < minDistance){
+          index = i
+          minDistance = distance
+        }
+      }
+      let octave = Int(log2f(Float(frequencyTracker.frequency) / frequency))
+      // noteNameWithSharpsLabel.text = "\(noteNamesWithSharps[index])\(octave)"
+      // noteNameWithFlatsLabel.text = "\(noteNamesWithFlats[index])\(octave)"
+    }
+    // amplitudeLabel.text = String(format: "%0.2f", tracker.amplitude)
+  }
 
   @objc func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response
@@ -162,6 +167,8 @@ class AudioRecorderViewManager : RCTViewManager {
     }
     
     micBooster.gain = 0
+    
+    setupPlot()
     
     // Inform bridge/React about success
     resolve(jsonArray.rawString());

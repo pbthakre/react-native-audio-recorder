@@ -1,25 +1,25 @@
 import { NativeModules } from 'react-native';
 
-const { AudioRecorderController } = NativeModules;
+const { AudioRecorderViewManager } = NativeModules;
 
 export default {
   setupRecorder () {
-    return AudioRecorderController.setupRecorder();
+    return AudioRecorderViewManager.setupRecorder();
   },
 
   startRecording() {
-    return AudioRecorderController.startRecording();
+    return AudioRecorderViewManager.startRecording();
   },
 
   stopRecording() {
-    return AudioRecorderController.stopRecording();
+    return AudioRecorderViewManager.stopRecording();
   },
 
   startPlaying() {
-    return AudioRecorderController.startPlaying();
+    return AudioRecorderViewManager.startPlaying();
   },
 
   stopPlaying() {
-    return AudioRecorderController.stopPlaying();
+    return AudioRecorderViewManager.stopPlaying();
   }
 }

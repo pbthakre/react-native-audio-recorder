@@ -12,19 +12,12 @@ import AudioKitUI
 
 // Represents the our native ui (view) component
 class AudioRecorderView: EZAudioPlot {
-  var audioInputPlot: EZAudioPlot!
+  var plot : AKNodeOutputPlot
   let mic = AKMicrophone()
   
   private override init(frame: CGRect) {
-    super.init(frame: frame)
-    
-    self.frame = frame
-    
-    // Set width to use 100% (relative)
-    self.autoresizingMask = [.flexibleWidth]
-
     // Create the WaveForm
-    let plot = AKNodeOutputPlot(self.mic, frame: frame)
+    plot = AKNodeOutputPlot(self.mic, frame: frame)
     
     // Set width and height to use 100 % (relative)
     plot.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -42,6 +35,15 @@ class AudioRecorderView: EZAudioPlot {
     
     // Set the scaling factor of the line
     plot.gain = 5
+    
+    // Call super constructor
+    super.init(frame: frame)
+    
+    // Assign frame
+    self.frame = frame
+    
+    // Set width to use 100% (relative)
+    self.autoresizingMask = [.flexibleWidth]
     
     // Add the view
     self.addSubview(plot)

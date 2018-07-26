@@ -37,9 +37,8 @@ class AudioRecorderViewManager : RCTViewManager {
   // Represents the booster which lets control the microphone input properties such as volume
   var micBooster: AKBooster!
   
-  
+  // Represents the filter node
   var moogLadder: AKMoogLadder!
-  var delay: AKDelay!
   
   // Represents the view
   var currentView : AudioRecorderView?
@@ -116,8 +115,10 @@ class AudioRecorderViewManager : RCTViewManager {
     // Player should play the audio file again after finishing
     player.isLooping = true
     
+    // Apply filter which enables to manipulate the signal
     moogLadder = AKMoogLadder(player)
     
+    // Create a mixer which combines our filtered node and our microphone node
     mainMixer = AKMixer(moogLadder, micBooster)
     
     // Set the signal of the main mixer as output signal

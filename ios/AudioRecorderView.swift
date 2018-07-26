@@ -12,30 +12,9 @@ import AudioKitUI
 
 // Represents the our native ui (view) component
 class AudioRecorderView: EZAudioPlot {
-  var plot : AKNodeOutputPlot
-  let mic = AKMicrophone()
+  var plot : AKNodeOutputPlot = AKNodeOutputPlot(AKMixer.init(), frame: CGRect.init())
   
   private override init(frame: CGRect) {
-    // Create the WaveForm
-    plot = AKNodeOutputPlot(self.mic, frame: frame)
-    
-    // Set width and height to use 100 % (relative)
-    plot.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    
-    // Set plot properties to generate waveform like plot
-    plot.plotType = .rolling
-    plot.shouldFill = true
-    plot.shouldMirror = true
-    
-    // Set the color of the line
-    plot.color = UIColor.red
-    
-    // Set the background color of the plot
-    plot.backgroundColor = UIColor.black
-    
-    // Set the scaling factor of the line
-    plot.gain = 5
-    
     // Call super constructor
     super.init(frame: frame)
     
@@ -44,9 +23,33 @@ class AudioRecorderView: EZAudioPlot {
     
     // Set width to use 100% (relative)
     self.autoresizingMask = [.flexibleWidth]
+  }
+  
+  func setupWaveForm(mic: AKMicrophone) {
+    DispatchQueue.main.async {
+      // Create the WaveForm
+      self.plot = AKNodeOutputPlot(mic, frame: self.frame)
     
-    // Add the view
-    self.addSubview(plot)
+      // Set width and height to use 100 % (relative)
+      self.plot.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    
+      // Set plot properties to generate waveform like plot
+      self.plot.plotType = .rolling
+      self.plot.shouldFill = true
+      self.plot.shouldMirror = true
+    
+      // Set the color of the line
+      self.plot.color = UIColor.red
+    
+      // Set the background color of the plot
+      self.plot.backgroundColor = UIColor.black
+    
+      // Set the scaling factor of the line
+      self.plot.gain = 5
+    
+      // Add the view
+      self.addSubview(self.plot)
+    }
   }
   
   required init?(coder aDecoder: NSCoder) {

@@ -138,6 +138,8 @@ class AudioRecorderViewManager : RCTViewManager {
     // Microphone monitoring is muted
     micBooster.gain = 0
     
+    self.currentView?.setupWaveForm(mic: self.mic);
+    
     // Inform bridge/React about success
     resolve(jsonArray.rawString());
   }

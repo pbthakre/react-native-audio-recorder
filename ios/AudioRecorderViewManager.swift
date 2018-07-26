@@ -1,5 +1,5 @@
 //
-//  SampleViewManager.swift
+//  AudioRecorderViewManager.swift
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 24.07.18.

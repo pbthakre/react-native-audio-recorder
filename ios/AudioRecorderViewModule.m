@@ -1,5 +1,5 @@
 //
-//  SampleViewModule.m
+//  AudioRecorderViewModule.m
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 24.07.18.

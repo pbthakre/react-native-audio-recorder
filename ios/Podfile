@@ -8,6 +8,7 @@ target 'reactnativeaudiorecorder' do
   # Pods for react-native-audio-recorder
   pod 'AudioKit', '~> 4.2'
   pod 'SwiftyJSON', '~> 4.1'
+  pod 'SnapKit', '~> 4.0.0'
 
   # ignore all warnings from all pods
   inhibit_all_warnings!

@@ -28,8 +28,6 @@ class AudioRecorderViewManager : RCTViewManager {
   var frequencyTracker: AKFrequencyTracker!
   var silence: AKBooster!
   
-  var audioInputPlot: EZAudioPlot!
-  
   let mic = AKMicrophone()
   
   var currentView : AudioRecorderView?
@@ -48,20 +46,6 @@ class AudioRecorderViewManager : RCTViewManager {
   
   override class func requiresMainQueueSetup() -> Bool {
     return false
-  }
-
-  func setupPlot() {
-    DispatchQueue.main.async {
-      self.audioInputPlot = EZAudioPlot(frame: CGRect(x: 10, y: 100, width: 300, height: 200))
-      self.currentView?.addSubview(self.audioInputPlot)
-      
-      let plot = AKNodeOutputPlot(self.mic, frame: self.audioInputPlot.bounds)
-      plot.plotType = .rolling
-      plot.shouldFill = true
-      plot.shouldMirror = true
-      plot.color = UIColor.blue
-      self.audioInputPlot.addSubview(plot)
-    }
   }
 
   func updateUI() {

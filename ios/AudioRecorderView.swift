@@ -7,17 +7,27 @@
 //
 
 import UIKit
+import AudioKit
+import AudioKitUI
 
 // Represents the our native ui (view) component
-class AudioRecorderView: UIView {
+class AudioRecorderView: EZAudioPlot {
+  var audioInputPlot: EZAudioPlot!
+  let mic = AKMicrophone()
+  
   private override init(frame: CGRect) {
     super.init(frame: frame)
     
-    let view = UIView(frame: frame)
-    view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    view.backgroundColor = UIColor.green
-    
-    self.addSubview(view)
+    self.frame = frame
+    self.autoresizingMask = [.flexibleWidth]
+
+    let plot = AKNodeOutputPlot(self.mic, frame: frame)
+    plot.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    plot.plotType = .rolling
+    plot.shouldFill = true
+    plot.shouldMirror = true
+    plot.color = UIColor.red
+    self.addSubview(plot)
   }
   
   required init?(coder aDecoder: NSCoder) {

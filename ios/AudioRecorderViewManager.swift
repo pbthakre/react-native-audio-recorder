@@ -117,6 +117,7 @@ class AudioRecorderViewManager : RCTViewManager {
     
     // Apply filter which enables to manipulate the signal
     moogLadder = AKMoogLadder(player)
+    moogLadder.presetDullNoiseMoogLadder()
     
     // Create a mixer which combines our filtered node and our microphone node
     mainMixer = AKMixer(moogLadder, micBooster)

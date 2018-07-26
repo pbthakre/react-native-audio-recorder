@@ -164,6 +164,12 @@ class AudioRecorderViewManager : RCTViewManager {
       // Try to start recording
       try recorder.record();
       
+      // Set input node to microphone for recording
+      self.currentView?.setNode(inputNode: mic)
+      
+      // Clear the waveform before playing
+      self.currentView?.plot.clear()
+      
       // Start rendering the waveform
       self.currentView?.plot.resume()
       
@@ -242,6 +248,15 @@ class AudioRecorderViewManager : RCTViewManager {
       "value": ""
     ]
     
+    // Set main mixer as input to render waveform from played audio
+    self.currentView?.setNode(inputNode: mainMixer)
+    
+    // Clear the waveform before playing
+    self.currentView?.plot.clear()
+    
+    // Start rendering waveform of played audio
+    self.currentView?.plot.resume()
+    
     // Start playing the audio file
     player.play()
     
@@ -256,6 +271,8 @@ class AudioRecorderViewManager : RCTViewManager {
       "error": "",
       "value": ""
     ]
+    
+    self.currentView?.plot.pause()
     
     // Stop playing the audio file
     player.stop()

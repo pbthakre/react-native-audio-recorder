@@ -23,5 +23,4 @@
   RCT_EXTERN_METHOD(stopRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
   RCT_EXTERN_METHOD(startPlaying: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
   RCT_EXTERN_METHOD(stopPlaying: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
-  RCT_EXTERN_METHOD(setColor);
 @end

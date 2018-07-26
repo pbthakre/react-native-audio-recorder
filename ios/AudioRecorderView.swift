@@ -55,6 +55,11 @@ class AudioRecorderView: EZAudioPlot {
     }
   }
   
+  // Define which node should be used as input node (input signal)
+  func setNode(inputNode: AKNode) {
+    self.plot.node = inputNode
+  }
+  
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }

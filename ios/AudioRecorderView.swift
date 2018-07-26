@@ -46,6 +46,9 @@ class AudioRecorderView: EZAudioPlot {
     
       // Set the scaling factor of the line
       self.plot.gain = 5
+      
+      // Prevent waveform from being rendered all the time
+      self.plot.pause()
     
       // Add the view
       self.addSubview(self.plot)

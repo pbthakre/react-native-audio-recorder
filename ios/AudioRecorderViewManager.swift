@@ -139,6 +139,7 @@ class AudioRecorderViewManager : RCTViewManager {
     // Microphone monitoring is muted
     micBooster.gain = 0
     
+    // Initialize the wave form
     self.currentView?.setupWaveForm(mic: self.mic);
     
     // Inform bridge/React about success
@@ -162,6 +163,9 @@ class AudioRecorderViewManager : RCTViewManager {
     do {
       // Try to start recording
       try recorder.record();
+      
+      // Start rendering the waveform
+      self.currentView?.plot.resume()
       
       // Inform bridge/React about success
       resolve(jsonArray.rawString());
@@ -196,6 +200,9 @@ class AudioRecorderViewManager : RCTViewManager {
     if let _ = player.audioFile?.duration {
       // Stop the recorder
       recorder.stop()
+      
+      // Stop rendering the waveform
+      self.currentView?.plot.pause()
       
       // Generate a random file name
       let fileName = UUID().uuidString + ".m4a"

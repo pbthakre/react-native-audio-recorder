@@ -47,6 +47,9 @@ class AudioRecorderView: EZAudioPlot {
       // Set the scaling factor of the line
       self.plot.gain = 5
       
+      // Cut off lines which go beyond the view bounds
+      self.plot.clipsToBounds = true
+      
       // Prevent waveform from being rendered all the time
       self.plot.pause()
     

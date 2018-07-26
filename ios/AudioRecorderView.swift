@@ -39,7 +39,7 @@ class AudioRecorderView: EZAudioPlot {
       self.plot.shouldMirror = true
     
       // Set the color of the line
-      self.plot.color = UIColor.red
+      self.plot.color = UIColor(red: 245.0 / 255.0, green: 0.0 / 255.0, blue: 87.0 / 255.0, alpha: 1.0)
     
       // Set the background color of the plot
       self.plot.backgroundColor = UIColor.black

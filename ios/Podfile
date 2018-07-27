@@ -1,5 +1,8 @@
 # Uncomment the next line to define a global platform for your project
- platform :ios, '11.4'
+platform :ios, '11.4'
+
+# ignore all warnings from all pods
+inhibit_all_warnings!
 
 target 'reactnativeaudiorecorder' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
@@ -8,10 +11,6 @@ target 'reactnativeaudiorecorder' do
   # Pods for react-native-audio-recorder
   pod 'AudioKit', '~> 4.2'
   pod 'SwiftyJSON', '~> 4.1'
-  pod 'SnapKit', '~> 4.0.0'
-
-  # ignore all warnings from all pods
-  inhibit_all_warnings!
 end
 
 def change_lines_in_file(file_path, &change)
@@ -27,5 +26,13 @@ def change_lines_in_file(file_path, &change)
 
     File.open(file_path, 'w') do |f|
         f.puts(change.call(contents))
+    end
+end
+
+post_install do |installer|
+    installer.pods_project.targets.each do |target|
+        target.build_configurations.each do |config|
+            config.build_settings['GCC_WARN_INHIBIT_ALL_WARNINGS'] = "YES"
+        end
     end
 end

@@ -50,13 +50,11 @@ class AudioRecorderView: EZAudioPlot {
       // Cut off lines which go beyond the view bounds
       self.plot.clipsToBounds = true
       
-      // Render baseline
-      let uint8Pointer = UnsafeMutablePointer<Float>.allocate(capacity: 5)
-      uint8Pointer.initialize(from: [0, 0, 0, 0, 0, 0])
-      self.plot.setSampleData(uint8Pointer, length: 5)
-      
       // Prevent waveform from being rendered all the time
       self.plot.pause()
+      
+      // Clear the waveform to generate a baseline
+      self.plot.clear()
     
       // Add the view
       self.addSubview(self.plot)

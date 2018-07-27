@@ -210,6 +210,9 @@ class AudioRecorderViewManager : RCTViewManager {
       // Stop rendering the waveform
       self.currentView?.plot.pause()
       
+      // Clear the waveform after recording
+      self.currentView?.plot.clear()
+      
       // Generate a random file name
       let fileName = UUID().uuidString + ".m4a"
       
@@ -272,7 +275,11 @@ class AudioRecorderViewManager : RCTViewManager {
       "value": ""
     ]
     
+    // Stop rendering the waveform
     self.currentView?.plot.pause()
+    
+    // Clear the waveform after playing
+    self.currentView?.plot.clear()
     
     // Stop playing the audio file
     player.stop()

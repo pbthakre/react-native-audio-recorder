@@ -1125,7 +1125,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = reactnativeaudiorecorderTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1149,7 +1149,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = M944G5L26R;
 				INFOPLIST_FILE = reactnativeaudiorecorderTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

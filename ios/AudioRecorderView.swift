@@ -74,9 +74,7 @@ class AudioRecorderView: EZAudioPlot {
   
   // Setup the timeline with custom properties
   private func setupWaveformTimeline() {
-    self.timelineBar.updateSize()
     self.timelineBar.autoresizingMask = [.flexibleHeight]
-    
     self.plot.addSubview(self.timelineBar)
   }
   
@@ -105,21 +103,17 @@ class AudioRecorderView: EZAudioPlot {
   }
 }
 
+// Represents our timeline bar which enables to move forward or backward in the audio file (abstract)
 class TimelineBar: AKView {
   private let color = UIColor.white
-  private var rect = CGRect(x: 50, y: 0, width: 2, height: 70)
+  private var rect = CGRect(x: 50, y: 0, width: 2, height: 0)
   
+  // Constructor
   convenience init() {
-    self.init(frame: CGRect(x: 50, y: 0, width: 2, height: 70))
-    // wantsLayer = true
+    self.init(frame: CGRect(x: 50, y: 0, width: 2, height: 0))
   }
   
-  public func updateSize(height: CGFloat = 0) {
-    guard let superview = superview else { return }
-    let theHeight = height > 0 ? height : superview.frame.height
-    rect = CGRect(x: 0, y: 0, width: 2, height: superview.frame.height)
-  }
-  
+  // Style the context of the defined rectangle
   override func draw(_ dirtyRect: CGRect) {
     let context = UIGraphicsGetCurrentContext()
     if (context != nil) {

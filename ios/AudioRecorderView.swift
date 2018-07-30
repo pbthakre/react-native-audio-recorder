@@ -6,14 +6,29 @@
 //  Copyright © 2018 Crowdio GmbH. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import AudioKit
 import AudioKitUI
 
 // Represents the our native ui (view) component
-class AudioRecorderView: EZAudioPlot {
+public class AudioRecorderView: EZAudioPlot {
   private var plot : AKNodeOutputPlot = AKNodeOutputPlot(AKMixer.init(), frame: CGRect.init())
+  
   private var timelineBar = TimelineBar()
+  
+  public weak var delegate: AudioRecorderViewDelegate?
+  
+  /// position in seconds of the bar
+  public var position: Double {
+    get {
+      return Double(timelineBar.frame.origin.x)
+    }
+    
+    set {
+      timelineBar.frame.origin.x = CGFloat(newValue)
+    }
+  }
   
   private override init(frame: CGRect) {
     // Call super constructor
@@ -80,11 +95,19 @@ class AudioRecorderView: EZAudioPlot {
   
   // Resume plot, but keep access level private
   public func resumeWaveform() {
+    // Turn off touch events while recording or playing
+    DispatchQueue.main.async {
+      self.isUserInteractionEnabled = false
+    }
     self.plot.resume()
   }
   
   // Pause plot, but keep access level private
   public func pauseWaveform() {
+    // Activate touch events after recording or playing
+    DispatchQueue.main.async {
+      self.isUserInteractionEnabled = true
+    }
     self.plot.pause()
   }
   
@@ -98,9 +121,37 @@ class AudioRecorderView: EZAudioPlot {
     self.plot.node = inputNode
   }
   
-  required init?(coder aDecoder: NSCoder) {
+  public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//    position = mousePositionToTime(with: event)
+//    delegate?.waveformSelected(source: self, at: position)
+  }
+  
+  override public func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+//    delegate?.waveformScrubComplete(source: self, at: position)
+  }
+  
+  override public func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//    position = mousePositionToTime(with: event)
+//    delegate?.waveformScrubbed(source: self, at: position)
+  }
+  
+//  private func mousePositionToTime(with event: UIEvent?) -> Double {
+//    // guard let file = file else { return 0 }
+//
+//    let loc = convert(event.locationInWindow, from: nil)
+//    let mouseTime = Double(loc.x / frame.width) * file.duration
+//    return mouseTime
+//  }
+  
+  required public init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+}
+
+public protocol AudioRecorderViewDelegate: class {
+  func waveformSelected(source: AudioRecorderView, at time: Double)
+  func waveformScrubbed(source: AudioRecorderView, at time: Double)
+  func waveformScrubComplete(source: AudioRecorderView, at time: Double)
 }
 
 // Represents our timeline bar which enables to move forward or backward in the audio file (abstract)

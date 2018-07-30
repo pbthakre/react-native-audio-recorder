@@ -17,31 +17,31 @@ import SwiftyJSON
 @objc(AudioRecorderViewManager)
 class AudioRecorderViewManager : RCTViewManager {
   // Represents the device's microphone
-  let mic = AKMicrophone()
+  private let mic = AKMicrophone()
   
    // Represents the mixer which handles the microphone input
-  var micMixer: AKMixer!
+  private var micMixer: AKMixer!
   
   // Represents the mixer which handles the speaker output
-  var mainMixer: AKMixer!
+  private var mainMixer: AKMixer!
   
   // Represents the recorder which handles recording of audio samples via mixer
-  var recorder: AKNodeRecorder!
+  private var recorder: AKNodeRecorder!
   
   // Represents the player which handles playing of audio samples via mixer
-  var player: AKPlayer!
+  private var player: AKPlayer!
   
   // Represents the file of recorded or played audio samples
-  var tape: AKAudioFile!
+  private var tape: AKAudioFile!
   
   // Represents the booster which lets control the microphone input properties such as volume
-  var micBooster: AKBooster!
+  private var micBooster: AKBooster!
   
   // Represents the filter node
-  var moogLadder: AKMoogLadder!
+  private var moogLadder: AKMoogLadder!
   
   // Represents the view
-  var currentView : AudioRecorderView?
+  private var currentView : AudioRecorderView?
   
   // Instantiates the view
   override func view() -> AudioRecorderView {
@@ -55,7 +55,7 @@ class AudioRecorderViewManager : RCTViewManager {
     return true
   }
 
-  @objc func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+  @objc public func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response
     var jsonArray: JSON = [
       "success": true,
@@ -146,7 +146,7 @@ class AudioRecorderViewManager : RCTViewManager {
     resolve(jsonArray.rawString());
   }
 
-  @objc func startRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+  @objc public func startRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response
     var jsonArray: JSON = [
       "success": true,
@@ -185,7 +185,7 @@ class AudioRecorderViewManager : RCTViewManager {
     }
   }
 
-  @objc func stopRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
+  @objc public func stopRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
     // Result/Error - Response
     var jsonArray: JSON = [
       "success": true,
@@ -243,7 +243,7 @@ class AudioRecorderViewManager : RCTViewManager {
     resolve(jsonArray.rawString());
   }
 
-  @objc func startPlaying(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+  @objc public func startPlaying(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response
     var jsonArray: JSON = [
       "success": true,
@@ -267,7 +267,7 @@ class AudioRecorderViewManager : RCTViewManager {
     resolve(jsonArray.rawString());
   }
 
-  @objc func stopPlaying(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+  @objc public func stopPlaying(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response
     var jsonArray: JSON = [
       "success": true,

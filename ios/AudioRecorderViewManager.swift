@@ -140,7 +140,7 @@ class AudioRecorderViewManager : RCTViewManager {
     micBooster.gain = 0
     
     // Initialize the wave form
-    self.currentView?.setupWaveForm(mic: self.mic);
+    self.currentView?.setupWaveform(mic: self.mic);
     
     // Inform bridge/React about success
     resolve(jsonArray.rawString());
@@ -168,10 +168,10 @@ class AudioRecorderViewManager : RCTViewManager {
       self.currentView?.setNode(inputNode: mic)
       
       // Clear the waveform before playing
-      self.currentView?.plot.clear()
+      self.currentView?.clearWaveform()
       
       // Start rendering the waveform
-      self.currentView?.plot.resume()
+      self.currentView?.resumeWaveform()
       
       // Inform bridge/React about success
       resolve(jsonArray.rawString());
@@ -208,10 +208,10 @@ class AudioRecorderViewManager : RCTViewManager {
       recorder.stop()
       
       // Stop rendering the waveform
-      self.currentView?.plot.pause()
+      self.currentView?.pauseWaveform()
       
       // Clear the waveform after recording
-      self.currentView?.plot.clear()
+      self.currentView?.clearWaveform()
       
       // Generate a random file name
       let fileName = UUID().uuidString + ".m4a"
@@ -255,10 +255,10 @@ class AudioRecorderViewManager : RCTViewManager {
     self.currentView?.setNode(inputNode: mainMixer)
     
     // Clear the waveform before playing
-    self.currentView?.plot.clear()
+    self.currentView?.clearWaveform()
     
     // Start rendering waveform of played audio
-    self.currentView?.plot.resume()
+    self.currentView?.resumeWaveform()
     
     // Start playing the audio file
     player.play()
@@ -276,10 +276,10 @@ class AudioRecorderViewManager : RCTViewManager {
     ]
     
     // Stop rendering the waveform
-    self.currentView?.plot.pause()
+    self.currentView?.pauseWaveform()
     
     // Clear the waveform after playing
-    self.currentView?.plot.clear()
+    self.currentView?.clearWaveform()
     
     // Stop playing the audio file
     player.stop()

@@ -12,7 +12,7 @@ import AudioKitUI
 
 // Represents the our native ui (view) component
 class AudioRecorderView: EZAudioPlot {
-  var plot : AKNodeOutputPlot = AKNodeOutputPlot(AKMixer.init(), frame: CGRect.init())
+  private var plot : AKNodeOutputPlot = AKNodeOutputPlot(AKMixer.init(), frame: CGRect.init())
   private var timelineBar = TimelineBar()
   
   private override init(frame: CGRect) {
@@ -26,7 +26,7 @@ class AudioRecorderView: EZAudioPlot {
     self.autoresizingMask = [.flexibleWidth]
   }
   
-  func setupWaveForm(mic: AKMicrophone) {
+  func setupWaveform(mic: AKMicrophone) {
     DispatchQueue.main.async {
       // Create the WaveForm
       self.plot = AKNodeOutputPlot(mic, frame: self.frame)
@@ -66,8 +66,23 @@ class AudioRecorderView: EZAudioPlot {
     }
   }
   
+  // Resume plot, but keep access level private
+  public func resumeWaveform() {
+    self.plot.resume()
+  }
+  
+  // Pause plot, but keep access level private
+  public func pauseWaveform() {
+    self.plot.pause()
+  }
+  
+  // Clear plot, but keep access level private
+  public func clearWaveform() {
+    self.plot.clear()
+  }
+  
   // Define which node should be used as input node (input signal)
-  func setNode(inputNode: AKNode) {
+  public func setNode(inputNode: AKNode) {
     self.plot.node = inputNode
   }
   

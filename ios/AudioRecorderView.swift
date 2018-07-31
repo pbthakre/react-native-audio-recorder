@@ -121,14 +121,6 @@ public class AudioRecorderView: EZAudioPlot {
     self.plot.node = inputNode
   }
   
-  public func updateWaveformDisplay(currentTime: Double) {
-    print(currentTime)
-    DispatchQueue.main.async {
-      self.position = Double(CGFloat(currentTime / 100) * (self.frame.width / 6))
-    }
-    //    delegate?.waveformSelected(source: self, at: position)
-  }
-  
   public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //    position = mousePositionToTime(with: event)
 //    delegate?.waveformSelected(source: self, at: position)

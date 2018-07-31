@@ -19,7 +19,9 @@ export default class App extends Component<Props> {
   state = {
     isSetup: false,
     isRecording: false,
-    isPlaying: false
+    isPlaying: false,
+    fileUrl: '',
+    numberOfRecords: 0
   };
 
   constructor(props) {
@@ -54,7 +56,7 @@ export default class App extends Component<Props> {
   };
 
   render() {
-    const { isSetup, isRecording, isPlaying } = this.state;
+    const { isSetup, isRecording, isPlaying, numberOfRecords } = this.state;
 
     return (
       <View style={styles.container}>
@@ -92,6 +94,7 @@ export default class App extends Component<Props> {
 
                       if (parsedResult['success']) {
                         this.setState({isRecording: false});
+                        this.setState({numberOfRecords: this.state.numberOfRecords + 1})
                       }
                     })
                     .catch(error => {
@@ -100,6 +103,27 @@ export default class App extends Component<Props> {
                 }}
                 title={"Stop Recording"}
               />
+            }
+            {isSetup &&
+            <Button
+              style={styles.button}
+              onPress={() => {
+                this.recorderRef.finishRecording()
+                  .then((result) => {
+                    const parsedResult = JSON.parse(result);
+
+                    if (parsedResult['success']) {
+                      parsedResult['fileUrl']
+                      this.setState({numberOfRecords: 0})
+                    }
+                  })
+                  .catch(error => {
+                    console.log(error.toString());
+                  });
+              }}
+              title={"Finish Recording"}
+              disabled={isRecording || numberOfRecords < 1}
+            />
             }
             {isSetup && !isPlaying &&
               <Button

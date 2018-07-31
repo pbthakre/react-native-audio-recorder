@@ -46,7 +46,12 @@ class AudioRecorderViewManager : RCTViewManager {
   // Represents the view
   private var currentView: AudioRecorderView?
   
+  // Defines from which position to play the file
   private var pointToStartPlayingInSeconds: Double = 0.00
+  
+  // Defines if the recording is/should be overwriting existing parts of the file
+  private var isOverwriting: Bool = true
+  
   
   // Instantiates the view
   override func view() -> AudioRecorderView {
@@ -166,23 +171,25 @@ class AudioRecorderViewManager : RCTViewManager {
     }
     
     do {
+      
       // Reset all data from previous recording
       try recorder.reset()
       
       // Try to start recording
       try recorder.record()
       
+      // Clear the waveform before recording
+      self.currentView?.clearWaveform()
+      
       // Set input node to microphone for recording
       self.currentView?.setNode(inputNode: mic)
-      
-      // Clear the waveform before playing
-      self.currentView?.clearWaveform()
       
       // Start rendering the waveform
       self.currentView?.resumeWaveform()
       
       // Inform bridge/React about success
       resolve(jsonArray.rawString());
+      
     } catch {
       print("Errored recording.")
       
@@ -195,14 +202,28 @@ class AudioRecorderViewManager : RCTViewManager {
 
   @objc public func stopRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
     // Result/Error - Response
-    var jsonArray: JSON = [
+    let jsonArray: JSON = [
       "success": true,
-      "error": "",
-      "value": ["lastRecordedFilePath": ""]
+      "error": ""
     ]
     
     // Microphone monitoring is muted
     micBooster.gain = 0
+    
+    // Stop the recorder
+    recorder.stop()
+    
+    // Inform bridge/React about success
+    resolve(jsonArray.rawString());
+  }
+  
+  @objc public func finishRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
+    // Result/Error - Response
+    var jsonArray: JSON = [
+      "success": true,
+      "error": "",
+      "value": ["fileUrl": ""]
+    ]
     
     // Temporarily store the audio file recorded by the recorder
     tape = recorder.audioFile!
@@ -212,9 +233,6 @@ class AudioRecorderViewManager : RCTViewManager {
     
     // Check if the loaded audio file has a duration and is therefore valid from that point of view
     if let _ = player.audioFile?.duration {
-      // Stop the recorder
-      recorder.stop()
-      
       // Stop rendering the waveform
       self.currentView?.pauseWaveform()
       
@@ -240,9 +258,10 @@ class AudioRecorderViewManager : RCTViewManager {
       // Make the file url available to React Native
       if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
         // Set the file url of the last recorded file
-        jsonArray["value"]["lastRecordedFilePath"].stringValue = documentsPathString + fileName
+        jsonArray["value"]["fileUrl"].stringValue = documentsPathString + fileName
       }
     }
+    
     
     // Inform bridge/React about success
     resolve(jsonArray.rawString());

@@ -15,6 +15,10 @@ export default {
     return AudioRecorderViewManager.stopRecording();
   },
 
+  finishRecording() {
+    return AudioRecorderViewManager.finishRecording();
+  },
+
   startPlaying() {
     return AudioRecorderViewManager.startPlaying();
   },

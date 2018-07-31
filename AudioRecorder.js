@@ -25,6 +25,10 @@ export default class AudioRecorder extends Component<Props> {
     return AudioRecorderNative.stopRecording();
   };
 
+  finishRecording() {
+    return AudioRecorderNative.finishRecording();
+  };
+
   startPlaying() {
     return AudioRecorderNative.startPlaying();
   };

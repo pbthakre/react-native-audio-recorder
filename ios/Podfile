@@ -9,7 +9,7 @@ target 'reactnativeaudiorecorder' do
   use_frameworks!
 
   # Pods for react-native-audio-recorder
-  pod 'AudioKit', '~> 4.2'
+  pod 'AudioKit', '~> 4.3'
   pod 'SwiftyJSON', '~> 4.1'
 end
 

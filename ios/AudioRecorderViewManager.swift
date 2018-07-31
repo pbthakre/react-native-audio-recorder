@@ -34,6 +34,9 @@ class AudioRecorderViewManager : RCTViewManager {
   // Represents the file of recorded or played audio samples
   private var tape: AKAudioFile!
   
+  // The name of the file where the current recording is stored in
+  private let fileName = "currentRecording.m4a"
+  
   // Represents the booster which lets control the microphone input properties such as volume
   private var micBooster: AKBooster!
   
@@ -112,7 +115,7 @@ class AudioRecorderViewManager : RCTViewManager {
       player = AKPlayer(audioFile: file)
     }
     
-    // Player should play the audio file again after finishing
+    // Define if the player should play the audio file again after finishing
     player.isLooping = true
     
     // Apply filter which enables to manipulate the signal
@@ -161,8 +164,11 @@ class AudioRecorderViewManager : RCTViewManager {
     }
     
     do {
+      // Reset all data from previous recording
+      try recorder.reset()
+      
       // Try to start recording
-      try recorder.record();
+      try recorder.record()
       
       // Set input node to microphone for recording
       self.currentView?.setNode(inputNode: mic)
@@ -213,9 +219,6 @@ class AudioRecorderViewManager : RCTViewManager {
       // Clear the waveform after recording
       self.currentView?.clearWaveform()
       
-      // Generate a random file name
-      let fileName = UUID().uuidString + ".m4a"
-      
       // Store the audio data permanently on the device's storage
       tape.exportAsynchronously(name: fileName,
                                 baseDir: .documents,
@@ -259,6 +262,20 @@ class AudioRecorderViewManager : RCTViewManager {
     
     // Start rendering waveform of played audio
     self.currentView?.resumeWaveform()
+    
+    // Load audio file data into player
+    if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+      do {
+        try player.load(url: NSURL(string: documentsPathString + "/" + fileName)! as URL)
+      } catch {
+        print("Errored recording.")
+        
+        // Inform bridge/React about error
+        jsonArray["success"] = false
+        jsonArray["error"].stringValue = error.localizedDescription
+        reject("Error", jsonArray.rawString(), error)
+      }
+    }
     
     // Start playing the audio file
     player.play()

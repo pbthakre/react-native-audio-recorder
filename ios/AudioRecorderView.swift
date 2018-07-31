@@ -146,6 +146,10 @@ public class AudioRecorderView: EZAudioPlot {
   required public init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
+  
+  override public func layoutSubviews() {
+    self.timelineBar.updateScrubberPosition(frame: self.frame)
+  }
 }
 
 public protocol AudioRecorderViewDelegate: class {
@@ -172,5 +176,11 @@ class TimelineBar: AKView {
     }
     color.setFill()
     context?.fill(dirtyRect)
+  }
+  
+  // Update the position of the scrubber
+  func updateScrubberPosition(frame: CGRect) {
+    let center = (frame.size.width / 2) - (self.frame.size.width / 2)
+    self.frame.origin.x = center
   }
 }

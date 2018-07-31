@@ -43,6 +43,9 @@ class AudioRecorderViewManager : RCTViewManager {
   // Represents the view
   private var currentView : AudioRecorderView?
   
+  // TODO: Add description
+  var audioTimer: Timer?
+  
   // Instantiates the view
   override func view() -> AudioRecorderView {
     let newView = AudioRecorderView()
@@ -173,6 +176,9 @@ class AudioRecorderViewManager : RCTViewManager {
       // Start rendering the waveform
       self.currentView?.resumeWaveform()
       
+      //
+      self.startAudioTimer()
+      
       // Inform bridge/React about success
       resolve(jsonArray.rawString());
     } catch {
@@ -286,5 +292,26 @@ class AudioRecorderViewManager : RCTViewManager {
     
     // Inform bridge/React about success
     resolve(jsonArray.rawString());
+  }
+  
+  @objc func updateWaveform() {
+    self.currentView?.updateWaveformDisplay(currentTime: recorder.recordedDuration)
+  }
+  
+  func startAudioTimer() {
+    guard audioTimer == nil else { return }
+    DispatchQueue.main.async {
+      self.audioTimer = Timer.scheduledTimer(timeInterval: 0.01,
+                                      target: self,
+                                      selector: #selector(self.updateWaveform),
+                                      userInfo: nil,
+                                      repeats: true)
+    }
+  }
+  
+  func stopAudioTimer() {
+    guard audioTimer != nil else { return }
+    audioTimer?.invalidate()
+    audioTimer = nil
   }
 }

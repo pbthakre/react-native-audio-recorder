@@ -121,6 +121,14 @@ public class AudioRecorderView: EZAudioPlot {
     self.plot.node = inputNode
   }
   
+  public func updateWaveformDisplay(currentTime: Double) {
+    print(currentTime)
+    DispatchQueue.main.async {
+      self.position = Double(CGFloat(currentTime / 100) * (self.frame.width / 6))
+    }
+    //    delegate?.waveformSelected(source: self, at: position)
+  }
+  
   public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
 //    position = mousePositionToTime(with: event)
 //    delegate?.waveformSelected(source: self, at: position)
@@ -157,11 +165,11 @@ public protocol AudioRecorderViewDelegate: class {
 // Represents our timeline bar which enables to move forward or backward in the audio file (abstract)
 class TimelineBar: AKView {
   private let color = UIColor.white
-  private var rect = CGRect(x: 50, y: 0, width: 2, height: 0)
+  private var rect = CGRect(x: 0, y: 0, width: 2, height: 0)
   
   // Constructor
   convenience init() {
-    self.init(frame: CGRect(x: 50, y: 0, width: 2, height: 0))
+    self.init(frame: CGRect(x: 0, y: 0, width: 2, height: 0))
   }
   
   // Style the context of the defined rectangle

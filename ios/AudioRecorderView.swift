@@ -180,7 +180,7 @@ class TimelineBar: AKView {
   
   // Update the position of the scrubber
   func updateScrubberPosition(frame: CGRect) {
-    let center = (frame.size.width / 2) - (self.frame.size.width / 2)
+    let center = ((frame.size.width / 2) - (self.frame.size.width / 2)) / 2
     self.frame.origin.x = center
   }
 }

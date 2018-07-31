@@ -34,6 +34,9 @@ class AudioRecorderViewManager : RCTViewManager {
   // Represents the file of recorded or played audio samples
   private var tape: AKAudioFile!
   
+  // Stores all the urls of all recorded tapes, necessary for overwriting
+  private var tapes = [AKAudioFile]()
+  
   // The name of the file where the current recording is stored in
   private let fileName = "currentRecording.m4a"
   
@@ -49,9 +52,11 @@ class AudioRecorderViewManager : RCTViewManager {
   // Defines from which position to play the file
   private var pointToStartPlayingInSeconds: Double = 0.00
   
+  // Defines from which position to overwrite the recorded data
+  private var pointToOverwriteRecordingInSeconds: Double = 0.00
+  
   // Defines if the recording is/should be overwriting existing parts of the file
   private var isOverwriting: Bool = true
-  
   
   // Instantiates the view
   override func view() -> AudioRecorderView {
@@ -171,7 +176,6 @@ class AudioRecorderViewManager : RCTViewManager {
     }
     
     do {
-      
       // Reset all data from previous recording
       try recorder.reset()
       
@@ -189,7 +193,6 @@ class AudioRecorderViewManager : RCTViewManager {
       
       // Inform bridge/React about success
       resolve(jsonArray.rawString());
-      
     } catch {
       print("Errored recording.")
       
@@ -213,6 +216,15 @@ class AudioRecorderViewManager : RCTViewManager {
     // Stop the recorder
     recorder.stop()
     
+    // Stop rendering the waveform
+    self.currentView?.pauseWaveform()
+    
+    // Temporarily store the audio file recorded by the recorder
+    tape = recorder.audioFile!
+    
+    // Store the tape in array
+    tapes.append(tape)
+    
     // Inform bridge/React about success
     resolve(jsonArray.rawString());
   }
@@ -225,43 +237,63 @@ class AudioRecorderViewManager : RCTViewManager {
       "value": ["fileUrl": ""]
     ]
     
-    // Temporarily store the audio file recorded by the recorder
-    tape = recorder.audioFile!
+    // Create the tape which will then contain all the recorded tapes of this session
+    var finalTape: AKAudioFile? = nil
+    do {
+      finalTape = try AKAudioFile()
+    }
+    catch {
+      // Inform bridge/React about error
+      jsonArray["success"] = false
+      jsonArray["error"].stringValue = error.localizedDescription
+      reject("Error", jsonArray.rawString(), error)
+    }
     
-    // Load the audio samples from the file into the player
-    player.load(audioFile: tape)
-    
-    // Check if the loaded audio file has a duration and is therefore valid from that point of view
-    if let _ = player.audioFile?.duration {
-      // Stop rendering the waveform
-      self.currentView?.pauseWaveform()
-      
-      // Clear the waveform after recording
-      self.currentView?.clearWaveform()
-      
-      // Store the audio data permanently on the device's storage
-      tape.exportAsynchronously(name: fileName,
-                                baseDir: .documents,
-                                exportFormat: .m4a) {_, exportError in
-                                  if let error = exportError {
-                                    print("Export Failed \(error)")
-                                    
-                                    // Inform bridge/React about error
-                                    jsonArray["success"] = false
-                                    jsonArray["error"].stringValue = error.localizedDescription
-                                    reject("Error", jsonArray.rawString(), error)
-                                  } else {
-                                    print("Export succeeded")
-                                  }
+    // Iterate over each tape of this session
+    for tape in tapes {
+      do {
+        // Add the tape to the final tape
+        let newFile = try finalTape?.appendedBy(file: tape)
+        finalTape = newFile
       }
-      
-      // Make the file url available to React Native
-      if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-        // Set the file url of the last recorded file
-        jsonArray["value"]["fileUrl"].stringValue = documentsPathString + fileName
+      catch {
+        // Inform bridge/React about error
+        jsonArray["success"] = false
+        jsonArray["error"].stringValue = error.localizedDescription
+        reject("Error", jsonArray.rawString(), error)
       }
     }
     
+    // Stop rendering the waveform
+    self.currentView?.pauseWaveform()
+    
+    // Clear the waveform after recording
+    self.currentView?.clearWaveform()
+    
+    // Store the audio data (final tape) permanently on the device's storage
+    finalTape?.exportAsynchronously(name: fileName,
+                              baseDir: .documents,
+                              exportFormat: .m4a) {_, exportError in
+                                if let error = exportError {
+                                  print("Export Failed \(error)")
+                                  
+                                  // Inform bridge/React about error
+                                  jsonArray["success"] = false
+                                  jsonArray["error"].stringValue = error.localizedDescription
+                                  reject("Error", jsonArray.rawString(), error)
+                                } else {
+                                  print("Export succeeded")
+                                }
+    }
+    
+    // Make the file url available to React Native
+    if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+      // Set the file url of the last recorded file
+      jsonArray["value"]["fileUrl"].stringValue = documentsPathString + fileName
+    }
+    
+    // Clear tapes after storing them
+    tapes.removeAll(keepingCapacity: false)
     
     // Inform bridge/React about success
     resolve(jsonArray.rawString());
@@ -307,7 +339,7 @@ class AudioRecorderViewManager : RCTViewManager {
 
   @objc public func stopPlaying(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response
-    var jsonArray: JSON = [
+    let jsonArray: JSON = [
       "success": true,
       "error": "",
       "value": ""

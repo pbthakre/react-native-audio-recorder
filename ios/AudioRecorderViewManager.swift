@@ -44,7 +44,9 @@ class AudioRecorderViewManager : RCTViewManager {
   private var moogLadder: AKMoogLadder!
   
   // Represents the view
-  private var currentView : AudioRecorderView?
+  private var currentView: AudioRecorderView?
+  
+  private var pointToStartPlayingInSeconds: Double = 0.00
   
   // Instantiates the view
   override func view() -> AudioRecorderView {
@@ -278,7 +280,7 @@ class AudioRecorderViewManager : RCTViewManager {
     }
     
     // Start playing the audio file
-    player.play()
+    player.play(from: pointToStartPlayingInSeconds)
     
     // Inform bridge/React about success
     resolve(jsonArray.rawString());

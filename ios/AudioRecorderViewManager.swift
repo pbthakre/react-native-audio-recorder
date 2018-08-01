@@ -37,9 +37,6 @@ class AudioRecorderViewManager : RCTViewManager {
   // Create the tape which will then contain all the recorded tapes of this session
   var finalTape: AKAudioFile? = nil
   
-  // Stores all the urls of all recorded tapes, necessary for overwriting
-  private var tapes = [AKAudioFile]()
-  
   // The name of the file where the current recording is stored in
   private let fileName = "currentRecording.m4a"
   
@@ -167,6 +164,17 @@ class AudioRecorderViewManager : RCTViewManager {
     // Initialize the wave form
     self.currentView?.setupWaveform(mic: self.mic);
     
+    // Setup the audio tape which contains the compilation of all audio data of one session
+    do {
+      finalTape = try AKAudioFile()
+    }
+    catch {
+      // Inform bridge/React about error
+      jsonArray["success"] = false
+      jsonArray["error"].stringValue = error.localizedDescription
+      reject("Error", jsonArray.rawString(), error)
+    }
+    
     // Inform bridge/React about success
     resolve(jsonArray.rawString());
   }
@@ -229,32 +237,16 @@ class AudioRecorderViewManager : RCTViewManager {
     // Temporarily store the audio file recorded by the recorder
     tape = recorder.audioFile!
     
-    // Store the tape in array
-    tapes.append(tape)
-    
+    // Append the current recorded tape to the final tape
     do {
-      finalTape = try AKAudioFile()
+      let newFile = try finalTape?.appendedBy(file: tape)
+      finalTape = newFile
     }
     catch {
       // Inform bridge/React about error
       jsonArray["success"] = false
       jsonArray["error"].stringValue = error.localizedDescription
       reject("Error", jsonArray.rawString(), error)
-    }
-    
-    // Iterate over each tape of this session
-    for tape in tapes {
-      do {
-        // Add the tape to the final tape
-        let newFile = try finalTape?.appendedBy(file: tape)
-        finalTape = newFile
-      }
-      catch {
-        // Inform bridge/React about error
-        jsonArray["success"] = false
-        jsonArray["error"].stringValue = error.localizedDescription
-        reject("Error", jsonArray.rawString(), error)
-      }
     }
     
     // Inform bridge/React about success
@@ -291,14 +283,35 @@ class AudioRecorderViewManager : RCTViewManager {
                                 }
     }
     
+    // Reset the final tape to be ready for the next session
+    do {
+      finalTape = try AKAudioFile()
+    }
+    catch {
+      // Inform bridge/React about error
+      jsonArray["success"] = false
+      jsonArray["error"].stringValue = error.localizedDescription
+      reject("Error", jsonArray.rawString(), error)
+    }
+    
     // Make the file url available to React Native
     if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
       // Set the file url of the last recorded file
       jsonArray["value"]["fileUrl"].stringValue = documentsPathString + fileName
     }
     
-    // Clear tapes after storing them
-    tapes.removeAll(keepingCapacity: false)
+    do {
+      // Reset all data from previous recording
+      try recorder.reset()
+      tape = try AKAudioFile()
+    } catch {
+      print("Errored recording.")
+      
+      // Inform bridge/React about error
+      jsonArray["success"] = false
+      jsonArray["error"].stringValue = error.localizedDescription
+      reject("Error", jsonArray.rawString(), error)
+    }
     
     // Inform bridge/React about success
     resolve(jsonArray.rawString());

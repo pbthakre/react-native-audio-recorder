@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   StyleSheet,
   View
 } from 'react-native';
 
 import AudioRecorderUIView from './AudioRecorderNativeView'
-import AudioRecorderNative from "./AudioRecorderNativeModule";
+import AudioRecorderNative from './AudioRecorderNativeModule';
 
 type Props = {};
 export default class AudioRecorder extends Component<Props> {

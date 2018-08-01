@@ -80,7 +80,7 @@ export default class App extends Component<Props> {
                       console.log(error.toString());
                     })
                 }}
-                title={"Start Recording"}
+                title={'Start Recording'}
                 disabled={isPlaying}
               />
             }
@@ -101,7 +101,7 @@ export default class App extends Component<Props> {
                       console.log(error.toString());
                     });
                 }}
-                title={"Stop Recording"}
+                title={'Stop Recording'}
               />
             }
             {isSetup &&
@@ -121,7 +121,7 @@ export default class App extends Component<Props> {
                     console.log(error.toString());
                   });
               }}
-              title={"Finish Recording"}
+              title={'Finish Recording'}
               disabled={isRecording || numberOfRecords < 1}
             />
             }
@@ -141,7 +141,7 @@ export default class App extends Component<Props> {
                       console.log(error.toString());
                     });
                 }}
-                title={"Start Playing"}
+                title={'Start Playing'}
                 disabled={isRecording}
               />
             }
@@ -161,7 +161,7 @@ export default class App extends Component<Props> {
                       console.log(error.toString());
                     });
                 }}
-                title={"Stop Playing"}
+                title={'Stop Playing'}
               />
             }
             <Text>Recorder State: {this.renderRecorderStateText(isSetup, isRecording, isPlaying)}</Text>

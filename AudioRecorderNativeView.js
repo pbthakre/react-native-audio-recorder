@@ -3,7 +3,7 @@ import { requireNativeComponent, Dimensions, StyleSheet } from 'react-native'
 
 const AudioRecorderView = requireNativeComponent('AudioRecorderView', AudioRecorderUIView);
 
-import AudioRecorderNative from "./AudioRecorderNativeModule";
+import AudioRecorderNative from './AudioRecorderNativeModule';
 
 export default class AudioRecorderUIView extends Component {
   constructor (props) {
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   recorder: {
     marginTop: 100,
     width: Dimensions.get('window').width,
-    height: "30%",
+    height: '30%',
     backgroundColor: 'red'
   }
 });

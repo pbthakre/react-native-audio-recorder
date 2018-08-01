@@ -34,6 +34,9 @@ class AudioRecorderViewManager : RCTViewManager {
   // Represents the file of recorded or played audio samples
   private var tape: AKAudioFile!
   
+  // Create the tape which will then contain all the recorded tapes of this session
+  var finalTape: AKAudioFile? = nil
+  
   // Stores all the urls of all recorded tapes, necessary for overwriting
   private var tapes = [AKAudioFile]()
   
@@ -189,9 +192,6 @@ class AudioRecorderViewManager : RCTViewManager {
       // Try to start recording
       try recorder.record()
       
-      // Clear the waveform before recording
-      self.currentView?.clearWaveform()
-      
       // Set input node to microphone for recording
       self.currentView?.setNode(inputNode: mic)
       
@@ -212,7 +212,7 @@ class AudioRecorderViewManager : RCTViewManager {
 
   @objc public func stopRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
     // Result/Error - Response
-    let jsonArray: JSON = [
+    var jsonArray: JSON = [
       "success": true,
       "error": ""
     ]
@@ -232,20 +232,6 @@ class AudioRecorderViewManager : RCTViewManager {
     // Store the tape in array
     tapes.append(tape)
     
-    // Inform bridge/React about success
-    resolve(jsonArray.rawString());
-  }
-  
-  @objc public func finishRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
-    // Result/Error - Response
-    var jsonArray: JSON = [
-      "success": true,
-      "error": "",
-      "value": ["fileUrl": ""]
-    ]
-    
-    // Create the tape which will then contain all the recorded tapes of this session
-    var finalTape: AKAudioFile? = nil
     do {
       finalTape = try AKAudioFile()
     }
@@ -270,6 +256,18 @@ class AudioRecorderViewManager : RCTViewManager {
         reject("Error", jsonArray.rawString(), error)
       }
     }
+    
+    // Inform bridge/React about success
+    resolve(jsonArray.rawString());
+  }
+  
+  @objc public func finishRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
+    // Result/Error - Response
+    var jsonArray: JSON = [
+      "success": true,
+      "error": "",
+      "value": ["fileUrl": ""]
+    ]
     
     // Stop rendering the waveform
     self.currentView?.pauseWaveform()
@@ -308,7 +306,7 @@ class AudioRecorderViewManager : RCTViewManager {
 
   @objc public func startPlaying(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response
-    var jsonArray: JSON = [
+    let jsonArray: JSON = [
       "success": true,
       "error": "",
       "value": ""
@@ -323,19 +321,8 @@ class AudioRecorderViewManager : RCTViewManager {
     // Start rendering waveform of played audio
     self.currentView?.resumeWaveform()
     
-    // Load audio file data into player
-    if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-      do {
-        try player.load(url: NSURL(string: documentsPathString + "/" + fileName)! as URL)
-      } catch {
-        print("Errored recording.")
-        
-        // Inform bridge/React about error
-        jsonArray["success"] = false
-        jsonArray["error"].stringValue = error.localizedDescription
-        reject("Error", jsonArray.rawString(), error)
-      }
-    }
+    // Load the finalTape (session recordings) data into player
+    player.load(audioFile: finalTape!)
     
     // Start playing the audio file
     player.play(from: pointToStartPlayingInSeconds)
@@ -354,9 +341,6 @@ class AudioRecorderViewManager : RCTViewManager {
     
     // Stop rendering the waveform
     self.currentView?.pauseWaveform()
-    
-    // Clear the waveform after playing
-    self.currentView?.clearWaveform()
     
     // Stop playing the audio file
     player.stop()

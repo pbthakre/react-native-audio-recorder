@@ -13,8 +13,16 @@ import AudioKitUI
 
 // Represents the our native ui (view) component
 public class AudioRecorderView: EZAudioPlot {
+  // The width of the component received from React Native
+  public var componentWidth: Double = 0.00
+  
+  // The height of the component received from React Native
+  public var componentHeight: Double = 0.00
+  
+  // The plot which represents the waveform
   private var plot : AKNodeOutputPlot = AKNodeOutputPlot(AKMixer.init(), frame: CGRect.init())
   
+  // The timeline scrubber
   private var timelineBar = TimelineBar()
   
   public weak var delegate: AudioRecorderViewDelegate?
@@ -148,7 +156,7 @@ public class AudioRecorderView: EZAudioPlot {
   }
   
   override public func layoutSubviews() {
-    self.timelineBar.updateScrubberPosition(frame: self.frame)
+    self.timelineBar.updateScrubberPosition(componentWidth: self.componentWidth, componentHeight: self.componentHeight)
   }
 }
 
@@ -179,8 +187,10 @@ class TimelineBar: AKView {
   }
   
   // Update the position of the scrubber
-  func updateScrubberPosition(frame: CGRect) {
-    let center = ((frame.size.width / 2) - (self.frame.size.width / 2)) / 2
-    self.frame.origin.x = center
+  func updateScrubberPosition(componentWidth: Double, componentHeight: Double) {
+    DispatchQueue.main.async {
+      let center = CGFloat(componentWidth / 2) - (self.frame.size.width / 2)
+      self.frame.origin.x = center
+    }
   }
 }

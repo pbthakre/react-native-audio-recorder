@@ -69,6 +69,13 @@ class AudioRecorderViewManager : RCTViewManager {
   override class func requiresMainQueueSetup() -> Bool {
     return true
   }
+  
+  // Sets the dimensions of the AudioRecorderView to the component dimensions received from React Native
+  @objc public func setDimensions(_ width:Double, dimHeight height:Double) {
+    self.currentView?.componentWidth = width
+    self.currentView?.componentHeight = height
+    self.currentView?.layoutSubviews()
+  }
 
   @objc public func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response

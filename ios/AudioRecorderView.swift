@@ -23,18 +23,18 @@ public class AudioRecorderView: EZAudioPlot {
   private var plot : AKNodeOutputPlot = AKNodeOutputPlot(AKMixer.init(), frame: CGRect.init())
   
   // The timeline scrubber
-  private var timelineBar = TimelineBar()
+  private var timelineScrubber = TimelineScrubber()
   
   public weak var delegate: AudioRecorderViewDelegate?
   
   /// position in seconds of the bar
   public var position: Double {
     get {
-      return Double(timelineBar.frame.origin.x)
+      return Double(timelineScrubber.frame.origin.x)
     }
     
     set {
-      timelineBar.frame.origin.x = CGFloat(newValue)
+      timelineScrubber.frame.origin.x = CGFloat(newValue)
     }
   }
   
@@ -97,8 +97,8 @@ public class AudioRecorderView: EZAudioPlot {
   
   // Setup the timeline with custom properties
   private func setupWaveformTimeline() {
-    self.timelineBar.autoresizingMask = [.flexibleHeight]
-    self.plot.addSubview(self.timelineBar)
+    self.timelineScrubber.autoresizingMask = [.flexibleHeight]
+    self.plot.addSubview(self.timelineScrubber)
   }
   
   // Resume plot, but keep access level private
@@ -156,7 +156,7 @@ public class AudioRecorderView: EZAudioPlot {
   }
   
   override public func layoutSubviews() {
-    self.timelineBar.updateScrubberPosition(componentWidth: self.componentWidth, componentHeight: self.componentHeight)
+    self.timelineScrubber.updateScrubberPosition(componentWidth: self.componentWidth, componentHeight: self.componentHeight)
   }
 }
 
@@ -166,8 +166,8 @@ public protocol AudioRecorderViewDelegate: class {
   func waveformScrubComplete(source: AudioRecorderView, at time: Double)
 }
 
-// Represents our timeline bar which enables to move forward or backward in the audio file (abstract)
-class TimelineBar: AKView {
+// Represents our scrubber which enables to move forward or backward in the audio file (abstract)
+class TimelineScrubber: AKView {
   private let color = UIColor.white
   private var rect = CGRect(x: 0, y: 0, width: 2, height: 0)
   

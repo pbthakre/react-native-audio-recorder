@@ -215,6 +215,7 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       },
       onError: { error in
+        jsonArray["success"] = false
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
@@ -227,6 +228,7 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       },
       onError: { error in
+        jsonArray["success"] = false
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
@@ -239,6 +241,7 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       },
       onError: { error in
+        jsonArray["success"] = false
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
@@ -251,6 +254,7 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       },
       onError: { error in
+        jsonArray["success"] = false
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
@@ -263,6 +267,7 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       },
       onError: { error in
+        jsonArray["success"] = false
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
@@ -315,6 +320,7 @@ class AudioRecorderViewManager : RCTViewManager {
       
       // Inform bridge/React about error
       jsonArray["error"].stringValue = error.localizedDescription
+      jsonArray["success"] = false
       reject("Error", jsonArray.rawString(), error)
     }
   }

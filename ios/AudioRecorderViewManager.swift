@@ -215,7 +215,7 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       },
       onError: { error in
-        jsonArray["success"] = false
+        self.jsonArray["success"] = false
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
@@ -228,7 +228,7 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       },
       onError: { error in
-        jsonArray["success"] = false
+        self.jsonArray["success"] = false
         reject("Error", self.jsonArray.rawString(), error)
       }
     )

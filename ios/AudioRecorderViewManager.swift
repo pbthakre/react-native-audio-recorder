@@ -277,14 +277,8 @@ class AudioRecorderViewManager : RCTViewManager {
     resolve(jsonArray.rawString());
   }
 
+  // Starts the recording of audio
   @objc public func startRecording(_ startTimeInMs:Double, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
-    // Result/Error - Response
-    var jsonArray: JSON = [
-      "success": true,
-      "error": "",
-      "value": ""
-    ]
-    
     // Microphone will be monitored while recording
     // only if headphones are plugged
     if AKSettings.headPhonesPlugged {
@@ -314,12 +308,12 @@ class AudioRecorderViewManager : RCTViewManager {
       self.currentView?.resumeWaveform()
       
       // Inform bridge/React about success
+      jsonArray["success"] = true
       resolve(jsonArray.rawString());
     } catch {
-      print("Errored recording.")
+      print("Recording failed.")
       
       // Inform bridge/React about error
-      jsonArray["success"] = false
       jsonArray["error"].stringValue = error.localizedDescription
       reject("Error", jsonArray.rawString(), error)
     }

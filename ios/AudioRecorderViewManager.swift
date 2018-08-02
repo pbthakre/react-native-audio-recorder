@@ -71,7 +71,10 @@ class AudioRecorderViewManager : RCTViewManager {
   @objc public func setDimensions(_ width:Double, dimHeight height:Double) {
     self.currentView?.componentWidth = width
     self.currentView?.componentHeight = height
-    self.currentView?.layoutSubviews()
+    
+    DispatchQueue.main.async {
+      self.currentView?.layoutSubviews()
+    }
   }
 
   @objc public func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {

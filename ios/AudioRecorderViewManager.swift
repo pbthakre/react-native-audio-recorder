@@ -53,7 +53,7 @@ class AudioRecorderViewManager : RCTViewManager {
   private var pointToOverwriteRecordingInSeconds: Double = 0.00
   
   // Defines if the recording is/should be overwriting existing parts of the file
-  private var isOverwriting: Bool = true
+  private var isOverwriting: Bool = false
   
   // Instantiates the view
   override func view() -> AudioRecorderView {
@@ -176,7 +176,7 @@ class AudioRecorderViewManager : RCTViewManager {
     resolve(jsonArray.rawString());
   }
 
-  @objc public func startRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+  @objc public func startRecording(_ startTimeInMs:Double, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Result/Error - Response
     var jsonArray: JSON = [
       "success": true,
@@ -188,6 +188,15 @@ class AudioRecorderViewManager : RCTViewManager {
     // only if headphones are plugged
     if AKSettings.headPhonesPlugged {
       micBooster.gain = 1
+    }
+    
+    // If -1 then overwriting flag is set to false, "first" new recording
+    // otherwise set overwriting flag to true, prepare overwriting from specific point
+    if (startTimeInMs < 0) {
+      self.isOverwriting = false
+    } else {
+      self.isOverwriting = true
+      self.pointToOverwriteRecordingInSeconds = Double(startTimeInMs) / Double(1000)
     }
     
     do {
@@ -219,7 +228,8 @@ class AudioRecorderViewManager : RCTViewManager {
     // Result/Error - Response
     var jsonArray: JSON = [
       "success": true,
-      "error": ""
+      "error": "",
+      "value": ["fileUrl": ""]
     ]
     
     // Microphone monitoring is muted
@@ -234,80 +244,142 @@ class AudioRecorderViewManager : RCTViewManager {
     // Temporarily store the audio file recorded by the recorder
     tape = recorder.audioFile!
     
-    // Append the current recorded tape to the final tape
-    do {
-      let newFile = try finalTape?.appendedBy(file: tape)
-      finalTape = newFile
-    }
-    catch {
-      // Inform bridge/React about error
-      jsonArray["success"] = false
-      jsonArray["error"].stringValue = error.localizedDescription
-      reject("Error", jsonArray.rawString(), error)
-    }
-    
-    // Inform bridge/React about success
-    resolve(jsonArray.rawString());
-  }
-  
-  @objc public func finishRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
-    // Result/Error - Response
-    var jsonArray: JSON = [
-      "success": true,
-      "error": "",
-      "value": ["fileUrl": ""]
-    ]
-    
-    // Stop rendering the waveform
-    self.currentView?.pauseWaveform()
-    
-    // Clear the waveform after recording
-    self.currentView?.clearWaveform()
-    
-    // Store the audio data (final tape) permanently on the device's storage
-    finalTape?.exportAsynchronously(name: fileName,
-                              baseDir: .documents,
-                              exportFormat: .m4a) {_, exportError in
-                                if let error = exportError {
-                                  print("Export Failed \(error)")
-                                  
-                                  // Inform bridge/React about error
-                                  jsonArray["success"] = false
-                                  jsonArray["error"].stringValue = error.localizedDescription
-                                  reject("Error", jsonArray.rawString(), error)
-                                } else {
-                                  print("Export succeeded")
-                                }
-    }
-    
-    // Reset the final tape to be ready for the next session
-    do {
-      finalTape = try AKAudioFile()
-    }
-    catch {
-      // Inform bridge/React about error
-      jsonArray["success"] = false
-      jsonArray["error"].stringValue = error.localizedDescription
-      reject("Error", jsonArray.rawString(), error)
-    }
-    
-    // Make the file url available to React Native
-    if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-      // Set the file url of the last recorded file
-      jsonArray["value"]["fileUrl"].stringValue = documentsPathString + fileName
-    }
-    
-    do {
-      // Reset all data from previous recording
-      try recorder.reset()
-      tape = try AKAudioFile()
-    } catch {
-      print("Errored recording.")
+    // Create a new file
+    if (!self.isOverwriting) {
+      // Append the current recorded tape to the final tape
+      do {
+        let newFile = try finalTape?.appendedBy(file: tape)
+        finalTape = newFile
+      }
+      catch {
+        // Inform bridge/React about error
+        jsonArray["success"] = false
+        jsonArray["error"].stringValue = error.localizedDescription
+        reject("Error", jsonArray.rawString(), error)
+      }
       
-      // Inform bridge/React about error
-      jsonArray["success"] = false
-      jsonArray["error"].stringValue = error.localizedDescription
-      reject("Error", jsonArray.rawString(), error)
+      // Clear the waveform after recording
+      self.currentView?.clearWaveform()
+      
+      // Store the audio data (final tape) permanently on the device's storage
+      finalTape?.exportAsynchronously(name: fileName,
+                                      baseDir: .documents,
+                                      exportFormat: .m4a) {_, exportError in
+                                        if let error = exportError {
+                                          print("Export Failed \(error)")
+                                          
+                                          // Inform bridge/React about error
+                                          jsonArray["success"] = false
+                                          jsonArray["error"].stringValue = error.localizedDescription
+                                          reject("Error", jsonArray.rawString(), error)
+                                        } else {
+                                          print("Export succeeded")
+                                        }
+      }
+      
+      // Reset the final tape to be ready for the next session
+      do {
+        finalTape = try AKAudioFile()
+      }
+      catch {
+        // Inform bridge/React about error
+        jsonArray["success"] = false
+        jsonArray["error"].stringValue = error.localizedDescription
+        reject("Error", jsonArray.rawString(), error)
+      }
+      
+      // Make the file url available to React Native
+      if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+        // Set the file url of the last recorded file
+        jsonArray["value"]["fileUrl"].stringValue = documentsPathString + "/" + fileName
+      }
+      
+      do {
+        // Reset all data from previous recording
+        try recorder.reset()
+        tape = try AKAudioFile()
+      } catch {
+        print("Errored recording.")
+        
+        // Inform bridge/React about error
+        jsonArray["success"] = false
+        jsonArray["error"].stringValue = error.localizedDescription
+        reject("Error", jsonArray.rawString(), error)
+      }
+    } else { // Overwrite from - to
+      do {
+        // The tape which should be overwritten
+        let previousTape = try AKAudioFile(readFileName: fileName, baseDir: .documents)
+        
+        // The first sample to be extracted
+        var firstSampleToExtract = 0
+        
+        // The last sample to be extracted
+        var lastSampleToExtract = previousTape.sampleRate * pointToOverwriteRecordingInSeconds
+        
+        // Extract the first part of the previous file (starting from zero to the point from which should be overwritten
+        let previousTapeExtractedBefore = try previousTape.extracted(fromSample: Int64(firstSampleToExtract), toSample: Int64(lastSampleToExtract))
+        
+        // Append the the first part of the previous tape to the final tape
+        var newFile = try finalTape?.appendedBy(file: previousTapeExtractedBefore)
+        finalTape = newFile
+        
+        // Append the new recorded tape (the part which replaces the old part in the previous file)
+        newFile = try finalTape?.appendedBy(file: tape)
+        finalTape = newFile
+        
+        // The first sample to be extracted
+        firstSampleToExtract = Int((tape.sampleRate * tape.duration) + 1)
+        
+        // The last sample to be extracted
+        lastSampleToExtract = previousTape.sampleRate * previousTape.duration
+        
+        // Extract the first part of the previous file (starting from zero to the point from which should be overwritten
+        let previousTapeExtractedAfter = try previousTape.extracted(fromSample: Int64(firstSampleToExtract), toSample: Int64(lastSampleToExtract))
+        
+        // Append the last part of the previous tape to the final tape
+        newFile = try finalTape?.appendedBy(file: previousTapeExtractedAfter)
+        finalTape = newFile
+        
+        // Clear the waveform after recording
+        self.currentView?.clearWaveform()
+        
+        // Store the audio data (final tape) permanently on the device's storage
+        finalTape?.exportAsynchronously(name: fileName,
+                                        baseDir: .documents,
+                                        exportFormat: .m4a) {_, exportError in
+                                          if let error = exportError {
+                                            print("Export Failed \(error)")
+                                            
+                                            // Inform bridge/React about error
+                                            jsonArray["success"] = false
+                                            jsonArray["error"].stringValue = error.localizedDescription
+                                            reject("Error", jsonArray.rawString(), error)
+                                          } else {
+                                            print("Export succeeded")
+                                          }
+        }
+        
+        // Reset the final tape to be ready for the next session
+        finalTape = try AKAudioFile()
+        
+        // Make the file url available to React Native
+        if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+          // Set the file url of the last recorded file
+          jsonArray["value"]["fileUrl"].stringValue = documentsPathString + "/" + fileName
+        }
+        
+        // Reset all data from previous recording
+        try recorder.reset()
+        tape = try AKAudioFile()
+      } catch {
+        print("Errored.")
+        
+        // Inform bridge/React about error
+        jsonArray["success"] = false
+        jsonArray["error"].stringValue = error.localizedDescription
+        reject("Error", jsonArray.rawString(), error)
+      }
     }
     
     // Inform bridge/React about success

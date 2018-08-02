@@ -19,8 +19,7 @@ export default class App extends Component<Props> {
   state = {
     isSetup: false,
     isRecording: false,
-    fileUrl: '',
-    numberOfRecords: 0
+    fileUrl: ''
   };
 
   constructor(props) {
@@ -53,7 +52,7 @@ export default class App extends Component<Props> {
   };
 
   render() {
-    const { isSetup, isRecording, numberOfRecords } = this.state;
+    const { isSetup, isRecording } = this.state;
 
     return (
       <View style={styles.container}>
@@ -65,12 +64,13 @@ export default class App extends Component<Props> {
               <Button
                 style={styles.button}
                 onPress={() => {
-                  this.recorderRef.startRecording()
+                  this.recorderRef.startRecording(2000)
                     .then((result) => {
                       const parsedResult = JSON.parse(result);
 
                       if (parsedResult['success']) {
                         this.setState({isRecording: true});
+                        console.log('INFO: Recording started.')
                       }
                     })
                     .catch(error => {
@@ -90,7 +90,8 @@ export default class App extends Component<Props> {
 
                       if (parsedResult['success']) {
                         this.setState({isRecording: false});
-                        this.setState({numberOfRecords: this.state.numberOfRecords + 1})
+                        console.log('INFO: Recording stopped.')
+                        console.log(parsedResult['value']['fileUrl']);
                       }
                     })
                     .catch(error => {
@@ -99,27 +100,6 @@ export default class App extends Component<Props> {
                 }}
                 title={'Stop Recording'}
               />
-            }
-            {isSetup &&
-            <Button
-              style={styles.button}
-              onPress={() => {
-                this.recorderRef.finishRecording()
-                  .then((result) => {
-                    const parsedResult = JSON.parse(result);
-
-                    if (parsedResult['success']) {
-                      parsedResult['fileUrl']
-                      this.setState({numberOfRecords: 0})
-                    }
-                  })
-                  .catch(error => {
-                    console.log(error.toString());
-                  });
-              }}
-              title={'Finish Recording'}
-              disabled={isRecording || numberOfRecords < 1}
-            />
             }
             <Text>Recorder State: {this.renderRecorderStateText(isSetup, isRecording)}</Text>
           </View>

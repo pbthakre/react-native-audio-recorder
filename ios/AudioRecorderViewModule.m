@@ -18,9 +18,11 @@
 
 // Represents the bridge which enables access to AudioRecorderView(Manager) in React Native
 @interface RCT_EXTERN_MODULE(AudioRecorderViewManager, RCTViewManager)
-RCT_EXTERN_METHOD(setDimensions: (double)width dimHeight:(double)height);
+  // General
+  RCT_EXTERN_METHOD(setDimensions: (double)width dimHeight:(double)height);
+
+  // Recording
   RCT_EXTERN_METHOD(setupRecorder: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
-  RCT_EXTERN_METHOD(startRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
+  RCT_EXTERN_METHOD(startRecording: (double)startTimeInMS resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
   RCT_EXTERN_METHOD(stopRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
-  RCT_EXTERN_METHOD(finishRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 @end

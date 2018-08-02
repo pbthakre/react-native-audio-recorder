@@ -11,15 +11,11 @@ export default {
     return AudioRecorderViewManager.setupRecorder();
   },
 
-  startRecording() {
-    return AudioRecorderViewManager.startRecording();
+  startRecording(startTimeInMs) {
+    return AudioRecorderViewManager.startRecording(startTimeInMs);
   },
 
   stopRecording() {
     return AudioRecorderViewManager.stopRecording();
-  },
-
-  finishRecording() {
-    return AudioRecorderViewManager.finishRecording();
   }
 }

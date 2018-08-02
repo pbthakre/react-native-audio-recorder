@@ -259,7 +259,7 @@ class AudioRecorderViewManager : RCTViewManager {
       }
     )
     
-    // Start the AudioKit engine
+    // Setup the final tape
     setupFinalTape(
       onSuccess: { success in
         if (success) {
@@ -324,19 +324,8 @@ class AudioRecorderViewManager : RCTViewManager {
       reject("Error", jsonArray.rawString(), error)
     }
   }
-  @objc public func stopRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
-    // Microphone monitoring is muted
-    micBooster.gain = 0
-    
-    // Stop the recorder
-    recorder.stop()
-    
-    // Stop rendering the waveform
-    self.currentView?.pauseWaveform()
-    
-    // Temporarily store the audio file recorded by the recorder
-    tape = recorder.audioFile!
-    
+  
+  private func storeAudioDataInFile(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     // Create a new file
     if (!self.isOverwriting) {
       // Append the current recorded tape to the final tape
@@ -345,41 +334,43 @@ class AudioRecorderViewManager : RCTViewManager {
         finalTape = newFile
       }
       catch {
-        // Inform bridge/React about error
-        jsonArray["success"] = false
+        // Return with error
+        AKLog("Failed")
         jsonArray["error"].stringValue = error.localizedDescription
-        reject("Error", jsonArray.rawString(), error)
+        onError(error)
       }
       
       // Clear the waveform after recording
       self.currentView?.clearWaveform()
       
       // Store the audio data (final tape) permanently on the device's storage
-      finalTape?.exportAsynchronously(name: fileName,
-                                      baseDir: .documents,
-                                      exportFormat: .m4a) {_, exportError in
-                                        if let error = exportError {
-                                          print("Export Failed \(error)")
+      finalTape?.exportAsynchronously(
+        name: fileName,
+        baseDir: .documents,
+        exportFormat: .m4a) {_, exportError in
+          if let error = exportError {
+            print("Export failed.")
                                           
-                                          // Inform bridge/React about error
-                                          self.jsonArray["success"] = false
-                                          self.jsonArray["error"].stringValue = error.localizedDescription
-                                          reject("Error", self.jsonArray.rawString(), error)
-                                        } else {
-                                          print("Export succeeded")
-                                        }
+            // Return with error
+            self.jsonArray["error"].stringValue = error.localizedDescription + " - Export failed."
+            onError(error)
+          } else {
+            print("Export succeeded.")
+          }
       }
       
       // Reset the final tape to be ready for the next session
-      do {
-        finalTape = try AKAudioFile()
-      }
-      catch {
-        // Inform bridge/React about error
-        jsonArray["success"] = false
-        jsonArray["error"].stringValue = error.localizedDescription
-        reject("Error", jsonArray.rawString(), error)
-      }
+      setupFinalTape(
+        onSuccess: { success in
+          if (success) {
+            self.jsonArray["success"] = true
+          }
+        },
+        onError: { error in
+          self.jsonArray["success"] = false
+          onError(error)
+        }
+      )
       
       // Make the file url available to React Native
       if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
@@ -392,12 +383,11 @@ class AudioRecorderViewManager : RCTViewManager {
         try recorder.reset()
         tape = try AKAudioFile()
       } catch {
-        print("Errored recording.")
+        print("Failed.")
         
-        // Inform bridge/React about error
-        jsonArray["success"] = false
+        // Return with error
         jsonArray["error"].stringValue = error.localizedDescription
-        reject("Error", jsonArray.rawString(), error)
+        onError(error)
       }
     } else { // Overwrite from - to
       do {
@@ -438,19 +428,19 @@ class AudioRecorderViewManager : RCTViewManager {
         self.currentView?.clearWaveform()
         
         // Store the audio data (final tape) permanently on the device's storage
-        finalTape?.exportAsynchronously(name: fileName,
-                                        baseDir: .documents,
-                                        exportFormat: .m4a) {_, exportError in
-                                          if let error = exportError {
-                                            print("Export Failed \(error)")
-                                            
-                                            // Inform bridge/React about error
-                                            self.jsonArray["success"] = false
-                                            self.jsonArray["error"].stringValue = error.localizedDescription
-                                            reject("Error", self.jsonArray.rawString(), error)
-                                          } else {
-                                            print("Export succeeded")
-                                          }
+        finalTape?.exportAsynchronously(
+          name: fileName,
+          baseDir: .documents,
+          exportFormat: .m4a) {_, exportError in
+            if let error = exportError {
+              print("Export failed.")
+              
+              // Return with error
+              self.jsonArray["error"].stringValue = error.localizedDescription + " - Export failed."
+              onError(error)
+            } else {
+              print("Export succeeded.")
+            }
         }
         
         // Reset the final tape to be ready for the next session
@@ -466,14 +456,41 @@ class AudioRecorderViewManager : RCTViewManager {
         try recorder.reset()
         tape = try AKAudioFile()
       } catch {
-        print("Errored.")
+        print("Failed.")
         
-        // Inform bridge/React about error
-        jsonArray["success"] = false
+        // Return with error
         jsonArray["error"].stringValue = error.localizedDescription
-        reject("Error", jsonArray.rawString(), error)
+        onError(error)
       }
     }
+  }
+  
+  // Stops audio recording and stores the recorded data in a file
+  @objc public func stopRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
+    // Microphone monitoring is muted
+    micBooster.gain = 0
+    
+    // Stop the recorder
+    recorder.stop()
+    
+    // Stop rendering the waveform
+    self.currentView?.pauseWaveform()
+    
+    // Temporarily store the audio file recorded by the recorder
+    tape = recorder.audioFile!
+    
+    // Store the recorded audio data
+    storeAudioDataInFile(
+      onSuccess: { success in
+        if (success) {
+          self.jsonArray["success"] = true
+        }
+      },
+      onError: { error in
+        self.jsonArray["success"] = false
+        reject("Error", self.jsonArray.rawString(), error)
+      }
+    )
     
     // Inform bridge/React about success
     resolve(jsonArray.rawString());

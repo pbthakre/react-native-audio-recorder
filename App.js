@@ -90,7 +90,7 @@ export default class App extends Component<Props> {
 
                       if (parsedResult['success']) {
                         this.setState({isRecording: false});
-                        console.log('INFO: Recording stopped.')
+                        console.log('INFO: Recording stopped.');
                         console.log(parsedResult['value']['fileUrl']);
                       }
                     })

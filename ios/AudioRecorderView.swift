@@ -78,19 +78,11 @@ public class AudioRecorderView: EZAudioPlot {
   
   // Resume plot, but keep access level private
   public func resumeWaveform() {
-    // Turn off touch events while recording or playing
-    DispatchQueue.main.async {
-      self.isUserInteractionEnabled = false
-    }
     self.plot.resume()
   }
   
   // Pause plot, but keep access level private
   public func pauseWaveform() {
-    // Activate touch events after recording or playing
-    DispatchQueue.main.async {
-      self.isUserInteractionEnabled = true
-    }
     self.plot.pause()
   }
   

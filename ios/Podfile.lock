@@ -5,7 +5,7 @@ PODS:
   - SwiftyJSON (4.1.0)
 
 DEPENDENCIES:
-  - AudioKit (~> 4.2)
+  - AudioKit (~> 4.3)
   - SwiftyJSON (~> 4.1)
 
 SPEC REPOS:
@@ -17,6 +17,6 @@ SPEC CHECKSUMS:
   AudioKit: 95bd2427c1afa7954d71b0c6195a09b87b7448bc
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
 
-PODFILE CHECKSUM: 1ef17bcff7be6fb4fcf1a212d56140b392b5fe55
+PODFILE CHECKSUM: 4eefe4ccacfddc4ec01685ced7ca9f1ffbc6ead3
 
 COCOAPODS: 1.5.3

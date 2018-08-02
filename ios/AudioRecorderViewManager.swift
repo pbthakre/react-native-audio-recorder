@@ -16,44 +16,57 @@ import SwiftyJSON
 // Represents the AudioRecorderViewManager which manages our AudioRecorderView Module
 @objc(AudioRecorderViewManager)
 class AudioRecorderViewManager : RCTViewManager {
-  // Represents the device's microphone
+  // The device's microphone
   private let mic = AKMicrophone()
   
-   // Represents the mixer which handles the microphone input
+   // The mixer which handles the microphone input
   private var micMixer: AKMixer!
   
-  // Represents the mixer which handles the speaker output
+  // The mixer which handles the speaker output
   private var mainMixer: AKMixer!
   
-  // Represents the recorder which handles recording of audio samples via mixer
+  // The recorder which handles recording of audio samples via mixer
   private var recorder: AKNodeRecorder!
   
-  // Represents the player which handles playing of audio samples via mixer
+  // The player which handles playing of audio samples via mixer
   private var player: AKPlayer!
   
-  // Represents the file of recorded or played audio samples
+  // The file of recorded audio samples
   private var tape: AKAudioFile!
   
-  // Create the tape which will then contain all the recorded tapes of this session
+  // The tape which will then contain all the recorded sub tapes of this session
   var finalTape: AKAudioFile? = nil
   
   // The name of the file where the current recording is stored in
   private let fileName = "currentRecording.m4a"
   
-  // Represents the booster which lets control the microphone input properties such as volume
+  // The booster which lets control the microphone input properties such as volume
   private var micBooster: AKBooster!
   
-  // Represents the filter node
+  // The filter node
   private var moogLadder: AKMoogLadder!
   
-  // Represents the view
+  // The native ui view
   private var currentView: AudioRecorderView?
   
-  // Defines from which position to overwrite the recorded data
+  // The position from which to overwrite the recorded data
   private var pointToOverwriteRecordingInSeconds: Double = 0.00
   
   // Defines if the recording is/should be overwriting existing parts of the file
   private var isOverwriting: Bool = false
+  
+  // The promise response
+  private var jsonArray: JSON = [
+    "success": false,
+    "error": "",
+    "value": ["fileUrl": ""]
+  ]
+  
+  // Error for testing error handling
+  // Can be removed anytime later
+  enum TestError: Error {
+    case runtimeError(String)
+  }
   
   // Instantiates the view
   override func view() -> AudioRecorderView {
@@ -76,103 +89,191 @@ class AudioRecorderViewManager : RCTViewManager {
       self.currentView?.layoutSubviews()
     }
   }
-
-  @objc public func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
-    // Result/Error - Response
-    var jsonArray: JSON = [
-      "success": true,
-      "error": "",
-      "value": ""
-    ]
-    
-    // Stop AudioKit to prevent errors of duplicate initialization
+  
+  // Cleans up
+  private func cleanupRecorder(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
-      try AudioKit.stop()
-    } catch {
-      AKLog("AudioKit did not stop!")
+      // Remove temporary files from temp directory
+      AKAudioFile.cleanTempDirectory()
       
-      // Inform bridge/React about error
-      jsonArray["success"] = false
-      jsonArray["error"].stringValue = error.localizedDescription
-      reject("Error", jsonArray.rawString(), error)
+      // Stop AudioKit to prevent errors of duplicate initialization
+      try AudioKit.stop()
+
+      // Completed without error
+      onSuccess(true)
+    } catch {
+      // Aborted with error
+      AKLog("Cleanup failed.")
+      jsonArray["error"].stringValue = error.localizedDescription + " - Cleanup failed."
+      onError(error)
     }
-    
-    // Remove temporary files from temp directory
-    AKAudioFile.cleanTempDirectory()
-    
-    // Session settings
-    // Set number of audio frames which can be hold by the buffer (medium = 8)
-    AKSettings.bufferLength = .medium
-    
+  }
+  
+  // Init new recording session
+  private func initRecorderSession(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
       // Create a session with recording/recording and bluetooth output only
       try AKSettings.setSession(category: .playAndRecord, with: .allowBluetoothA2DP)
-    } catch {
-      AKLog("Could not set session category.")
       
-      // Inform bridge/React about error
-      jsonArray["success"] = false
-      jsonArray["error"].stringValue = error.localizedDescription
-      reject("Error", jsonArray.rawString(), error)
+      // Session settings
+      // Set number of audio frames which can be hold by the buffer (medium = 8)
+      AKSettings.bufferLength = .medium
+      
+      // Use default speakers of the device
+      AKSettings.defaultToSpeaker = true
+      
+      //throw TestError.runtimeError("some message")
+      
+      // Completed without error
+      onSuccess(true)
+    } catch {
+      // Return with error
+      AKLog("Init of session failed.")
+      jsonArray["error"].stringValue = error.localizedDescription + " - Init of session failed."
+      onError(error)
     }
-    
-    // Use default speakers of the device
-    AKSettings.defaultToSpeaker = true
-    
-    // Setup mixer (input handler) for microphone, plus wrap mixer into booster (property handler)
-    micMixer = AKMixer(mic)
-    micBooster = AKBooster(micMixer)
-    
-    // Microphone monitoring is muted
-    micBooster.gain = 0
-    
-    // Setup recorder with using microphone mixer as input handler
-    recorder = try? AKNodeRecorder(node: micMixer)
-    
-    // Setup player using the recorded audio file
-    if let file = recorder.audioFile {
-      player = AKPlayer(audioFile: file)
-    }
-    
-    // Apply filter which enables to manipulate the signal
-    moogLadder = AKMoogLadder(player)
-    moogLadder.presetDullNoiseMoogLadder()
-    
-    // Create a mixer which combines our filtered node and our microphone node
-    mainMixer = AKMixer(moogLadder, micBooster)
-    
-    // Set the signal of the main mixer as output signal
-    AudioKit.output = mainMixer
+  }
+  
+  // Setup virtual devices like, for example, mixer
+  private func setupVirtualDevices(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
+      // Setup mixer (input handler) for microphone, plus wrap mixer into booster (property handler)
+      micMixer = AKMixer(mic)
+      micBooster = AKBooster(micMixer)
+      
+      // Microphone monitoring is muted
+      micBooster.gain = 0
+      
+      // Setup recorder with using microphone mixer as input handler
+      recorder = try AKNodeRecorder(node: micMixer)
+      
+      // Setup player using the recorded audio file
+      if let file = recorder.audioFile {
+        player = AKPlayer(audioFile: file)
+      }
+      
+      // Apply filter which enables to manipulate the signal
+      moogLadder = AKMoogLadder(player)
+      moogLadder.presetDullNoiseMoogLadder()
+      
+      // Create a mixer which combines our filtered node and our microphone node
+      mainMixer = AKMixer(moogLadder, micBooster)
+      
+      // Completed without error
+      onSuccess(true)
+    } catch {
+      // Return with error
+      AKLog("Setup of virtual devices failed.")
+      jsonArray["error"].stringValue = error.localizedDescription + " - Setup of virtual devices failed."
+      onError(error)
+    }
+  }
+  
+  // Start the AudioKit engine
+  private func startEngine(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
+    do {
+      // Set the signal of the main mixer as output signal
+      AudioKit.output = mainMixer
+      
       // Start the audio engine
       try AudioKit.start()
-    } catch {
-      AKLog("AudioKit did not start!")
       
-      // Inform bridge/React about error
-      jsonArray["success"] = false
-      jsonArray["error"].stringValue = error.localizedDescription
-      reject("Error", jsonArray.rawString(), error)
+      // Completed without error
+      onSuccess(true)
+    } catch {
+      // Return with error
+      AKLog("Starting of engine failed.")
+      jsonArray["error"].stringValue = error.localizedDescription + " - Starting of engine failed."
+      onError(error)
     }
+  }
+  
+  // Setup the final tape which will contain all audio data of one session
+  private func setupFinalTape(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
+    do {
+      // Setup the audio tape which will contain the compilation of all the audio data of one session
+      finalTape = try AKAudioFile()
+      
+      // Completed without error
+      onSuccess(true)
+    }
+    catch {
+      // Return with error
+      AKLog("Setup of final tape failed.")
+      jsonArray["error"].stringValue = error.localizedDescription + " - Setup of final tape failed."
+      onError(error)
+    }
+  }
+
+  // Instantiates all the things needed for recording
+  @objc public func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
+    // Cleanup before initialize the new session
+    cleanupRecorder(
+      onSuccess: { success in
+        if (success) {
+          self.jsonArray["success"] = true
+        }
+      },
+      onError: { error in
+        reject("Error", self.jsonArray.rawString(), error)
+      }
+    )
+    
+    // Init a new recording session
+    initRecorderSession(
+      onSuccess: { success in
+        if (success) {
+          self.jsonArray["success"] = true
+        }
+      },
+      onError: { error in
+        reject("Error", self.jsonArray.rawString(), error)
+      }
+    )
+    
+    // Setup the virtual devices e. g. mixer
+    setupVirtualDevices(
+      onSuccess: { success in
+        if (success) {
+          self.jsonArray["success"] = true
+        }
+      },
+      onError: { error in
+        reject("Error", self.jsonArray.rawString(), error)
+      }
+    )
+    
+    // Start the AudioKit engine
+    startEngine(
+      onSuccess: { success in
+        if (success) {
+          self.jsonArray["success"] = true
+        }
+      },
+      onError: { error in
+        reject("Error", self.jsonArray.rawString(), error)
+      }
+    )
+    
+    // Start the AudioKit engine
+    setupFinalTape(
+      onSuccess: { success in
+        if (success) {
+          self.jsonArray["success"] = true
+        }
+      },
+      onError: { error in
+        reject("Error", self.jsonArray.rawString(), error)
+      }
+    )
     
     // Microphone monitoring is muted
     micBooster.gain = 0
-    
-    // Initialize the wave form
+
+    // Initialize the waveform
     self.currentView?.setupWaveform(mic: self.mic);
     
-    // Setup the audio tape which contains the compilation of all audio data of one session
-    do {
-      finalTape = try AKAudioFile()
-    }
-    catch {
-      // Inform bridge/React about error
-      jsonArray["success"] = false
-      jsonArray["error"].stringValue = error.localizedDescription
-      reject("Error", jsonArray.rawString(), error)
-    }
-    
-    // Inform bridge/React about success
+    // Recorder setup finished without errors
     resolve(jsonArray.rawString());
   }
 

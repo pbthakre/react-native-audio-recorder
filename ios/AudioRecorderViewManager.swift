@@ -241,7 +241,7 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       },
       onError: { error in
-        jsonArray["success"] = false
+        self.jsonArray["success"] = false
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
@@ -254,7 +254,7 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       },
       onError: { error in
-        jsonArray["success"] = false
+        self.jsonArray["success"] = false
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
@@ -267,7 +267,7 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       },
       onError: { error in
-        jsonArray["success"] = false
+        self.jsonArray["success"] = false
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
@@ -324,15 +324,7 @@ class AudioRecorderViewManager : RCTViewManager {
       reject("Error", jsonArray.rawString(), error)
     }
   }
-
   @objc public func stopRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
-    // Result/Error - Response
-    var jsonArray: JSON = [
-      "success": true,
-      "error": "",
-      "value": ["fileUrl": ""]
-    ]
-    
     // Microphone monitoring is muted
     micBooster.gain = 0
     
@@ -370,9 +362,9 @@ class AudioRecorderViewManager : RCTViewManager {
                                           print("Export Failed \(error)")
                                           
                                           // Inform bridge/React about error
-                                          jsonArray["success"] = false
-                                          jsonArray["error"].stringValue = error.localizedDescription
-                                          reject("Error", jsonArray.rawString(), error)
+                                          self.jsonArray["success"] = false
+                                          self.jsonArray["error"].stringValue = error.localizedDescription
+                                          reject("Error", self.jsonArray.rawString(), error)
                                         } else {
                                           print("Export succeeded")
                                         }
@@ -453,9 +445,9 @@ class AudioRecorderViewManager : RCTViewManager {
                                             print("Export Failed \(error)")
                                             
                                             // Inform bridge/React about error
-                                            jsonArray["success"] = false
-                                            jsonArray["error"].stringValue = error.localizedDescription
-                                            reject("Error", jsonArray.rawString(), error)
+                                            self.jsonArray["success"] = false
+                                            self.jsonArray["error"].stringValue = error.localizedDescription
+                                            reject("Error", self.jsonArray.rawString(), error)
                                           } else {
                                             print("Export succeeded")
                                           }

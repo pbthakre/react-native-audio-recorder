@@ -21,13 +21,5 @@ export default {
 
   finishRecording() {
     return AudioRecorderViewManager.finishRecording();
-  },
-
-  startPlaying() {
-    return AudioRecorderViewManager.startPlaying();
-  },
-
-  stopPlaying() {
-    return AudioRecorderViewManager.stopPlaying();
   }
 }

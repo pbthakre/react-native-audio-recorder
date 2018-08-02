@@ -49,9 +49,6 @@ class AudioRecorderViewManager : RCTViewManager {
   // Represents the view
   private var currentView: AudioRecorderView?
   
-  // Defines from which position to play the file
-  private var pointToStartPlayingInSeconds: Double = 0.00
-  
   // Defines from which position to overwrite the recorded data
   private var pointToOverwriteRecordingInSeconds: Double = 0.00
   
@@ -133,9 +130,6 @@ class AudioRecorderViewManager : RCTViewManager {
     if let file = recorder.audioFile {
       player = AKPlayer(audioFile: file)
     }
-    
-    // Define if the player should play the audio file again after finishing
-    player.isLooping = true
     
     // Apply filter which enables to manipulate the signal
     moogLadder = AKMoogLadder(player)
@@ -312,51 +306,6 @@ class AudioRecorderViewManager : RCTViewManager {
       jsonArray["error"].stringValue = error.localizedDescription
       reject("Error", jsonArray.rawString(), error)
     }
-    
-    // Inform bridge/React about success
-    resolve(jsonArray.rawString());
-  }
-
-  @objc public func startPlaying(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
-    // Result/Error - Response
-    let jsonArray: JSON = [
-      "success": true,
-      "error": "",
-      "value": ""
-    ]
-    
-    // Set main mixer as input to render waveform from played audio
-    self.currentView?.setNode(inputNode: mainMixer)
-    
-    // Clear the waveform before playing
-    self.currentView?.clearWaveform()
-    
-    // Start rendering waveform of played audio
-    self.currentView?.resumeWaveform()
-    
-    // Load the finalTape (session recordings) data into player
-    player.load(audioFile: finalTape!)
-    
-    // Start playing the audio file
-    player.play(from: pointToStartPlayingInSeconds)
-    
-    // Inform bridge/React about success
-    resolve(jsonArray.rawString());
-  }
-
-  @objc public func stopPlaying(_ resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
-    // Result/Error - Response
-    let jsonArray: JSON = [
-      "success": true,
-      "error": "",
-      "value": ""
-    ]
-    
-    // Stop rendering the waveform
-    self.currentView?.pauseWaveform()
-    
-    // Stop playing the audio file
-    player.stop()
     
     // Inform bridge/React about success
     resolve(jsonArray.rawString());

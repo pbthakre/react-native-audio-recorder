@@ -29,14 +29,6 @@ export default class AudioRecorder extends Component<Props> {
     return AudioRecorderNative.finishRecording();
   };
 
-  startPlaying() {
-    return AudioRecorderNative.startPlaying();
-  };
-
-  stopPlaying() {
-    return AudioRecorderNative.stopPlaying();
-  };
-
   render() {
     return (
       <View style={styles.container}>

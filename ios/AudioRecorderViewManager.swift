@@ -284,7 +284,7 @@ class AudioRecorderViewManager : RCTViewManager {
       self.finalTape = newFile
       
       // The first sample to be extracted
-      firstSampleToExtract = Int((self.tape.sampleRate * self.tape.duration) + 1)
+      firstSampleToExtract = Int(((self.finalTape?.sampleRate)! * (self.finalTape?.duration)!) + 1)
       
       // The last sample to be extracted
       lastSampleToExtract = previousTape.sampleRate * previousTape.duration

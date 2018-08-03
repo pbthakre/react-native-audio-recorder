@@ -119,9 +119,6 @@ class AudioRecorderViewManager : RCTViewManager {
       // Set number of audio frames which can be hold by the buffer
       AKSettings.bufferLength = .veryLong
       
-      // Set sample rate
-      AKSettings.sampleRate = 48000
-      
       // Don't use default speakers to avoid crackling in audio files (bug of AudioKit!?)
       AKSettings.defaultToSpeaker = false
       

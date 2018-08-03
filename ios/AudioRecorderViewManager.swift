@@ -248,6 +248,9 @@ class AudioRecorderViewManager : RCTViewManager {
       // Reset all data from previous recording
       try self.recorder.reset()
       self.tape = try AKAudioFile()
+      
+      // Completed without error
+      onSuccess(true)
     } catch {
       print("Failed.")
       
@@ -257,7 +260,54 @@ class AudioRecorderViewManager : RCTViewManager {
     }
   }
   
+  // Partially vverwrites the previous tape with the content of the current tape
+  private func overwritePartially(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
+    do {
+      // The tape which should be overwritten
+      let previousTape = try AKAudioFile(readFileName: self.fileName, baseDir: .documents)
+      
+      // The first sample to be extracted
+      var firstSampleToExtract = 0
+      
+      // The last sample to be extracted
+      var lastSampleToExtract = previousTape.sampleRate * self.pointToOverwriteRecordingInSeconds
+      
+      // Extract the first part of the previous file (starting from zero to the point from which should be overwritten
+      let previousTapeExtractedBefore = try previousTape.extracted(fromSample: Int64(firstSampleToExtract), toSample: Int64(lastSampleToExtract))
+      
+      // Append the the first part of the previous tape to the final tape
+      var newFile = try self.finalTape?.appendedBy(file: previousTapeExtractedBefore)
+      self.finalTape = newFile
+      
+      // Append the new recorded tape (the part which replaces the old part in the previous file)
+      newFile = try self.finalTape?.appendedBy(file: self.tape)
+      self.finalTape = newFile
+      
+      // The first sample to be extracted
+      firstSampleToExtract = Int((self.tape.sampleRate * self.tape.duration) + 1)
+      
+      // The last sample to be extracted
+      lastSampleToExtract = previousTape.sampleRate * previousTape.duration
+      
+      // Extract the first part of the previous file (starting from zero to the point from which should be overwritten
+      let previousTapeExtractedAfter = try previousTape.extracted(fromSample: Int64(firstSampleToExtract), toSample: Int64(lastSampleToExtract))
+      
+      // Append the last part of the previous tape to the final tape
+      newFile = try self.finalTape?.appendedBy(file: previousTapeExtractedAfter)
+      self.finalTape = newFile
+      
+      // Completed without error
+      onSuccess(true)
+    } catch {
+      print("Failed.")
+      
+      // Aborted with error
+      self.jsonArray["error"].stringValue = error.localizedDescription
+      onError(error)
+    }
+  }
   
+  // Creates one final tape out of others and stores it as an audio file on the device's storage
   private func createAndStoreTapeFromRecordings(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     // Create a new file
     if (!self.isOverwriting) {
@@ -322,88 +372,66 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       )
     } else { // Overwrite from - to
-      do {
-        // The tape which should be overwritten
-        let previousTape = try AKAudioFile(readFileName: self.fileName, baseDir: .documents)
-        
-        // The first sample to be extracted
-        var firstSampleToExtract = 0
-        
-        // The last sample to be extracted
-        var lastSampleToExtract = previousTape.sampleRate * self.pointToOverwriteRecordingInSeconds
-        
-        // Extract the first part of the previous file (starting from zero to the point from which should be overwritten
-        let previousTapeExtractedBefore = try previousTape.extracted(fromSample: Int64(firstSampleToExtract), toSample: Int64(lastSampleToExtract))
-        
-        // Append the the first part of the previous tape to the final tape
-        var newFile = try self.finalTape?.appendedBy(file: previousTapeExtractedBefore)
-        self.finalTape = newFile
-        
-        // Append the new recorded tape (the part which replaces the old part in the previous file)
-        newFile = try self.finalTape?.appendedBy(file: self.tape)
-        self.finalTape = newFile
-        
-        // The first sample to be extracted
-        firstSampleToExtract = Int((self.tape.sampleRate * self.tape.duration) + 1)
-        
-        // The last sample to be extracted
-        lastSampleToExtract = previousTape.sampleRate * previousTape.duration
-        
-        // Extract the first part of the previous file (starting from zero to the point from which should be overwritten
-        let previousTapeExtractedAfter = try previousTape.extracted(fromSample: Int64(firstSampleToExtract), toSample: Int64(lastSampleToExtract))
-        
-        // Append the last part of the previous tape to the final tape
-        newFile = try self.finalTape?.appendedBy(file: previousTapeExtractedAfter)
-        self.finalTape = newFile
-        
-        // Clear the waveform after recording
-        self.currentView?.clearWaveform()
-        
-        // Store the audio data (final tape) permanently on the device's storage
-        self.finalTape?.exportAsynchronously(
-          name: self.fileName,
-          baseDir: .documents,
-          exportFormat: .m4a) {_, exportError in
-            if let error = exportError {
-              print("Export failed.")
-              
-              // Aborted with error
-              self.jsonArray["error"].stringValue = error.localizedDescription + " - Export failed."
-              onError(error)
-            } else {
-              print("Export succeeded.")
-            }
-        }
-        
-        // Reset the final tape to be ready for the next session
-        setupFinalTape(
-          onSuccess: { success in
-            if (success) {
-              self.jsonArray["success"] = true
-            }
+      // Overwrite the previous tape partially with the content of the current tape
+      overwritePartially(
+        onSuccess: { success in
+          if (success) {
+            self.jsonArray["success"] = true
+          }
         },
-          onError: { error in
-            self.jsonArray["success"] = false
-            onError(error)
+        onError: { error in
+          self.jsonArray["success"] = false
+          onError(error)
         }
-        )
-        
-        // Make the file url available to React Native
-        if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-          // Set the file url of the last recorded file
-          self.jsonArray["value"]["fileUrl"].stringValue = documentsPathString + "/" + self.fileName
+      )
+      
+      // Clear the waveform after recording
+      self.currentView?.clearWaveform()
+      
+      // Store the audio data as file on the storage
+      exportFinalTapeToFile(
+        onSuccess: { success in
+          if (success) {
+            self.jsonArray["success"] = true
+          }
+        },
+        onError: { error in
+          self.jsonArray["success"] = false
+          onError(error)
         }
-        
-        // Reset all data from previous recording
-        try self.recorder.reset()
-        self.tape = try AKAudioFile()
-      } catch {
-        print("Failed.")
-        
-        // Aborted with error
-        self.jsonArray["error"].stringValue = error.localizedDescription
-        onError(error)
+      )
+      
+      // Reset the final tape to be ready for the next session
+      setupFinalTape(
+        onSuccess: { success in
+          if (success) {
+            self.jsonArray["success"] = true
+          }
+        },
+        onError: { error in
+          self.jsonArray["success"] = false
+          onError(error)
+        }
+      )
+      
+      // Make the file url available to React Native
+      if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+        // Set the file url of the last recorded file
+        self.jsonArray["value"]["fileUrl"].stringValue = documentsPathString + "/" + self.fileName
       }
+      
+      // Reset everything from previous recording
+      resetDataFromPreviousRecording(
+        onSuccess: { success in
+          if (success) {
+            self.jsonArray["success"] = true
+          }
+        },
+        onError: { error in
+          self.jsonArray["success"] = false
+          onError(error)
+        }
+      )
     }
   }
 

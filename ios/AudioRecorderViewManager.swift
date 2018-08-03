@@ -119,6 +119,9 @@ class AudioRecorderViewManager : RCTViewManager {
       // Set number of audio frames which can be hold by the buffer
       AKSettings.bufferLength = .veryLong
       
+      // Set sample rate
+      AKSettings.sampleRate = 48000
+      
       // Don't use default speakers to avoid crackling in audio files (bug of AudioKit!?)
       AKSettings.defaultToSpeaker = false
       
@@ -323,88 +326,39 @@ class AudioRecorderViewManager : RCTViewManager {
     }
   }
   
-  private func appendCurrentTapeToFinalTape(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
-    do {
-      // Append the current recorded tape to the final tape
-      let newFile = try self.finalTape?.appendedBy(file: self.tape)
-      self.finalTape = newFile
-      
-      // Completed without error
-      onSuccess(true)
-    }
-    catch {
-      // Aborted with error
-      AKLog("Failed")
-      self.jsonArray["error"].stringValue = error.localizedDescription
-      onError(error)
-    }
-  }
-  
-  private func exportFinalTapeToFile(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
-    // Store the audio data (final tape) permanently on the device's storage
-    self.finalTape?.exportAsynchronously(
-      name: self.fileName,
-      baseDir: .documents,
-      exportFormat: .m4a) {_, exportError in
-        if let error = exportError {
-          print("Export failed.")
-          
-          // Aborted with error
-          self.jsonArray["error"].stringValue = error.localizedDescription + " - Export failed."
-          onError(error)
-        } else {
-          print("Export succeeded.")
-          // Completed without error
-          onSuccess(true)
-        }
-      }
-  }
-  
-  private func resetDataFromPreviousRecording(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
-    do {
-      // Reset all data from previous recording
-      try self.recorder.reset()
-      self.tape = try AKAudioFile()
-    } catch {
-      print("Failed.")
-      
-      // Aborted with error
-      self.jsonArray["error"].stringValue = error.localizedDescription
-      onError(error)
-    }
-  }
-  
   private func storeAudioDataInFile(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     // Create a new file
     if (!self.isOverwriting) {
-      // Append the last recorded audio to the final tape
-      appendCurrentTapeToFinalTape(
-        onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
-        },
-        onError: { error in
-          self.jsonArray["success"] = false
-          onError(error)
-        }
-      )
+      // Append the current recorded tape to the final tape
+      do {
+        let newFile = try self.finalTape?.appendedBy(file: self.tape)
+        self.finalTape = newFile
+      }
+      catch {
+        // Aborted with error
+        AKLog("Failed")
+        self.jsonArray["error"].stringValue = error.localizedDescription
+        onError(error)
+      }
       
       // Clear the waveform after recording
       self.currentView?.clearWaveform()
       
-      // Store the audio data as file on the storage
-      exportFinalTapeToFile(
-        onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
+      // Store the audio data (final tape) permanently on the device's storage
+      self.finalTape?.exportAsynchronously(
+        name: self.fileName,
+        baseDir: .documents,
+        exportFormat: .m4a) {_, exportError in
+          if let error = exportError {
+            print("Export failed.")
+                                          
+            // Aborted with error
+            self.jsonArray["error"].stringValue = error.localizedDescription + " - Export failed."
+            onError(error)
+          } else {
+            print("Export succeeded.")
           }
-        },
-        onError: { error in
-          self.jsonArray["success"] = false
-          onError(error)
-        }
-      )
+      }
       
       // Reset the final tape to be ready for the next session
       setupFinalTape(
@@ -425,18 +379,17 @@ class AudioRecorderViewManager : RCTViewManager {
         self.jsonArray["value"]["fileUrl"].stringValue = documentsPathString + "/" + self.fileName
       }
       
-      // Reset everything from previous recording
-      resetDataFromPreviousRecording(
-        onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
-        },
-        onError: { error in
-          self.jsonArray["success"] = false
-          onError(error)
-        }
-      )
+      do {
+        // Reset all data from previous recording
+        try self.recorder.reset()
+        self.tape = try AKAudioFile()
+      } catch {
+        print("Failed.")
+        
+        // Aborted with error
+        self.jsonArray["error"].stringValue = error.localizedDescription
+        onError(error)
+      }
     } else { // Overwrite from - to
       do {
         // The tape which should be overwritten
@@ -492,17 +445,7 @@ class AudioRecorderViewManager : RCTViewManager {
         }
         
         // Reset the final tape to be ready for the next session
-        setupFinalTape(
-          onSuccess: { success in
-            if (success) {
-              self.jsonArray["success"] = true
-            }
-          },
-          onError: { error in
-            self.jsonArray["success"] = false
-            onError(error)
-          }
-        )
+        self.finalTape = try AKAudioFile()
         
         // Make the file url available to React Native
         if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {

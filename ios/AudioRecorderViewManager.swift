@@ -116,11 +116,14 @@ class AudioRecorderViewManager : RCTViewManager {
       try AKSettings.setSession(category: .playAndRecord, with: .allowBluetoothA2DP)
       
       // Session settings
-      // Set number of audio frames which can be hold by the buffer (medium = 8)
-      AKSettings.bufferLength = .medium
+      // Set number of audio frames which can be hold by the buffer
+      AKSettings.bufferLength = .veryLong
       
-      // Use default speakers of the device
-      AKSettings.defaultToSpeaker = true
+      // Set sample rate
+      AKSettings.sampleRate = 48000
+      
+      // Don't use default speakers to avoid crackling in audio files (bug of AudioKit!?)
+      AKSettings.defaultToSpeaker = false
       
       // Completed without error
       onSuccess(true)

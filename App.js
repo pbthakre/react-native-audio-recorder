@@ -64,7 +64,7 @@ export default class App extends Component<Props> {
               <Button
                 style={styles.button}
                 onPress={() => {
-                  this.recorderRef.startRecording(2000)
+                  this.recorderRef.startRecording()
                     .then((result) => {
                       const parsedResult = JSON.parse(result);
 

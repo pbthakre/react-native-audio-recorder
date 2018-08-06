@@ -11,6 +11,7 @@ target 'reactnativeaudiorecorder' do
   # Pods for react-native-audio-recorder
   pod 'AudioKit', '~> 4.3'
   pod 'SwiftyJSON', '~> 4.1'
+  pod 'SwiftSiriWaveformView', '~> 2.4'
 end
 
 def change_lines_in_file(file_path, &change)

@@ -2,21 +2,25 @@ PODS:
   - AudioKit (4.3):
     - AudioKit/UI (= 4.3)
   - AudioKit/UI (4.3)
+  - SwiftSiriWaveformView (2.4.0)
   - SwiftyJSON (4.1.0)
 
 DEPENDENCIES:
   - AudioKit (~> 4.3)
+  - SwiftSiriWaveformView (~> 2.4)
   - SwiftyJSON (~> 4.1)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AudioKit
+    - SwiftSiriWaveformView
     - SwiftyJSON
 
 SPEC CHECKSUMS:
   AudioKit: 95bd2427c1afa7954d71b0c6195a09b87b7448bc
+  SwiftSiriWaveformView: baa04ed2089e854af00ea54c38a7700ca43d7ae0
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
 
-PODFILE CHECKSUM: 4eefe4ccacfddc4ec01685ced7ca9f1ffbc6ead3
+PODFILE CHECKSUM: 41b3e76e7c87b2a9340340c054e56d4d7a60f46b
 
 COCOAPODS: 1.5.3

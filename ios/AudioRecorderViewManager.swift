@@ -49,6 +49,9 @@ class AudioRecorderViewManager : RCTViewManager {
   // The native ui view
   private var currentView: AudioRecorderView?
   
+  // The tracker which observes the microphone
+  private var microphoneTracker = AKMicrophoneTracker()
+  
   // The position from which to overwrite the recorded data
   private var pointToOverwriteRecordingInSeconds: Double = 0.00
   
@@ -117,10 +120,12 @@ class AudioRecorderViewManager : RCTViewManager {
       
       // Session settings
       // Set number of audio frames which can be hold by the buffer
-      AKSettings.bufferLength = .veryLong
+      AKSettings.bufferLength = .short
       
       // Don't use default speakers to avoid crackling in audio files (bug of AudioKit!?)
       AKSettings.defaultToSpeaker = false
+      
+      AKSettings.audioInputEnabled = true
       
       // Completed without error
       onSuccess(true)
@@ -172,6 +177,9 @@ class AudioRecorderViewManager : RCTViewManager {
     do {
       // Set the signal of the main mixer as output signal
       AudioKit.output = self.mainMixer
+      
+      // Start tracking
+      self.microphoneTracker.start()
       
       // Start the audio engine
       try AudioKit.start()
@@ -506,7 +514,7 @@ class AudioRecorderViewManager : RCTViewManager {
     self.micBooster.gain = 0
 
     // Initialize the waveform
-    self.currentView?.setupWaveform(mic: self.mic);
+    self.currentView?.setupWaveform(microphoneTracker: self.microphoneTracker);
     
     // Recorder setup finished without errors
     resolve(self.jsonArray.rawString());
@@ -536,9 +544,6 @@ class AudioRecorderViewManager : RCTViewManager {
       // Try to start recording
       try self.recorder.record()
       
-      // Set input node to microphone for recording
-      self.currentView?.setNode(inputNode: mic)
-      
       // Start rendering the waveform
       self.currentView?.resumeWaveform()
       
@@ -565,6 +570,9 @@ class AudioRecorderViewManager : RCTViewManager {
     
     // Stop rendering the waveform
     self.currentView?.pauseWaveform()
+    
+    // Clear the waveform after recording
+    self.currentView?.clearWaveform()
     
     // Temporarily store the audio file recorded by the recorder
     self.tape = self.recorder.audioFile!

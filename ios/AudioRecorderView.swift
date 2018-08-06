@@ -8,8 +8,10 @@
 
 import Foundation
 import UIKit
+
 import AudioKit
 import AudioKitUI
+import SwiftSiriWaveformView
 
 // Represents the our native ui (view) component
 public class AudioRecorderView: EZAudioPlot {
@@ -20,7 +22,13 @@ public class AudioRecorderView: EZAudioPlot {
   public var componentHeight: Double = 0.00
   
   // The plot which represents the waveform
-  private var plot : AKNodeOutputPlot = AKNodeOutputPlot(AKMixer.init(), frame: CGRect.init())
+  private var plot : SwiftSiriWaveformView = SwiftSiriWaveformView()
+  
+  // The timer which calls the waveform update method
+  var timer: Timer?
+  
+  // Tracker which observes the microphone
+  var microphoneTracker = AKMicrophoneTracker()
   
   private override init(frame: CGRect) {
     // Call super constructor
@@ -34,43 +42,56 @@ public class AudioRecorderView: EZAudioPlot {
   }
   
   // Initializes our waveform with defined properties
-  func setupWaveform(mic: AKMicrophone) {
+  func setupWaveform(microphoneTracker: AKMicrophoneTracker) {
     DispatchQueue.main.async {
       // Setup plot
-      self.setupWaveformPlot(mic: mic)
+      self.setupWaveformPlot(microphoneTracker: microphoneTracker)
+    }
+  }
+  
+  // Update the waveform according to amplitude change
+  @objc internal func refreshWaveformWithAmplitude(_:Timer) {
+    // Simply set the amplitude to whatever you need and the view will update itself.
+    DispatchQueue.main.async {
+      // Threshold amplitude so that baseline is quite straight
+      var amplitude = self.microphoneTracker.amplitude
+      if (self.microphoneTracker.amplitude < 0.25) {
+        amplitude = 0
+      }
+      
+      self.plot.amplitude = CGFloat(amplitude)
     }
   }
   
   // Setup the plot with custom properties
-  private func setupWaveformPlot(mic: AKMicrophone) {
+  private func setupWaveformPlot(microphoneTracker: AKMicrophoneTracker) {
+    // Set the tracker
+    self.microphoneTracker = microphoneTracker
+    
     // Create the plot
-    self.plot = AKNodeOutputPlot(mic, frame: self.frame)
+    self.plot = SwiftSiriWaveformView()
     
     // Set width and height to use 100 % (relative)
     self.plot.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     
-    // Set plot properties to generate waveform like plot
-    self.plot.plotType = .rolling
-    self.plot.shouldFill = true
-    self.plot.shouldMirror = true
+    // Set the wave line color
+    self.plot.waveColor = UIColor(red: 245.0 / 255.0, green: 0.0 / 255.0, blue: 87.0 / 255.0, alpha: 1.0)
     
-    // Set the color of the line
-    self.plot.color = UIColor(red: 245.0 / 255.0, green: 0.0 / 255.0, blue: 87.0 / 255.0, alpha: 1.0)
+    // Set amplitude and frequency to zero to create a straight line
+    self.plot.amplitude = 0
+    self.plot.frequency = 0
     
-    // Set the background color of the plot
-    self.plot.backgroundColor = UIColor.black
+    // Define the number of secondary lines
+    self.plot.numberOfWaves = 1
     
-    // Set the scaling factor of the line
-    self.plot.gain = 5
+    // Remove secondary lines
+    self.plot.secondaryLineWidth = 0
     
-    // Cut off lines which go beyond the view bounds
-    self.plot.clipsToBounds = true
+    // Set width of primary line
+    self.plot.primaryLineWidth = 5
     
-    // Prevent waveform from being rendered all the time
-    self.plot.pause()
-    
-    // Clear the waveform to generate a baseline
-    self.plot.clear()
+    // Set the speed of the wave form
+    self.plot.phaseShift = 0.5
     
     // Add the view
     self.addSubview(self.plot)
@@ -78,22 +99,25 @@ public class AudioRecorderView: EZAudioPlot {
   
   // Resume plot, but keep access level private
   public func resumeWaveform() {
-    self.plot.resume()
+    // Set number of sinus waves
+    self.plot.frequency = 4
+    
+    DispatchQueue.main.async {
+      self.timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(self.refreshWaveformWithAmplitude(_:)), userInfo: nil, repeats: true)
+    }
   }
   
   // Pause plot, but keep access level private
   public func pauseWaveform() {
-    self.plot.pause()
+    DispatchQueue.main.async {
+      self.timer?.invalidate()
+    }
   }
   
   // Clear plot, but keep access level private
   public func clearWaveform() {
-    self.plot.clear()
-  }
-  
-  // Define which node should be used as input node (input signal)
-  public func setNode(inputNode: AKNode) {
-    self.plot.node = inputNode
+    self.plot.amplitude = 0
+    self.plot.frequency = 0
   }
   
   required public init?(coder aDecoder: NSCoder) {

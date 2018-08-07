@@ -3,7 +3,7 @@
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 04.07.18.
-//  Copyright © 2018 Crowdio GmbH. All rights reserved.
+//  Copyright © 2018 Audvice GmbH. All rights reserved.
 //
 
 //

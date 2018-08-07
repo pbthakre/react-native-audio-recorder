@@ -458,14 +458,9 @@
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
-				7478BD5720F3A4EA0087F47D /* reactnativeaudiorecorder-Swift.h */,
-				744B4DF420FC70370078776A /* reactnativeaudiorecorder-Bridging-Header.h */,
-				7459AD6221073E5F0097EB82 /* AudioRecorderViewModule.m */,
-				7459AD5F21073E190097EB82 /* AudioRecorderViewManager.swift */,
-				7459AD3821073DFF0097EB82 /* AudioRecorderView.swift */,
-				7477249521197D6100DF3211 /* AudioPlayerView.swift */,
-				7477249321197D6100DF3211 /* AudioPlayerViewManager.swift */,
-				7477249421197D6100DF3211 /* AudioPlayerViewModule.m */,
+				7477249D211980D600DF3211 /* Bridge */,
+				7477249B211980B400DF3211 /* AudioRecorder */,
+				7477249C211980BE00DF3211 /* AudioPlayer */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
@@ -514,6 +509,35 @@
 				5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		7477249B211980B400DF3211 /* AudioRecorder */ = {
+			isa = PBXGroup;
+			children = (
+				7459AD6221073E5F0097EB82 /* AudioRecorderViewModule.m */,
+				7459AD5F21073E190097EB82 /* AudioRecorderViewManager.swift */,
+				7459AD3821073DFF0097EB82 /* AudioRecorderView.swift */,
+			);
+			name = AudioRecorder;
+			sourceTree = "<group>";
+		};
+		7477249C211980BE00DF3211 /* AudioPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				7477249521197D6100DF3211 /* AudioPlayerView.swift */,
+				7477249321197D6100DF3211 /* AudioPlayerViewManager.swift */,
+				7477249421197D6100DF3211 /* AudioPlayerViewModule.m */,
+			);
+			name = AudioPlayer;
+			sourceTree = "<group>";
+		};
+		7477249D211980D600DF3211 /* Bridge */ = {
+			isa = PBXGroup;
+			children = (
+				7478BD5720F3A4EA0087F47D /* reactnativeaudiorecorder-Swift.h */,
+				744B4DF420FC70370078776A /* reactnativeaudiorecorder-Bridging-Header.h */,
+			);
+			name = Bridge;
 			sourceTree = "<group>";
 		};
 		7478BD8020F4AA280087F47D /* Products */ = {

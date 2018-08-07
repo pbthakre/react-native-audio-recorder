@@ -12,7 +12,7 @@ import {
   Button
 } from 'react-native';
 
-import AudioRecorder from './AudioRecorder';
+import AudioRecorder from './native_modules/AudioRecorder/AudioRecorder';
 
 type Props = {};
 export default class App extends Component<Props> {

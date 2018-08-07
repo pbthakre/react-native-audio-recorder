@@ -23,6 +23,9 @@
 		7459AD3921073DFF0097EB82 /* AudioRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7459AD3821073DFF0097EB82 /* AudioRecorderView.swift */; };
 		7459AD6021073E190097EB82 /* AudioRecorderViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7459AD5F21073E190097EB82 /* AudioRecorderViewManager.swift */; };
 		7459AD6321073E5F0097EB82 /* AudioRecorderViewModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 7459AD6221073E5F0097EB82 /* AudioRecorderViewModule.m */; };
+		7477249621197D6100DF3211 /* AudioPlayerViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7477249321197D6100DF3211 /* AudioPlayerViewManager.swift */; };
+		7477249721197D6100DF3211 /* AudioPlayerViewModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 7477249421197D6100DF3211 /* AudioPlayerViewModule.m */; };
+		7477249821197D6100DF3211 /* AudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7477249521197D6100DF3211 /* AudioPlayerView.swift */; };
 		7478BDAA20F4AB860087F47D /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7478BDA920F4AA290087F47D /* libReactNativePermissions.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 /* End PBXBuildFile section */
@@ -331,6 +334,9 @@
 		7459AD3821073DFF0097EB82 /* AudioRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderView.swift; sourceTree = "<group>"; };
 		7459AD5F21073E190097EB82 /* AudioRecorderViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderViewManager.swift; sourceTree = "<group>"; };
 		7459AD6221073E5F0097EB82 /* AudioRecorderViewModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioRecorderViewModule.m; sourceTree = "<group>"; };
+		7477249321197D6100DF3211 /* AudioPlayerViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerViewManager.swift; sourceTree = "<group>"; };
+		7477249421197D6100DF3211 /* AudioPlayerViewModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayerViewModule.m; sourceTree = "<group>"; };
+		7477249521197D6100DF3211 /* AudioPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerView.swift; sourceTree = "<group>"; };
 		7478BD5720F3A4EA0087F47D /* reactnativeaudiorecorder-Swift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "reactnativeaudiorecorder-Swift.h"; sourceTree = "<group>"; };
 		7478BD7F20F4AA280087F47D /* ReactNativePermissions.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativePermissions.xcodeproj; path = "../../../../../Downloads/Crowdio/node_modules/react-native-permissions/ios/ReactNativePermissions.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -457,6 +463,9 @@
 				7459AD6221073E5F0097EB82 /* AudioRecorderViewModule.m */,
 				7459AD5F21073E190097EB82 /* AudioRecorderViewManager.swift */,
 				7459AD3821073DFF0097EB82 /* AudioRecorderView.swift */,
+				7477249521197D6100DF3211 /* AudioPlayerView.swift */,
+				7477249321197D6100DF3211 /* AudioPlayerViewManager.swift */,
+				7477249421197D6100DF3211 /* AudioPlayerViewModule.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
@@ -1085,8 +1094,11 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				7459AD6321073E5F0097EB82 /* AudioRecorderViewModule.m in Sources */,
+				7477249821197D6100DF3211 /* AudioPlayerView.swift in Sources */,
 				7459AD6021073E190097EB82 /* AudioRecorderViewManager.swift in Sources */,
 				7459AD3921073DFF0097EB82 /* AudioRecorderView.swift in Sources */,
+				7477249721197D6100DF3211 /* AudioPlayerViewModule.m in Sources */,
+				7477249621197D6100DF3211 /* AudioPlayerViewManager.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

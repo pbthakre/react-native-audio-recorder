@@ -31,6 +31,6 @@ const styles = StyleSheet.create({
     marginTop: 100,
     width: Dimensions.get('window').width,
     height: '30%',
-    backgroundColor: 'red'
+    backgroundColor: 'blue'
   }
 });

@@ -13,6 +13,10 @@ export default class AudioPlayer extends Component<Props> {
     super(props);
   }
 
+  renderByFile(fileUrl) {
+    return AudioPlayerNative.renderByFile(fileUrl);
+  };
+
   render() {
     return (
       <View style={styles.container}>

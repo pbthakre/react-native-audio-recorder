@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import AudioRecorder from './native_modules/AudioRecorder/AudioRecorder';
+import AudioPlayer from './native_modules/AudioPlayer/AudioPlayer';
 
 type Props = {};
 export default class App extends Component<Props> {
@@ -25,6 +26,7 @@ export default class App extends Component<Props> {
   constructor(props) {
     super(props);
     this.recorderRef = React.createRef();
+    this.playerRef = React.createRef();
   }
 
   renderRecorderStateText(isSetup, isRecording) {
@@ -56,6 +58,7 @@ export default class App extends Component<Props> {
 
     return (
       <View style={styles.container}>
+        <AudioPlayer ref={ (ref) => this.playerRef = ref} />
         <AudioRecorder ref={ (ref) => this.recorderRef = ref} />
 
         {!!this.recorderRef &&
@@ -84,19 +87,32 @@ export default class App extends Component<Props> {
               <Button
                 style={styles.button}
                 onPress={() => {
-                  this.recorderRef.stopRecording()
-                    .then((result) => {
-                      const parsedResult = JSON.parse(result);
+                  // Stop the recorder and get result incl. file url
+                  const stopRecordingPromise = this.recorderRef.stopRecording();
 
-                      if (parsedResult['success']) {
-                        this.setState({isRecording: false});
-                        console.log('INFO: Recording stopped.');
-                        console.log(parsedResult['value']['fileUrl']);
-                      }
-                    })
-                    .catch(error => {
-                      console.log(error.toString());
-                    });
+                  // Create a waveform from the file with the given url
+                  const renderByFilePromise = stopRecordingPromise.then((stopRecordingResult) => {
+                    const parsedResult = JSON.parse(stopRecordingResult);
+
+                    if (parsedResult['success']) {
+                      this.setState({isRecording: false});
+                      console.log('INFO: Recording stopped.')
+                    }
+
+                    return this.playerRef.renderByFile(parsedResult['value']['fileUrl']);
+                  });
+
+                  // Check if rendering the waveform was successful
+                  renderByFilePromise.then((renderByFileResult) => {
+                    const parsedResult = JSON.parse(renderByFileResult);
+                    if (parsedResult['success']) {
+                      console.log('INFO: Drawing waveform of file finished.')
+                    }
+                  })
+                  .catch(error => {
+                    console.log(error.toString());
+                  });
+
                 }}
                 title={'Stop Recording'}
               />

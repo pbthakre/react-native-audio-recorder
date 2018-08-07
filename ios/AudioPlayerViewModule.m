@@ -20,4 +20,7 @@
 @interface RCT_EXTERN_MODULE(AudioPlayerViewManager, RCTViewManager)
   // General
   RCT_EXTERN_METHOD(setDimensions: (double)width dimHeight:(double)height);
+
+  // Waveform
+  RCT_EXTERN_METHOD(renderByFile: (NSString *)fileUrl resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 @end

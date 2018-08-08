@@ -116,8 +116,10 @@ public class AudioRecorderView: EZAudioPlot {
   
   // Clear plot, but keep access level private
   public func clearWaveform() {
-    self.plot.amplitude = 0
-    self.plot.frequency = 0
+    DispatchQueue.main.async {
+      self.plot.amplitude = 0
+      self.plot.frequency = 0
+    }
   }
   
   required public init?(coder aDecoder: NSCoder) {

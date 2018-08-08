@@ -38,7 +38,7 @@ class AudioRecorderViewManager : RCTViewManager {
   var finalTape: AKAudioFile? = nil
   
   // The name of the file where the current recording is stored in
-  private let fileName = "currentRecording.m4a"
+  private let fileName = "currentRecording.mp4"
   
   // The booster which lets control the microphone input properties such as volume
   private var micBooster: AKBooster!
@@ -120,7 +120,7 @@ class AudioRecorderViewManager : RCTViewManager {
       
       // Session settings
       // Set number of audio frames which can be hold by the buffer
-      AKSettings.bufferLength = .short
+      AKSettings.bufferLength = .veryLong
       
       // Don't use default speakers to avoid crackling in audio files (bug of AudioKit!?)
       AKSettings.defaultToSpeaker = false
@@ -214,6 +214,9 @@ class AudioRecorderViewManager : RCTViewManager {
   // Appends the current recorded audio to the final audio
   private func appendCurrentTapeToFinalTape(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
+      // Create a new file with zero data (extracted is used to avoid buffer error on reading an empty file)
+      self.finalTape = try self.tape.extracted(fromSample: 0, toSample: 1)
+      
       // Append the current recorded tape to the final tape
       let newFile = try self.finalTape?.appendedBy(file: self.tape)
       self.finalTape = newFile
@@ -235,18 +238,23 @@ class AudioRecorderViewManager : RCTViewManager {
     self.finalTape?.exportAsynchronously(
       name: self.fileName,
       baseDir: .documents,
-      exportFormat: .m4a) {_, exportError in
-        if let error = exportError {
-          print("Export failed.")
-          
-          // Aborted with error
-          self.jsonArray["error"].stringValue = error.localizedDescription + " - Export failed."
-          onError(error)
-        } else {
-          print("Export succeeded.")
-          // Completed without error
-          onSuccess(true)
-        }
+      exportFormat: .mp4) {
+        exportedFile, error in
+          print("myExportCallBack has been triggered. It means that export ended")
+          if error == nil {
+            // If it is valid:
+            if exportedFile != nil {
+              print("Export succeeded.")
+              // Completed without error
+              onSuccess(true)
+            }
+          } else {
+            print("Export failed.")
+            
+            // Aborted with error
+            self.jsonArray["error"].stringValue = (error?.localizedDescription)! + " - Export failed."
+            onError(error!)
+          }
     }
   }
   
@@ -379,6 +387,8 @@ class AudioRecorderViewManager : RCTViewManager {
           onError(error)
         }
       )
+      
+      onSuccess(true)
     } else { // Overwrite from - to
       // Overwrite the previous tape partially with the content of the current tape
       overwritePartially(
@@ -440,6 +450,8 @@ class AudioRecorderViewManager : RCTViewManager {
           onError(error)
         }
       )
+      
+      onSuccess(true)
     }
   }
 
@@ -561,7 +573,7 @@ class AudioRecorderViewManager : RCTViewManager {
   }
   
   // Stops audio recording and stores the recorded data in a file
-  @objc public func stopRecording(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
+  @objc public func stopRecording(_ resolve:@escaping RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
     // Microphone monitoring is muted
     self.micBooster.gain = 0
     
@@ -582,6 +594,8 @@ class AudioRecorderViewManager : RCTViewManager {
       onSuccess: { success in
         if (success) {
           self.jsonArray["success"] = true
+          // Inform bridge/React about success
+          resolve(self.jsonArray.rawString());
         }
       },
       onError: { error in
@@ -589,8 +603,5 @@ class AudioRecorderViewManager : RCTViewManager {
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
-    
-    // Inform bridge/React about success
-    resolve(self.jsonArray.rawString());
   }
 }

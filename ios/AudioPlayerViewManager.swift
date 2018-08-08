@@ -30,6 +30,7 @@ class AudioPlayerViewManager : RCTViewManager {
   override func view() -> AudioPlayerView {
     let newView = AudioPlayerView()
     self.currentView = newView
+    self.currentView?.setupWaveform()
     return newView
   }
   
@@ -50,9 +51,8 @@ class AudioPlayerViewManager : RCTViewManager {
   
   // Instantiates all the things needed for the player waveform
   @objc public func renderByFile(_ fileUrl:String, resolver resolve:@escaping RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
-    
     // Create the waveform from file
-    self.currentView?.setupWaveform(
+    self.currentView?.updateWaveformWithData(
       fileUrl: URL(string: fileUrl)!,
       onSuccess: { success in
         if (success) {

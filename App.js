@@ -93,13 +93,14 @@ export default class App extends Component<Props> {
                   // Create a waveform from the file with the given url
                   const renderByFilePromise = stopRecordingPromise.then((stopRecordingResult) => {
                     const parsedResult = JSON.parse(stopRecordingResult);
-                    
+
                     if (parsedResult['success']) {
                       this.setState({isRecording: false});
-                      console.log('INFO: Recording stopped.')
+                      console.log('INFO: Recording stopped.');
+                      console.log(parsedResult['value']['fileUrl'])
                     }
 
-                    return that.playerRef.renderByFile(parsedResult['value']['fileUrl']);
+                    return this.playerRef.renderByFile(parsedResult['value']['fileUrl']);
                   });
 
                   // Check if rendering the waveform was successful

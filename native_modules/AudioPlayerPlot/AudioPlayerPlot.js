@@ -20,7 +20,7 @@ export default class AudioPlayerPlot extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <AudioPlayerUIView style={styles.native}/>
+        <AudioPlayerUIView style={this.props.style} width={this.props.width} height={this.props.height}/>
       </View>
     );
   }

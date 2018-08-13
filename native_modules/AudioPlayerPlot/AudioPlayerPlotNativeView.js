@@ -22,12 +22,12 @@ export default class AudioPlayerUIView extends Component {
     if (this.state.dimensions) {
       AudioPlayerNative.setDimensions(this.state.dimensions.width, this.state.dimensions.height)
     }
-    return <AudioPlayerView style={styles.player} onLayout={this.onLayout}/>
+    return <AudioPlayerView style={styles.default} onLayout={this.onLayout} width={!this.props.width ? styles.default.width : this.props.width} height={!this.props.height ? styles.default.height : this.props.height}/>
   }
 }
 
 const styles = StyleSheet.create({
-  player: {
+  default: {
     marginTop: 100,
     width: Dimensions.get('window').width,
     height: '30%',

@@ -22,7 +22,7 @@ export default class AudioRecorderUIView extends Component {
     if (this.state.dimensions) {
       AudioRecorderNative.setDimensions(this.state.dimensions.width, this.state.dimensions.height)
     }
-    return <AudioRecorderView style={styles.recorder} onLayout={this.onLayout}/>
+    return <AudioRecorderView style={styles.recorder} onLayout={this.onLayout} width={!this.props.width ? styles.recorder.width : this.props.width} height={!this.props.height ? styles.recorder.height : this.props.height}/>
   }
 }
 

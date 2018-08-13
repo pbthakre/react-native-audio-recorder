@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 import AudioRecorder from './native_modules/AudioRecorder/AudioRecorder';
-import AudioPlayer from './native_modules/AudioPlayer/AudioPlayer';
+import AudioPlayerPlot from './native_modules/AudioPlayerPlot/AudioPlayerPlot';
 
 type Props = {};
 export default class App extends Component<Props> {
@@ -26,7 +26,7 @@ export default class App extends Component<Props> {
   constructor(props) {
     super(props);
     this.recorderRef = React.createRef();
-    this.playerRef = React.createRef();
+    this.playerPlotRef = React.createRef();
   }
 
   renderRecorderStateText(isSetup, isRecording) {
@@ -58,7 +58,7 @@ export default class App extends Component<Props> {
 
     return (
       <View style={styles.container}>
-        <AudioPlayer ref={ (ref) => this.playerRef = ref} />
+        <AudioPlayerPlot ref={ (ref) => this.playerPlotRef = ref} />
         <AudioRecorder ref={ (ref) => this.recorderRef = ref} />
 
         {!!this.recorderRef &&
@@ -100,7 +100,7 @@ export default class App extends Component<Props> {
                       console.log(parsedResult['value']['fileUrl'])
                     }
 
-                    return this.playerRef.renderByFile(parsedResult['value']['fileUrl']);
+                    return this.playerPlotRef.renderByFile(parsedResult['value']['fileUrl']);
                   });
 
                   // Check if rendering the waveform was successful

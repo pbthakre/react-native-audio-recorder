@@ -4,11 +4,11 @@ import {
   View
 } from 'react-native';
 
-import AudioPlayerUIView from './AudioPlayerNativeView'
-import AudioPlayerNative from './AudioPlayerNativeModule';
+import AudioPlayerUIView from './AudioPlayerPlotNativeView'
+import AudioPlayerNative from './AudioPlayerPlotNativeModule';
 
 type Props = {};
-export default class AudioPlayer extends Component<Props> {
+export default class AudioPlayerPlot extends Component<Props> {
   constructor(props) {
     super(props);
   }

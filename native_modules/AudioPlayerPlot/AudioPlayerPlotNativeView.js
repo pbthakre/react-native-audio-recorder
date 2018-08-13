@@ -3,7 +3,7 @@ import { requireNativeComponent, Dimensions, StyleSheet } from 'react-native'
 
 const AudioPlayerView = requireNativeComponent('AudioPlayerView', AudioPlayerUIView);
 
-import AudioPlayerNative from './AudioPlayerNativeModule';
+import AudioPlayerNative from './AudioPlayerPlotNativeModule';
 
 export default class AudioPlayerUIView extends Component {
   constructor (props) {

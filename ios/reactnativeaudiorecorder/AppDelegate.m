@@ -10,6 +10,8 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+@import AudioKit;
+
 @implementation AppDelegate
 
   // Application Launch finished
@@ -32,6 +34,9 @@
     rootViewController.view = rootView;
     self.window.rootViewController = rootViewController;
     [self.window makeKeyAndVisible];
+    
+    // Define that EZAudio should throw an error instead of terminating program on error
+    EZAudioUtilities.shouldExitOnCheckResultFail = NO;
     
     return YES;
   }

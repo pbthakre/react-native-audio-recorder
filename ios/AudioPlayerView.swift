@@ -22,6 +22,11 @@ public class AudioPlayerView: EZAudioPlot {
   // The plot which represents the waveform
   private var plot: EZAudioPlot = EZAudioPlot(frame: CGRect.init())
   
+  // Holds the errors of waveform
+  enum WaveFormError: Error {
+    case fileNotReady(String)
+  }
+  
   private override init(frame: CGRect) {
     // Call super constructor
     super.init(frame: frame)
@@ -69,18 +74,31 @@ public class AudioPlayerView: EZAudioPlot {
   }
   
   // Add the data to the plot (waveform)
-  public func updateWaveformWithData(fileUrl: URL, onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
-    // Add delay so that file is readable and not opened/used by other services anymore
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-      // Read the file from storage
-      let file = EZAudioFile(url: fileUrl)
-      guard let data = file?.getWaveformData() else { return }
-      
-      // Add the data to the plot
-      self.plot.updateBuffer(data.buffers[0], withBufferSize: data.bufferSize)
+  public func updateWaveformWithData(fileUrl: URL, onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void)  {
+    // Read the file from storage
+    let file : EZAudioFile? = EZAudioFile(url: fileUrl)
     
+    // If the file has an id, it is ready to be read
+    if (file?.audioFileID != nil) {
+      print("Waveform Data")
+      
+      // Read the waveform data from the audio file
+      let data: EZAudioFloatData? = file?.getWaveformData()
+      
+      // Run ui update on main thread
+      DispatchQueue.main.async() {
+        // Add the data to the plot
+        self.plot.updateBuffer(data?.buffers[0], withBufferSize: (data?.bufferSize)!)
+      }
+      
       // Completed without error
       onSuccess(true)
+    } else {
+      print("No Waveform Data")
+      let error = WaveFormError.fileNotReady("Audio file is not ready!")
+      
+      // Completed with error
+      onError(error)
     }
   }
 }

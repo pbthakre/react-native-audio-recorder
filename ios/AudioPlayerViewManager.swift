@@ -49,11 +49,35 @@ class AudioPlayerViewManager : RCTViewManager {
     }
   }
   
-  // Instantiates all the things needed for the player waveform
+  // Enables to re-run a method x-times or until a condition is fullfilled
+  func retry(_ attempts: Int, task: @escaping (_ onSuccess: @escaping (Bool) -> Void, _ onError: @escaping (Error) -> Void) -> Void, onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
+    // Try
+    task({(success) in
+      // Condition fullfilled
+      onSuccess(success)
+    }) {(error) in
+      // Error
+      print("Error retry left \(attempts)")
+      
+      // Attempts left
+      if attempts > 1 {
+        // Wait x seconds before retrying
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+          self.retry(attempts - 1, task: task, onSuccess: onSuccess, onError: onError)
+        }
+      } else {
+        onError(error)
+      }
+    }
+  }
+  
+  // Render a waveform from audio file data
   @objc public func renderByFile(_ fileUrl:String, resolver resolve:@escaping RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
-    // Create the waveform from file
-    self.currentView?.updateWaveformWithData(
-      fileUrl: URL(string: fileUrl)!,
+    
+    // Try X-times to create waveform from audio file, this retry is necessary since writing the file
+    // is not always finished when file access to read is done
+    self.retry(10, task: { success, onError in
+      self.currentView?.updateWaveformWithData(fileUrl: URL(string: fileUrl)!, onSuccess: success, onError: onError) },
       onSuccess: { success in
         if (success) {
           self.jsonArray["success"] = true
@@ -64,7 +88,6 @@ class AudioPlayerViewManager : RCTViewManager {
         self.jsonArray["success"] = false
         self.jsonArray["error"].stringValue = error.localizedDescription
         reject("Error", self.jsonArray.rawString(), error)
-      }
-    )
+      })
   }
 }

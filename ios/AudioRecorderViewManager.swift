@@ -125,6 +125,7 @@ class AudioRecorderViewManager : RCTViewManager {
       // Don't use default speakers to avoid crackling in audio files (bug of AudioKit!?)
       AKSettings.defaultToSpeaker = false
       
+      // Listen to microphone
       AKSettings.audioInputEnabled = true
       
       // Completed without error

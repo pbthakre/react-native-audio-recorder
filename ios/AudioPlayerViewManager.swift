@@ -28,6 +28,9 @@ class AudioPlayerViewManager : RCTViewManager {
   
   // Instantiates the view
   override func view() -> AudioPlayerView {
+    // Set flag so that application does not exit on EZAudio error
+    AudioPlayerHelper.setShouldExitOnCheckResultFail()
+    
     let newView = AudioPlayerView()
     self.currentView = newView
     self.currentView?.setupWaveform()
@@ -62,7 +65,7 @@ class AudioPlayerViewManager : RCTViewManager {
       // Attempts left
       if attempts > 1 {
         // Wait x seconds before retrying
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
           self.retry(attempts - 1, task: task, onSuccess: onSuccess, onError: onError)
         }
       } else {

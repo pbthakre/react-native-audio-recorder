@@ -1,8 +1,8 @@
-import { AppRegistry } from 'react-native';
-import App from './App';
 
-if (__DEV__) {
-  require('react-devtools');
-}
+import AudioRecorder from './native_modules/AudioRecorder/AudioRecorder';
+import AudioPlayerPlot from './native_modules/AudioPlayerPlot/AudioPlayerPlot';
 
-AppRegistry.registerComponent('reactnativeaudiorecorder', () => App);
+export { AudioRecorder, AudioPlayerPlot }
+
+
+

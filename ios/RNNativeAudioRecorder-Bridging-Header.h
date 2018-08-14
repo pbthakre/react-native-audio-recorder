@@ -1,5 +1,5 @@
 //
-//  AudioRecorderBridge.m
+//  RNNativeAudioRecorder-Bridging-Header.h
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 04.07.18.
@@ -22,3 +22,5 @@
 #import "React/RCTEventDispatcher.h"
 
 #import <React/RCTViewManager.h>
+
+#import "AudioPlayerHelper.h"

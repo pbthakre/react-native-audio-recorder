@@ -2,25 +2,103 @@ PODS:
   - AudioKit (4.3):
     - AudioKit/UI (= 4.3)
   - AudioKit/UI (4.3)
+  - boost-for-react-native (1.63.0)
+  - DoubleConversion (1.1.5)
+  - Folly (2016.10.31.00):
+    - boost-for-react-native
+    - DoubleConversion
+    - glog
+  - glog (0.3.4)
+  - React (0.56.0):
+    - React/Core (= 0.56.0)
+  - React/Core (0.56.0):
+    - yoga (= 0.56.0.React)
+  - React/CxxBridge (0.56.0):
+    - Folly (= 2016.10.31.00)
+    - React/Core
+    - React/cxxreact
+  - React/cxxreact (0.56.0):
+    - boost-for-react-native (= 1.63.0)
+    - Folly (= 2016.10.31.00)
+    - React/jschelpers
+    - React/jsinspector
+  - React/DevSupport (0.56.0):
+    - React/Core
+    - React/RCTWebSocket
+  - React/fishhook (0.56.0)
+  - React/jschelpers (0.56.0):
+    - Folly (= 2016.10.31.00)
+    - React/PrivateDatabase
+  - React/jsinspector (0.56.0)
+  - React/PrivateDatabase (0.56.0)
+  - React/RCTAnimation (0.56.0):
+    - React/Core
+  - React/RCTBlob (0.56.0):
+    - React/Core
+  - React/RCTNetwork (0.56.0):
+    - React/Core
+  - React/RCTText (0.56.0):
+    - React/Core
+  - React/RCTWebSocket (0.56.0):
+    - React/Core
+    - React/fishhook
+    - React/RCTBlob
+  - ReactNativePermissions (1.1.1):
+    - React
   - SwiftSiriWaveformView (2.4.0)
   - SwiftyJSON (4.1.0)
+  - yoga (0.56.0.React)
 
 DEPENDENCIES:
   - AudioKit (~> 4.3)
+  - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
+  - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
+  - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - React/Core (from `../node_modules/react-native`)
+  - React/CxxBridge (from `../node_modules/react-native`)
+  - React/DevSupport (from `../node_modules/react-native`)
+  - React/RCTAnimation (from `../node_modules/react-native`)
+  - React/RCTNetwork (from `../node_modules/react-native`)
+  - React/RCTText (from `../node_modules/react-native`)
+  - React/RCTWebSocket (from `../node_modules/react-native`)
+  - ReactNativePermissions (from `../node_modules/react-native-permissions`)
   - SwiftSiriWaveformView (~> 2.4)
   - SwiftyJSON (~> 4.1)
+  - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - AudioKit
+    - boost-for-react-native
     - SwiftSiriWaveformView
     - SwiftyJSON
 
+EXTERNAL SOURCES:
+  DoubleConversion:
+    :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
+  Folly:
+    :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
+  glog:
+    :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  React:
+    :path: "../node_modules/react-native"
+  ReactNativePermissions:
+    :path: "../node_modules/react-native-permissions"
+  yoga:
+    :path: "../node_modules/react-native/ReactCommon/yoga"
+
 SPEC CHECKSUMS:
   AudioKit: 95bd2427c1afa7954d71b0c6195a09b87b7448bc
+  boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  DoubleConversion: a9706f16e388b53ff12cca34473428ee29746a26
+  Folly: c89ac2d5c6ab169cd7397ef27485c44f35f742c7
+  glog: b3b0330915eccea41c5cc9731a77cf564a9be5ea
+  React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
+  ReactNativePermissions: 9f2d9c45c98800795e6c2ed330e25d11a66a8169
   SwiftSiriWaveformView: baa04ed2089e854af00ea54c38a7700ca43d7ae0
   SwiftyJSON: c29297daf073d2aa016295d5809cdd68045c39b3
+  yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: 41b3e76e7c87b2a9340340c054e56d4d7a60f46b
+PODFILE CHECKSUM: a11ec8a2caf94272e00e55ce6bf288bd1d8a125f
 
 COCOAPODS: 1.5.3

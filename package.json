@@ -1,7 +1,7 @@
 {
   "name": "react-native-native-audio-recorder",
-  "version": "1.0.0",
-  "description": "Native Audio Recorder",
+  "version": "0.1.0",
+  "description": "Native Audio Recorder for React Native supporting Audio Recording, Feedback Plot and Audio File Waveform",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

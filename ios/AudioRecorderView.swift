@@ -55,7 +55,7 @@ public class AudioRecorderView: EZAudioPlot {
     DispatchQueue.main.async {
       // Threshold amplitude so that baseline is quite straight
       var amplitude = self.microphoneTracker.amplitude
-      if (self.microphoneTracker.amplitude < 0.25) {
+      if (self.microphoneTracker.amplitude < 0.05) {
         amplitude = 0
       }
       

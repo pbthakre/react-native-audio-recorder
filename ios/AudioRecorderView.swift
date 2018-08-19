@@ -71,9 +71,6 @@ public class AudioRecorderView: EZAudioPlot {
     // Create the plot
     self.plot = SwiftSiriWaveformView()
     
-    // Set background color of plot
-    self.plot.backgroundColor = UIColor.white
-    
     // Set width and height to use 100 % (relative)
     self.plot.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   default: {
     marginTop: 100,
     width: Dimensions.get('window').width,
-    height: '30%',
-    backgroundColor: 'yellow'
+    height: '66%',
+    backgroundColor: 'white'
   }
 });

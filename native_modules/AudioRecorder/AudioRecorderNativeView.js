@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   recorder: {
     marginTop: 100,
     width: Dimensions.get('window').width,
-    height: '30%',
-    backgroundColor: 'red'
+    height: '66%',
+    backgroundColor: 'white'
   }
 });

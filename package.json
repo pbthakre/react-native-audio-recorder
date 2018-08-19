@@ -12,9 +12,7 @@
   "author": "Michael Andorfer",
   "license": "MIT",
   "dependencies": {
-    "react": "16.4.1",
-    "react-native-create-bridge": "^2.0.1",
-    "react-native-permissions": "^1.1.1"
+    "react": "16.4.1"
   },
   "peerDependencies": {
     "react-native": "0.56.0"

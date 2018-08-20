@@ -15,9 +15,9 @@ A React Native module which serves with a native module for audio recording, and
 
 4. Open the package.json and add the following section:  
     ```
-      "scripts": {
-        "postinstall": "cd ios && pod install && cd ../node_modules/react-native-native-audio-recorder/ios && pod install"
-      }
+    "scripts": {
+      "postinstall": "cd ios && pod install && cd ../node_modules/react-native-native-audio-recorder/ios && pod install"
+    }
     ```
 5. Run the script (installation of cocoapods) via:  
 `$ npm install`
@@ -34,9 +34,9 @@ A React Native module which serves with a native module for audio recording, and
 9. Optional - for better development experience: inhibit hundred of third-party warnings:  
 a) add the following lines to package.json:
     ```
-      "scripts": {
-        "inhibit-third-party-warnings": "react-native-inhibit-warnings"
-      }
+    "scripts": {
+      "inhibit-third-party-warnings": "react-native-inhibit-warnings"
+    }
     ```
     b) run `$ npm install --save-dev react-native-inhibit-warnings`  
     c) run `$ npm run inhibit-third-party-warnings`  

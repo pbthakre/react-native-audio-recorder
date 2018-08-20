@@ -31,6 +31,18 @@ A React Native module which serves with a native module for audio recording, and
 8. No you can run the project, however you will get the following error:
 `'RCTAnimation/RCTValueAnimatedNode.h' file not found` so replace it `#import <RCTAnimation/RCTValueAnimatedNode.h>` with `"RCTValueAnimatedNode.h"` and run the project again
     
+9. Optional - for better development experience: inhibit hundred of third-party warnings:  
+a) add the following lines to package.json:
+    ```
+      "scripts": {
+        "inhibit-third-party-warnings": "react-native-inhibit-warnings"
+      }
+    ```
+    b) run `$ npm install --save-dev react-native-inhibit-warnings`  
+    c) run `$ npm run inhibit-third-party-warnings`  
+
+    
+    
 ## Usage
 ```javascript
 import { AudioRecorder, AudioPlayerPlot } from 'react-native-native-audio-recorder';

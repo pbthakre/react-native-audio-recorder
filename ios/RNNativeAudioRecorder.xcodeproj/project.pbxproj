@@ -7,14 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2FF556FB9F5F71485989DDD8 /* Pods_RNNativeAudioRecorder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 054A83BD20C176AF1ACB5359 /* Pods_RNNativeAudioRecorder.framework */; };
-		743D20B32122BE4F00A3F546 /* AudioPlayerViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743D20AB2122BE4E00A3F546 /* AudioPlayerViewManager.swift */; };
-		743D20B42122BE4F00A3F546 /* AudioPlayerViewModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 743D20AC2122BE4E00A3F546 /* AudioPlayerViewModule.m */; };
-		743D20B52122BE4F00A3F546 /* AudioRecorderViewModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 743D20AD2122BE4E00A3F546 /* AudioRecorderViewModule.m */; };
-		743D20B62122BE4F00A3F546 /* AudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743D20AE2122BE4E00A3F546 /* AudioPlayerView.swift */; };
-		743D20B72122BE4F00A3F546 /* AudioRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743D20B02122BE4F00A3F546 /* AudioRecorderView.swift */; };
-		743D20B82122BE4F00A3F546 /* AudioRecorderViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743D20B22122BE4F00A3F546 /* AudioRecorderViewManager.swift */; };
-		74DD20782123008E000732A4 /* AudioPlayerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 74DD20772123008E000732A4 /* AudioPlayerHelper.m */; };
+		74326B56212C3607007BE829 /* AudioPlayerViewModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 74326B53212C3607007BE829 /* AudioPlayerViewModule.m */; };
+		74326B57212C3607007BE829 /* AudioPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74326B54212C3607007BE829 /* AudioPlayerView.swift */; };
+		74326B58212C3607007BE829 /* AudioPlayerViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74326B55212C3607007BE829 /* AudioPlayerViewManager.swift */; };
+		74326B5E212C3638007BE829 /* AudioRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74326B5B212C3638007BE829 /* AudioRecorderView.swift */; };
+		74326B5F212C3638007BE829 /* AudioRecorderViewModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 74326B5C212C3638007BE829 /* AudioRecorderViewModule.m */; };
+		74326B60212C3638007BE829 /* AudioRecorderViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74326B5D212C3638007BE829 /* AudioRecorderViewManager.swift */; };
+		74326B64212C368A007BE829 /* AudioPlayerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 74326B63212C368A007BE829 /* AudioPlayerHelper.m */; };
+		74326B68212C369F007BE829 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74326B66212C369F007BE829 /* SwiftyJSON.swift */; };
+		74326B69212C369F007BE829 /* SwiftSiriWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74326B67212C369F007BE829 /* SwiftSiriWaveformView.swift */; };
+		74326C3D212C3B92007BE829 /* AudioKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74326C39212C3B69007BE829 /* AudioKit.framework */; };
+		74326C3E212C3B92007BE829 /* AudioKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74326C3A212C3B69007BE829 /* AudioKitUI.framework */; };
+		74326C92212C3FE3007BE829 /* AudioKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74326C39212C3B69007BE829 /* AudioKit.framework */; };
+		74326C93212C3FE3007BE829 /* AudioKitUI.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74326C3A212C3B69007BE829 /* AudioKitUI.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,25 +29,28 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				74326C92212C3FE3007BE829 /* AudioKit.framework in CopyFiles */,
+				74326C93212C3FE3007BE829 /* AudioKitUI.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		03F61624C74DFF753C65D15D /* Pods-RNNativeAudioRecorder.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNNativeAudioRecorder.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RNNativeAudioRecorder/Pods-RNNativeAudioRecorder.debug.xcconfig"; sourceTree = "<group>"; };
-		054A83BD20C176AF1ACB5359 /* Pods_RNNativeAudioRecorder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RNNativeAudioRecorder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		134814201AA4EA6300B7C361 /* libRNNativeAudioRecorder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNNativeAudioRecorder.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		6D1FB8B3C5D33A3C52CC69C8 /* Pods-RNNativeAudioRecorder.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNNativeAudioRecorder.release.xcconfig"; path = "Pods/Target Support Files/Pods-RNNativeAudioRecorder/Pods-RNNativeAudioRecorder.release.xcconfig"; sourceTree = "<group>"; };
-		743D20AB2122BE4E00A3F546 /* AudioPlayerViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerViewManager.swift; sourceTree = "<group>"; };
-		743D20AC2122BE4E00A3F546 /* AudioPlayerViewModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayerViewModule.m; sourceTree = "<group>"; };
-		743D20AD2122BE4E00A3F546 /* AudioRecorderViewModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioRecorderViewModule.m; sourceTree = "<group>"; };
-		743D20AE2122BE4E00A3F546 /* AudioPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayerView.swift; sourceTree = "<group>"; };
-		743D20B02122BE4F00A3F546 /* AudioRecorderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioRecorderView.swift; sourceTree = "<group>"; };
-		743D20B22122BE4F00A3F546 /* AudioRecorderViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioRecorderViewManager.swift; sourceTree = "<group>"; };
+		74326B53212C3607007BE829 /* AudioPlayerViewModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioPlayerViewModule.m; path = AudioPlayerPlot/AudioPlayerViewModule.m; sourceTree = "<group>"; };
+		74326B54212C3607007BE829 /* AudioPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioPlayerView.swift; path = AudioPlayerPlot/AudioPlayerView.swift; sourceTree = "<group>"; };
+		74326B55212C3607007BE829 /* AudioPlayerViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioPlayerViewManager.swift; path = AudioPlayerPlot/AudioPlayerViewManager.swift; sourceTree = "<group>"; };
+		74326B5B212C3638007BE829 /* AudioRecorderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioRecorderView.swift; path = AudioRecorder/AudioRecorderView.swift; sourceTree = "<group>"; };
+		74326B5C212C3638007BE829 /* AudioRecorderViewModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioRecorderViewModule.m; path = AudioRecorder/AudioRecorderViewModule.m; sourceTree = "<group>"; };
+		74326B5D212C3638007BE829 /* AudioRecorderViewManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioRecorderViewManager.swift; path = AudioRecorder/AudioRecorderViewManager.swift; sourceTree = "<group>"; };
+		74326B62212C368A007BE829 /* AudioPlayerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioPlayerHelper.h; path = Helpers/AudioPlayerHelper.h; sourceTree = "<group>"; };
+		74326B63212C368A007BE829 /* AudioPlayerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioPlayerHelper.m; path = Helpers/AudioPlayerHelper.m; sourceTree = "<group>"; };
+		74326B66212C369F007BE829 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = Libraries/SwiftyJSON.swift; sourceTree = "<group>"; };
+		74326B67212C369F007BE829 /* SwiftSiriWaveformView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftSiriWaveformView.swift; path = Libraries/SwiftSiriWaveformView.swift; sourceTree = "<group>"; };
+		74326C39212C3B69007BE829 /* AudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioKit.framework; path = Frameworks/AudioKit.framework; sourceTree = "<group>"; };
+		74326C3A212C3B69007BE829 /* AudioKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioKitUI.framework; path = Frameworks/AudioKitUI.framework; sourceTree = "<group>"; };
 		743D20BA2122BEDB00A3F546 /* RNNativeAudioRecorder-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNNativeAudioRecorder-Bridging-Header.h"; sourceTree = "<group>"; };
-		74DD20772123008E000732A4 /* AudioPlayerHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioPlayerHelper.m; sourceTree = "<group>"; };
-		74DD20792123019A000732A4 /* AudioPlayerHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioPlayerHelper.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,7 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FF556FB9F5F71485989DDD8 /* Pods_RNNativeAudioRecorder.framework in Frameworks */,
+				74326C3D212C3B92007BE829 /* AudioKit.framework in Frameworks */,
+				74326C3E212C3B92007BE829 /* AudioKitUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,17 +77,12 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				74DD20792123019A000732A4 /* AudioPlayerHelper.h */,
-				74DD20772123008E000732A4 /* AudioPlayerHelper.m */,
-				743D20AE2122BE4E00A3F546 /* AudioPlayerView.swift */,
-				743D20AB2122BE4E00A3F546 /* AudioPlayerViewManager.swift */,
-				743D20AC2122BE4E00A3F546 /* AudioPlayerViewModule.m */,
-				743D20B02122BE4F00A3F546 /* AudioRecorderView.swift */,
-				743D20B22122BE4F00A3F546 /* AudioRecorderViewManager.swift */,
-				743D20AD2122BE4E00A3F546 /* AudioRecorderViewModule.m */,
 				743D20BA2122BEDB00A3F546 /* RNNativeAudioRecorder-Bridging-Header.h */,
+				74326B6A212C36A4007BE829 /* Libraries */,
+				74326B65212C368E007BE829 /* Helpers */,
+				74326B5A212C3618007BE829 /* AudioPlayerPlot */,
+				74326B61212C3642007BE829 /* AudioRecorder */,
 				134814211AA4EA7D00B7C361 /* Products */,
-				D3749A59E2112D64963ECFDD /* Pods */,
 				6FDF2872BEC829D59221C299 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -86,18 +90,48 @@
 		6FDF2872BEC829D59221C299 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				054A83BD20C176AF1ACB5359 /* Pods_RNNativeAudioRecorder.framework */,
+				74326C39212C3B69007BE829 /* AudioKit.framework */,
+				74326C3A212C3B69007BE829 /* AudioKitUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		D3749A59E2112D64963ECFDD /* Pods */ = {
+		74326B5A212C3618007BE829 /* AudioPlayerPlot */ = {
 			isa = PBXGroup;
 			children = (
-				03F61624C74DFF753C65D15D /* Pods-RNNativeAudioRecorder.debug.xcconfig */,
-				6D1FB8B3C5D33A3C52CC69C8 /* Pods-RNNativeAudioRecorder.release.xcconfig */,
+				74326B53212C3607007BE829 /* AudioPlayerViewModule.m */,
+				74326B55212C3607007BE829 /* AudioPlayerViewManager.swift */,
+				74326B54212C3607007BE829 /* AudioPlayerView.swift */,
 			);
-			name = Pods;
+			name = AudioPlayerPlot;
+			sourceTree = "<group>";
+		};
+		74326B61212C3642007BE829 /* AudioRecorder */ = {
+			isa = PBXGroup;
+			children = (
+				74326B5B212C3638007BE829 /* AudioRecorderView.swift */,
+				74326B5D212C3638007BE829 /* AudioRecorderViewManager.swift */,
+				74326B5C212C3638007BE829 /* AudioRecorderViewModule.m */,
+			);
+			name = AudioRecorder;
+			sourceTree = "<group>";
+		};
+		74326B65212C368E007BE829 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				74326B62212C368A007BE829 /* AudioPlayerHelper.h */,
+				74326B63212C368A007BE829 /* AudioPlayerHelper.m */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
+		74326B6A212C36A4007BE829 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				74326B67212C369F007BE829 /* SwiftSiriWaveformView.swift */,
+				74326B66212C369F007BE829 /* SwiftyJSON.swift */,
+			);
+			name = Libraries;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -107,7 +141,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNNativeAudioRecorder" */;
 			buildPhases = (
-				6E086B5A394A83C148F8A03C /* [CP] Check Pods Manifest.lock */,
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
 				58B511D91A9E6C8500147676 /* CopyFiles */,
@@ -153,39 +186,20 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		6E086B5A394A83C148F8A03C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-RNNativeAudioRecorder-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		58B511D71A9E6C8500147676 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				743D20B32122BE4F00A3F546 /* AudioPlayerViewManager.swift in Sources */,
-				743D20B52122BE4F00A3F546 /* AudioRecorderViewModule.m in Sources */,
-				74DD20782123008E000732A4 /* AudioPlayerHelper.m in Sources */,
-				743D20B82122BE4F00A3F546 /* AudioRecorderViewManager.swift in Sources */,
-				743D20B42122BE4F00A3F546 /* AudioPlayerViewModule.m in Sources */,
-				743D20B62122BE4F00A3F546 /* AudioPlayerView.swift in Sources */,
-				743D20B72122BE4F00A3F546 /* AudioRecorderView.swift in Sources */,
+				74326B5F212C3638007BE829 /* AudioRecorderViewModule.m in Sources */,
+				74326B60212C3638007BE829 /* AudioRecorderViewManager.swift in Sources */,
+				74326B64212C368A007BE829 /* AudioPlayerHelper.m in Sources */,
+				74326B68212C369F007BE829 /* SwiftyJSON.swift in Sources */,
+				74326B57212C3607007BE829 /* AudioPlayerView.swift in Sources */,
+				74326B69212C369F007BE829 /* SwiftSiriWaveformView.swift in Sources */,
+				74326B5E212C3638007BE829 /* AudioRecorderView.swift in Sources */,
+				74326B58212C3607007BE829 /* AudioPlayerViewManager.swift in Sources */,
+				74326B56212C3607007BE829 /* AudioPlayerViewModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,9 +291,14 @@
 		};
 		58B511F01A9E6C8500147676 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 03F61624C74DFF753C65D15D /* Pods-RNNativeAudioRecorder.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -293,7 +312,10 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lstdc++",
+				);
 				PRODUCT_NAME = RNNativeAudioRecorder;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "RNNativeAudioRecorder-Bridging-Header.h";
@@ -304,9 +326,14 @@
 		};
 		58B511F11A9E6C8500147676 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6D1FB8B3C5D33A3C52CC69C8 /* Pods-RNNativeAudioRecorder.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -320,7 +347,10 @@
 					"@loader_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-lstdc++",
+				);
 				PRODUCT_NAME = RNNativeAudioRecorder;
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "RNNativeAudioRecorder-Bridging-Header.h";

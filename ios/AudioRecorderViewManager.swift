@@ -38,7 +38,10 @@ class AudioRecorderViewManager : RCTViewManager {
   var finalTape: AKAudioFile? = nil
   
   // The name of the file where the current recording is stored in
-  private let fileName = "currentRecording.mp4"
+  private var fileName = "recording.mp4"
+  
+  // The file url of the file which should be overwritten
+  private var fileToOverwrite = "recording.mp4"
   
   // The booster which lets control the microphone input properties such as volume
   private var micBooster: AKBooster!
@@ -212,29 +215,21 @@ class AudioRecorderViewManager : RCTViewManager {
     }
   }
   
-  // Appends the current recorded audio to the final audio
-  private func appendCurrentTapeToFinalTape(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
-    do {
-      // Create a new file with zero data (extracted is used to avoid buffer error on reading an empty file)
-      self.finalTape = try self.tape.extracted(fromSample: 0, toSample: 1)
-      
-      // Append the current recorded tape to the final tape
-      let newFile = try self.finalTape?.appendedBy(file: self.tape)
-      self.finalTape = newFile
-      
-      // Completed without error
-      onSuccess(true)
-    }
-    catch {
-      // Aborted with error
-      AKLog("Failed")
-      self.jsonArray["error"].stringValue = error.localizedDescription
-      onError(error)
-    }
-  }
-  
   // Exports the final tape to a file
   private func exportFinalTapeToFile(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
+    if (!self.isOverwriting) {
+      // Create filename from timestamp for the new file
+      let now = Date()
+      let formatter = DateFormatter()
+      formatter.timeZone = TimeZone.current
+      formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+      let dateString = formatter.string(from: now)
+      self.fileName = dateString + "--rec.mp4"
+    } else {
+      // Set file name of overwritten file to the given one
+      self.fileName = (NSURL(string: self.fileToOverwrite)?.lastPathComponent)!
+    }
+    
     // Store the audio data (final tape) permanently on the device's storage
     self.finalTape?.exportAsynchronously(
       name: self.fileName,
@@ -277,11 +272,11 @@ class AudioRecorderViewManager : RCTViewManager {
     }
   }
   
-  // Partially vverwrites the previous tape with the content of the current tape
+  // Partially overwrites the previous tape with the content of the current tape
   private func overwritePartially(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
       // The tape which should be overwritten
-      let previousTape = try AKAudioFile(readFileName: self.fileName, baseDir: .documents)
+      let previousTape = try AKAudioFile(forReading: URL(string: self.fileToOverwrite)!)
       
       // The first sample to be extracted
       var firstSampleToExtract = 0
@@ -324,22 +319,31 @@ class AudioRecorderViewManager : RCTViewManager {
     }
   }
   
+  // Deletes the file so that it can be replaced without problems
+  private func deleteFile(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
+    // Delete the previous file
+    do {
+      let filemanager = FileManager.default
+      let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as NSString
+      let destinationPath = documentsPath.appendingPathComponent(self.fileToOverwrite)
+      
+      try filemanager.removeItem(atPath: destinationPath)
+      
+      // Completed without error
+      onSuccess(true)
+    } catch {
+      // Success is okay here because we just need to delete the file if AudioKit didn't do it by itself
+      // and if it already did an error will occur here that it cannot deleted anymore so it's ok to just move on
+      onSuccess(true)
+    }
+  }
+  
   // Creates one final tape out of others and stores it as an audio file on the device's storage
   private func createAndStoreTapeFromRecordings(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     // Create a new file
     if (!self.isOverwriting) {
-      // Append the last recorded audio to the final tape
-      appendCurrentTapeToFinalTape(
-        onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
-        },
-        onError: { error in
-          self.jsonArray["success"] = false
-          onError(error)
-        }
-      )
+      // Set the final tape to the current recorded tape
+      self.finalTape = self.tape
       
       // Clear the waveform after recording
       self.currentView?.clearWaveform()
@@ -407,6 +411,19 @@ class AudioRecorderViewManager : RCTViewManager {
       // Clear the waveform after recording
       self.currentView?.clearWaveform()
       
+      // Store the audio data as file on the storage
+      deleteFile(
+        onSuccess: { success in
+          if (success) {
+            self.jsonArray["success"] = true
+          }
+        },
+        onError: { error in
+          self.jsonArray["success"] = false
+          onError(error)
+        }
+      )
+
       // Store the audio data as file on the storage
       exportFinalTapeToFile(
         onSuccess: { success in
@@ -534,7 +551,7 @@ class AudioRecorderViewManager : RCTViewManager {
   }
 
   // Starts the recording of audio
-  @objc public func startRecording(_ startTimeInMs:Double, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+  @objc public func startRecording(_ startTimeInMs:Double, file fileUrl:NSString, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Microphone will be monitored while recording
     // only if headphones are plugged
     if AKSettings.headPhonesPlugged {
@@ -543,11 +560,12 @@ class AudioRecorderViewManager : RCTViewManager {
     
     // If -1 then overwriting flag is set to false, "first" new recording
     // otherwise set overwriting flag to true, prepare overwriting from specific point
-    if (startTimeInMs < 0) {
-      self.isOverwriting = false
-    } else {
+    if (startTimeInMs >= 0 && fileUrl != "") {
       self.isOverwriting = true
       self.pointToOverwriteRecordingInSeconds = Double(startTimeInMs) / Double(1000)
+      self.fileToOverwrite = fileUrl as String
+    } else {
+      self.isOverwriting = false
     }
     
     do {

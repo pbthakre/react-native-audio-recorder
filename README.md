@@ -13,27 +13,16 @@ A React Native module which serves with a native module for audio recording, and
 3. Since we have not published this project to the NPM registry yet, you have to install the project directly from GitHub:  
 `$ npm install crowdio/react-native-audio-recorder#develop --save`
 
-4. Copy the `Podfile` from the root directory of the react-native-audio-recorder package to the `ios` folder of the created project
-
-5. Open the package.json and add the following section:  
-    ```
-    "scripts": {
-      "postinstall": "cd ios && pod install && cd ../node_modules/react-native-native-audio-recorder/ios && pod install"
-    }
-    ```
-6. Run the script (installation of cocoapods) via:  
-`$ npm install`
-
-7. Head into the ios folder:  
+4. Head into the ios folder:  
 `$ cd ios`
 
-8. Open the project:  
-`ProjectName.xcworkspace` NOT `ProjectName.xcodeproj`
-
-9. No you can run the project, however you will get the following error:
-`'RCTAnimation/RCTValueAnimatedNode.h' file not found` so replace it `#import <RCTAnimation/RCTValueAnimatedNode.h>` with `"RCTValueAnimatedNode.h"` and run the project again
+5. Open the project:  
+`ProjectName.xcodeproj`
     
-10. Optional - for better development experience: inhibit hundred of third-party warnings:  
+6. Go to Project -> Target -> Build Settings -> Section "Search Paths" -> "Framework Search Paths" and add:  
+`$(SRCROOT)/../node_modules/react-native-native-audio-recorder/ios/Frameworks`
+    
+7. Optional - for better development experience: inhibit hundred of third-party warnings:  
 a) add the following lines to package.json:
     ```
     "scripts": {

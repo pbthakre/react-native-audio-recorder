@@ -62,9 +62,6 @@ public class AudioPlayerView: EZAudioPlot {
         // Set line width
         self.plot.waveformLayer.lineWidth = 3
         
-        // Set the background color of the plot
-        self.plot.backgroundColor = UIColor.black
-        
         // Cut off lines which go beyond the view bounds
         self.plot.clipsToBounds = true
         

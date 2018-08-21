@@ -89,6 +89,9 @@ public class AudioRecorderView: EZAudioPlot {
     
     // Set width of primary line
     self.plot.primaryLineWidth = 5
+
+    // Set the background color of the plot
+    self.plot.backgroundColor = UIColor.white
     
     // Set the speed of the wave form
     self.plot.phaseShift = 0.5

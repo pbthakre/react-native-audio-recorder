@@ -13,16 +13,18 @@ A React Native module which serves with a native module for audio recording, and
 3. Since we have not published this project to the NPM registry yet, you have to install the project directly from GitHub:  
 `$ npm install crowdio/react-native-audio-recorder#develop --save`
 
-4. Head into the ios folder:  
-`$ cd ios`
+4. Run the following command to add the package to your project:  
+`$ npm react-native link`
 
-5. Open the project:  
+4. Open the project in the ios folder:  
 `ProjectName.xcodeproj`
     
-6. Go to Project -> Target -> Build Settings -> Section "Search Paths" -> "Framework Search Paths" and add:  
+5. Add at least one Swift file to your project, the compiler needs this to recognize the bridging   
+    
+5. Go to Project -> Target -> Build Settings -> Section "Search Paths" -> "Framework Search Paths" and add:  
 `$(SRCROOT)/../node_modules/react-native-native-audio-recorder/ios/Frameworks`
     
-7. Optional - for better development experience: inhibit hundred of third-party warnings:  
+6. Optional - for better development experience: inhibit hundred of third-party warnings:  
 a) add the following lines to package.json:
     ```
     "scripts": {

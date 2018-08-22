@@ -17,87 +17,90 @@ import AudioKitUI
 class AudioRecorderViewManager : RCTViewManager {
   // The device's microphone
   private let mic = AKMicrophone()
-  
+
    // The mixer which handles the microphone input
   private var micMixer: AKMixer!
-  
+
   // The mixer which handles the speaker output
   private var mainMixer: AKMixer!
-  
+
   // The recorder which handles recording of audio samples via mixer
   private var recorder: AKNodeRecorder!
-  
+
   // The player which handles playing of audio samples via mixer
   private var player: AKPlayer!
-  
+
   // The file of recorded audio samples
   private var tape: AKAudioFile!
-  
+
   // The tape which will then contain all the recorded sub tapes of this session
   var finalTape: AKAudioFile? = nil
-  
+
   // The name of the file where the current recording is stored in
-  private let fileName = "currentRecording.mp4"
-  
+  private var fileName = "recording.mp4"
+
+  // The file url of the file which should be overwritten
+  private var fileToOverwrite = "recording.mp4"
+
   // The booster which lets control the microphone input properties such as volume
   private var micBooster: AKBooster!
-  
+
   // The filter node
   private var moogLadder: AKMoogLadder!
-  
+
   // The native ui view
   private var currentView: AudioRecorderView?
-  
+
   // The tracker which observes the microphone
   private var microphoneTracker = AKMicrophoneTracker()
-  
+
   // The position from which to overwrite the recorded data
   private var pointToOverwriteRecordingInSeconds: Double = 0.00
-  
+
   // Defines if the recording is/should be overwriting existing parts of the file
   private var isOverwriting: Bool = false
-  
+
   // The promise response
   private var jsonArray: JSON = [
     "success": false,
     "error": "",
     "value": ["fileUrl": ""]
   ]
-  
+
   // Error for testing error handling
   // Can be removed anytime later
   enum TestError: Error {
     case runtimeError(String)
   }
-  
+
   // Instantiates the view
   override func view() -> AudioRecorderView {
     let newView = AudioRecorderView()
     self.currentView = newView
     return newView
   }
-  
+
   // Tells React Native to use Main Thread
   override class func requiresMainQueueSetup() -> Bool {
     return true
   }
-  
+
   // Sets the dimensions of the AudioRecorderView to the component dimensions received from React Native
   @objc public func setDimensions(_ width:Double, dimHeight height:Double) {
     self.currentView?.componentWidth = width
     self.currentView?.componentHeight = height
-    
+
     DispatchQueue.main.async {
       self.currentView?.layoutSubviews()
     }
   }
-  
+
   // Cleans up
   private func cleanupRecorder(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
       // Remove temporary files from temp directory
       AKAudioFile.cleanTempDirectory()
-      
+
       // Stop AudioKit to prevent errors of duplicate initialization
       try AudioKit.stop()
 
@@ -110,23 +113,23 @@ class AudioRecorderViewManager : RCTViewManager {
       onError(error)
     }
   }
-  
+
   // Init new recording session
   private func initRecorderSession(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
       // Create a session with recording/recording and bluetooth output only
       try AKSettings.setSession(category: .playAndRecord, with: .allowBluetoothA2DP)
-      
+
       // Session settings
       // Set number of audio frames which can be hold by the buffer
       AKSettings.bufferLength = .veryLong
-      
+
       // Don't use default speakers to avoid crackling in audio files (bug of AudioKit!?)
       AKSettings.defaultToSpeaker = false
-      
+
       // Listen to microphone
       AKSettings.audioInputEnabled = true
-      
+
       // Completed without error
       onSuccess(true)
     } catch {
@@ -136,32 +139,32 @@ class AudioRecorderViewManager : RCTViewManager {
       onError(error)
     }
   }
-  
+
   // Setup virtual devices like, for example, mixer
   private func setupVirtualDevices(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
       // Setup mixer (input handler) for microphone, plus wrap mixer into booster (property handler)
       self.micMixer = AKMixer(self.mic)
       self.micBooster = AKBooster(self.micMixer)
-      
+
       // Microphone monitoring is muted
       self.micBooster.gain = 0
-      
+
       // Setup recorder with using microphone mixer as input handler
       self.recorder = try AKNodeRecorder(node: micMixer)
-      
+
       // Setup player using the recorded audio file
       if let file = self.recorder.audioFile {
         self.player = AKPlayer(audioFile: file)
       }
-      
+
       // Apply filter which enables to manipulate the signal
       self.moogLadder = AKMoogLadder(self.player)
       self.moogLadder.presetDullNoiseMoogLadder()
-      
+
       // Create a mixer which combines our filtered node and our microphone node
       self.mainMixer = AKMixer(self.moogLadder, self.micBooster)
-      
+
       // Completed without error
       onSuccess(true)
     } catch {
@@ -171,19 +174,19 @@ class AudioRecorderViewManager : RCTViewManager {
       onError(error)
     }
   }
-  
+
   // Start the AudioKit engine
   private func startEngine(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
       // Set the signal of the main mixer as output signal
       AudioKit.output = self.mainMixer
-      
+
       // Start tracking
       self.microphoneTracker.start()
-      
+
       // Start the audio engine
       try AudioKit.start()
-      
+
       // Completed without error
       onSuccess(true)
     } catch {
@@ -193,13 +196,13 @@ class AudioRecorderViewManager : RCTViewManager {
       onError(error)
     }
   }
-  
+
   // Setup the final tape which will contain all audio data of one session
   private func setupFinalTape(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
       // Setup the audio tape which will contain the compilation of all the audio data of one session
       self.finalTape = try AKAudioFile()
-      
+
       // Completed without error
       onSuccess(true)
     }
@@ -210,30 +213,22 @@ class AudioRecorderViewManager : RCTViewManager {
       onError(error)
     }
   }
-  
-  // Appends the current recorded audio to the final audio
-  private func appendCurrentTapeToFinalTape(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
-    do {
-      // Create a new file with zero data (extracted is used to avoid buffer error on reading an empty file)
-      self.finalTape = try self.tape.extracted(fromSample: 0, toSample: 1)
-      
-      // Append the current recorded tape to the final tape
-      let newFile = try self.finalTape?.appendedBy(file: self.tape)
-      self.finalTape = newFile
-      
-      // Completed without error
-      onSuccess(true)
-    }
-    catch {
-      // Aborted with error
-      AKLog("Failed")
-      self.jsonArray["error"].stringValue = error.localizedDescription
-      onError(error)
-    }
-  }
-  
+
   // Exports the final tape to a file
   private func exportFinalTapeToFile(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
+    if (!self.isOverwriting) {
+      // Create filename from timestamp for the new file
+      let now = Date()
+      let formatter = DateFormatter()
+      formatter.timeZone = TimeZone.current
+      formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
+      let dateString = formatter.string(from: now)
+      self.fileName = dateString + "--rec.mp4"
+    } else {
+      // Set file name of overwritten file to the given one
+      self.fileName = (NSURL(string: self.fileToOverwrite)?.lastPathComponent)!
+    }
+
     // Store the audio data (final tape) permanently on the device's storage
     self.finalTape?.exportAsynchronously(
       name: self.fileName,
@@ -250,99 +245,108 @@ class AudioRecorderViewManager : RCTViewManager {
             }
           } else {
             print("Export failed.")
-            
+
             // Aborted with error
             self.jsonArray["error"].stringValue = (error?.localizedDescription)! + " - Export failed."
             onError(error!)
           }
     }
   }
-  
+
   // Resets recorder and current tape
   private func resetDataFromPreviousRecording(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
       // Reset all data from previous recording
       try self.recorder.reset()
       self.tape = try AKAudioFile()
-      
+
       // Completed without error
       onSuccess(true)
     } catch {
       print("Failed.")
-      
+
       // Aborted with error
       self.jsonArray["error"].stringValue = error.localizedDescription
       onError(error)
     }
   }
-  
-  // Partially vverwrites the previous tape with the content of the current tape
+
+  // Partially overwrites the previous tape with the content of the current tape
   private func overwritePartially(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
       // The tape which should be overwritten
-      let previousTape = try AKAudioFile(readFileName: self.fileName, baseDir: .documents)
-      
+      let previousTape = try AKAudioFile(forReading: URL(string: self.fileToOverwrite)!)
+
       // The first sample to be extracted
       var firstSampleToExtract = 0
-      
+
       // The last sample to be extracted
       var lastSampleToExtract = previousTape.sampleRate * self.pointToOverwriteRecordingInSeconds
-      
+
       // Extract the first part of the previous file (starting from zero to the point from which should be overwritten
       let previousTapeExtractedBefore = try previousTape.extracted(fromSample: Int64(firstSampleToExtract), toSample: Int64(lastSampleToExtract))
-      
+
       // Append the the first part of the previous tape to the final tape
       var newFile = try self.finalTape?.appendedBy(file: previousTapeExtractedBefore)
       self.finalTape = newFile
-      
+
       // Append the new recorded tape (the part which replaces the old part in the previous file)
       newFile = try self.finalTape?.appendedBy(file: self.tape)
       self.finalTape = newFile
-      
+
       // The first sample to be extracted
       firstSampleToExtract = Int(((self.finalTape?.sampleRate)! * (self.finalTape?.duration)!) + 1)
-      
+
       // The last sample to be extracted
       lastSampleToExtract = previousTape.sampleRate * previousTape.duration
-      
+
       // Extract the first part of the previous file (starting from zero to the point from which should be overwritten
       let previousTapeExtractedAfter = try previousTape.extracted(fromSample: Int64(firstSampleToExtract), toSample: Int64(lastSampleToExtract))
-      
+
       // Append the last part of the previous tape to the final tape
       newFile = try self.finalTape?.appendedBy(file: previousTapeExtractedAfter)
       self.finalTape = newFile
-      
+
       // Completed without error
       onSuccess(true)
     } catch {
       print("Failed.")
-      
+
       // Aborted with error
       self.jsonArray["error"].stringValue = error.localizedDescription
       onError(error)
     }
   }
-  
+
+  // Deletes the file so that it can be replaced without problems
+  private func deleteFile(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
+    // Delete the previous file
+    do {
+      let filemanager = FileManager.default
+      let documentsPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask,true)[0] as NSString
+      let destinationPath = documentsPath.appendingPathComponent(self.fileToOverwrite)
+
+      try filemanager.removeItem(atPath: destinationPath)
+
+      // Completed without error
+      onSuccess(true)
+    } catch {
+      // Success is okay here because we just need to delete the file if AudioKit didn't do it by itself
+      // and if it already did an error will occur here that it cannot deleted anymore so it's ok to just move on
+      onSuccess(true)
+    }
+  }
+
   // Creates one final tape out of others and stores it as an audio file on the device's storage
   private func createAndStoreTapeFromRecordings(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     // Create a new file
     if (!self.isOverwriting) {
-      // Append the last recorded audio to the final tape
-      appendCurrentTapeToFinalTape(
-        onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
-        },
-        onError: { error in
-          self.jsonArray["success"] = false
-          onError(error)
-        }
-      )
-      
+      // Set the final tape to the current recorded tape
+      self.finalTape = self.tape
+
       // Clear the waveform after recording
       self.currentView?.clearWaveform()
-      
+
       // Store the audio data as file on the storage
       exportFinalTapeToFile(
         onSuccess: { success in
@@ -355,7 +359,7 @@ class AudioRecorderViewManager : RCTViewManager {
           onError(error)
         }
       )
-      
+
       // Reset the final tape to be ready for the next session
       setupFinalTape(
         onSuccess: { success in
@@ -368,13 +372,13 @@ class AudioRecorderViewManager : RCTViewManager {
           onError(error)
         }
       )
-      
+
       // Make the file url available to React Native
       if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
         // Set the file url of the last recorded file
         self.jsonArray["value"]["fileUrl"].stringValue = documentsPathString + "/" + self.fileName
       }
-      
+
       // Reset everything from previous recording
       resetDataFromPreviousRecording(
         onSuccess: { success in
@@ -387,7 +391,7 @@ class AudioRecorderViewManager : RCTViewManager {
           onError(error)
         }
       )
-      
+
       onSuccess(true)
     } else { // Overwrite from - to
       // Overwrite the previous tape partially with the content of the current tape
@@ -402,10 +406,23 @@ class AudioRecorderViewManager : RCTViewManager {
           onError(error)
         }
       )
-      
+
       // Clear the waveform after recording
       self.currentView?.clearWaveform()
-      
+
+      // Store the audio data as file on the storage
+      deleteFile(
+        onSuccess: { success in
+          if (success) {
+            self.jsonArray["success"] = true
+          }
+        },
+        onError: { error in
+          self.jsonArray["success"] = false
+          onError(error)
+        }
+      )
+
       // Store the audio data as file on the storage
       exportFinalTapeToFile(
         onSuccess: { success in
@@ -418,7 +435,7 @@ class AudioRecorderViewManager : RCTViewManager {
           onError(error)
         }
       )
-      
+
       // Reset the final tape to be ready for the next session
       setupFinalTape(
         onSuccess: { success in
@@ -431,13 +448,13 @@ class AudioRecorderViewManager : RCTViewManager {
           onError(error)
         }
       )
-      
+
       // Make the file url available to React Native
       if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
         // Set the file url of the last recorded file
         self.jsonArray["value"]["fileUrl"].stringValue = documentsPathString + "/" + self.fileName
       }
-      
+
       // Reset everything from previous recording
       resetDataFromPreviousRecording(
         onSuccess: { success in
@@ -450,7 +467,7 @@ class AudioRecorderViewManager : RCTViewManager {
           onError(error)
         }
       )
-      
+
       onSuccess(true)
     }
   }
@@ -469,7 +486,7 @@ class AudioRecorderViewManager : RCTViewManager {
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
-    
+
     // Init a new recording session
     initRecorderSession(
       onSuccess: { success in
@@ -482,7 +499,7 @@ class AudioRecorderViewManager : RCTViewManager {
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
-    
+
     // Setup the virtual devices e. g. mixer
     setupVirtualDevices(
       onSuccess: { success in
@@ -495,7 +512,7 @@ class AudioRecorderViewManager : RCTViewManager {
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
-    
+
     // Start the AudioKit engine
     startEngine(
       onSuccess: { success in
@@ -508,7 +525,7 @@ class AudioRecorderViewManager : RCTViewManager {
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
-    
+
     // Setup the final tape
     setupFinalTape(
       onSuccess: { success in
@@ -521,74 +538,75 @@ class AudioRecorderViewManager : RCTViewManager {
         reject("Error", self.jsonArray.rawString(), error)
       }
     )
-    
+
     // Microphone monitoring is muted
     self.micBooster.gain = 0
 
     // Initialize the waveform
     self.currentView?.setupWaveform(microphoneTracker: self.microphoneTracker);
-    
+
     // Recorder setup finished without errors
     resolve(self.jsonArray.rawString());
   }
 
   // Starts the recording of audio
-  @objc public func startRecording(_ startTimeInMs:Double, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+  @objc public func startRecording(_ startTimeInMs:Double, file fileUrl:NSString, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Microphone will be monitored while recording
     // only if headphones are plugged
     if AKSettings.headPhonesPlugged {
       self.micBooster.gain = 1
     }
-    
+
     // If -1 then overwriting flag is set to false, "first" new recording
     // otherwise set overwriting flag to true, prepare overwriting from specific point
-    if (startTimeInMs < 0) {
-      self.isOverwriting = false
-    } else {
+    if (startTimeInMs >= 0 && fileUrl != "") {
       self.isOverwriting = true
       self.pointToOverwriteRecordingInSeconds = Double(startTimeInMs) / Double(1000)
+      self.fileToOverwrite = fileUrl as String
+    } else {
+      self.isOverwriting = false
     }
-    
+
     do {
       // Reset all data from previous recording
       try self.recorder.reset()
-      
+
       // Try to start recording
       try self.recorder.record()
-      
+
       // Start rendering the waveform
       self.currentView?.resumeWaveform()
-      
+
       // Inform bridge/React about success
       self.jsonArray["success"] = true
       resolve(self.jsonArray.rawString());
     } catch {
       print("Recording failed.")
-      
+
       // Inform bridge/React about error
       self.jsonArray["error"].stringValue = error.localizedDescription
       self.jsonArray["success"] = false
       reject("Error", self.jsonArray.rawString(), error)
     }
   }
-  
+
   // Stops audio recording and stores the recorded data in a file
   @objc public func stopRecording(_ resolve:@escaping RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
     // Microphone monitoring is muted
     self.micBooster.gain = 0
-    
+
     // Stop the recorder
     self.recorder.stop()
-    
+
     // Stop rendering the waveform
     self.currentView?.pauseWaveform()
-    
+
     // Clear the waveform after recording
     self.currentView?.clearWaveform()
-    
+
     // Temporarily store the audio file recorded by the recorder
     self.tape = self.recorder.audioFile!
-    
+
     // Create tape from and store the recorded audio data
     createAndStoreTapeFromRecordings(
       onSuccess: { success in

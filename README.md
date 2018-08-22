@@ -16,15 +16,18 @@ A React Native module which serves with a native module for audio recording, and
 4. Run the following command to add the package to your project:  
 `$ npm react-native link`
 
-4. Open the project in the ios folder:  
+5. Open the project in the ios folder:  
 `ProjectName.xcodeproj`
     
-5. Add at least one Swift file to your project, the compiler needs this to recognize the bridging   
+6. Add at least one Swift file to your project, the compiler needs this to recognize the bridging   
     
-5. Go to Project -> Target -> Build Settings -> Section "Search Paths" -> "Framework Search Paths" and add:  
+7. Go to Project -> Target -> Build Settings -> Section "Search Paths" -> "Framework Search Paths" and add:  
 `$(SRCROOT)/../node_modules/react-native-native-audio-recorder/ios/Frameworks`
+  
+8. Go to Project -> Target -> Info -> "Custom iOS Target Properties" -> hit the plus and add:  
+`Privacy - Microphone Usage Description`
     
-6. Optional - for better development experience: inhibit hundred of third-party warnings:  
+9. Optional - for better development experience: inhibit hundred of third-party warnings:  
 a) add the following lines to package.json:
     ```
     "scripts": {

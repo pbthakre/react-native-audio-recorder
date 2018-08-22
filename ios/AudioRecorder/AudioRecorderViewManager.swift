@@ -550,7 +550,7 @@ class AudioRecorderViewManager : RCTViewManager {
   }
 
   // Starts the recording of audio
-  @objc public func startRecording(_ startTimeInMs:Double, file fileUrl:NSString, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+  @objc public func startRecording(_ startTimeInMs:Double, file filePath:NSString, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Microphone will be monitored while recording
     // only if headphones are plugged
     if AKSettings.headPhonesPlugged {
@@ -559,10 +559,10 @@ class AudioRecorderViewManager : RCTViewManager {
 
     // If -1 then overwriting flag is set to false, "first" new recording
     // otherwise set overwriting flag to true, prepare overwriting from specific point
-    if (startTimeInMs >= 0 && fileUrl != "") {
+    if (startTimeInMs >= 0 && filePath != "") {
       self.isOverwriting = true
       self.pointToOverwriteRecordingInSeconds = Double(startTimeInMs) / Double(1000)
-      self.fileToOverwrite = fileUrl as String
+      self.fileToOverwrite = filePath as String
     } else {
       self.isOverwriting = false
     }

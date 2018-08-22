@@ -27,6 +27,9 @@ class AudioPlayerViewManager : RCTViewManager {
   
   // Instantiates the view
   override func view() -> AudioPlayerView {
+    // Turn off application exit on error of audio file reading in EZAudioUtilities (AudioKit)
+    AudioPlayerHelper.setShouldExitOnCheckResultFail()
+  
     let newView = AudioPlayerView()
     self.currentView = newView
     self.currentView?.setupWaveform()

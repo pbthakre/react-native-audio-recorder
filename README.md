@@ -46,4 +46,4 @@ import { AudioRecorder, AudioPlayerPlot } from 'react-native-native-audio-record
 
 ## Example
 
-For usage see the example project in the example folder, we have planned to add further explanations here in the readme or in the wiki anytime later. 
+For usage see the full-working [example project ](https://github.com/audvice/react-native-audio-recorder-example-project)

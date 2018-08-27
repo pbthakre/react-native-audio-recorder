@@ -41,6 +41,9 @@ class AudioRecorderViewManager : RCTViewManager {
 
   // The file url of the file which should be overwritten
   private var fileToOverwrite = "recording.mp4"
+    
+  // The duration of the file where the current recording is stored in - in milliseconds
+  private var fileDuration = 0
 
   // The booster which lets control the microphone input properties such as volume
   private var micBooster: AKBooster!
@@ -64,7 +67,7 @@ class AudioRecorderViewManager : RCTViewManager {
   private var jsonArray: JSON = [
     "success": false,
     "error": "",
-    "value": ["fileUrl": ""]
+    "value": ["fileUrl": "", "fileDurationInMS": "0"]
   ]
 
   // Error for testing error handling
@@ -378,6 +381,9 @@ class AudioRecorderViewManager : RCTViewManager {
         // Set the file url of the last recorded file
         self.jsonArray["value"]["fileUrl"].stringValue = documentsPathString + "/" + self.fileName
       }
+        
+      // Set the file duration in JSON
+      self.jsonArray["value"]["fileDurationInMS"].stringValue = String(format: "%.0f", self.tape.duration * 1000)
 
       // Reset everything from previous recording
       resetDataFromPreviousRecording(
@@ -435,6 +441,9 @@ class AudioRecorderViewManager : RCTViewManager {
           onError(error)
         }
       )
+        
+      // Set the file duration in JSON
+      self.jsonArray["value"]["fileDurationInMS"].stringValue = String(format: "%.0f", (self.finalTape?.duration)! * 1000)
 
       // Reset the final tape to be ready for the next session
       setupFinalTape(

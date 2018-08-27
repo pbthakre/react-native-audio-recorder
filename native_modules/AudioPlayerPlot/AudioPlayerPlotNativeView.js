@@ -28,7 +28,6 @@ export default class AudioPlayerUIView extends Component {
 
 const styles = StyleSheet.create({
   default: {
-    marginTop: 100,
     width: Dimensions.get('window').width,
     height: '66%',
     backgroundColor: 'white'

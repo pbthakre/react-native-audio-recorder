@@ -47,7 +47,7 @@ public class AudioPlayerView: EZAudioPlot {
   // Detect layout changes
   override public func layoutSubviews() {
     // Set plot line to middle of screen
-    self.plot.waveformLayer.frame.origin.x = CGFloat(self.windowWidth / 2)
+    self.plot.frame.origin.x = CGFloat(self.windowWidth / 2)
   }
   
   required public init?(coder aDecoder: NSCoder) {
@@ -103,6 +103,7 @@ public class AudioPlayerView: EZAudioPlot {
         let line = UIView(frame: CGRect(x: 0, y: (self.componentHeight / 2) - 1.5, width: self.windowWidth / 2, height: 3))
         line.backgroundColor = UIColor(red: 245.0 / 255.0, green: 0.0 / 255.0, blue: 87.0 / 255.0, alpha: 1.0)
         self.addSubview(line)
+        self.bringSubview(toFront: line)
       }
       
       // Completed without error

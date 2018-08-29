@@ -18,6 +18,12 @@ public class AudioPlayerView: EZAudioPlot {
   
   // The height of the component received from React Native
   public var componentHeight: Double = 0.00
+
+  // The width of the component received from React Native
+  public var windowWidth: Double = 0.00
+
+  // The height of the component received from React Native
+  public var windowHeight: Double = 0.00
   
   // The plot which represents the waveform
   private var plot: EZAudioPlot = EZAudioPlot(frame: CGRect.init())
@@ -36,6 +42,12 @@ public class AudioPlayerView: EZAudioPlot {
     
     // Set width to use 100% (relative)
     self.autoresizingMask = [.flexibleWidth]
+  }
+
+  // Detect layout changes
+  override public func layoutSubviews() {
+    // Set plot line to middle of screen
+    self.plot.waveformLayer.frame.origin.x = CGFloat(self.windowWidth / 2)
   }
   
   required public init?(coder aDecoder: NSCoder) {
@@ -86,6 +98,11 @@ public class AudioPlayerView: EZAudioPlot {
       DispatchQueue.main.async() {
         // Add the data to the plot
         self.plot.updateBuffer(data?.buffers[0], withBufferSize: (data?.bufferSize)!)
+        
+        // Create a straight line so that waveform starts in the middle of the screen
+        let line = UIView(frame: CGRect(x: 0, y: (self.componentHeight / 2) - 1.5, width: self.windowWidth / 2, height: 3))
+        line.backgroundColor = UIColor(red: 0.0 / 255.0, green: 0.0 / 255.0, blue: 0.0 / 255.0, alpha: 1.0)
+        self.addSubview(line)
       }
       
       // Completed without error

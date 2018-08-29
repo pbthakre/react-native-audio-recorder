@@ -101,7 +101,7 @@ public class AudioPlayerView: EZAudioPlot {
         
         // Create a straight line so that waveform starts in the middle of the screen
         let line = UIView(frame: CGRect(x: 0, y: (self.componentHeight / 2) - 1.5, width: self.windowWidth / 2, height: 3))
-        line.backgroundColor = UIColor(red: 0.0 / 255.0, green: 0.0 / 255.0, blue: 0.0 / 255.0, alpha: 1.0)
+        line.backgroundColor = UIColor(red: 245.0 / 255.0, green: 0.0 / 255.0, blue: 87.0 / 255.0, alpha: 1.0)
         self.addSubview(line)
       }
       

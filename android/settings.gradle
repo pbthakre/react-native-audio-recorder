@@ -1,0 +1,3 @@
+rootProject.name = 'RNNativeAudioRecorder'
+
+include ':app'

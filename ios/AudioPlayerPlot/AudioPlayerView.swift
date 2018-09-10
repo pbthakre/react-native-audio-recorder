@@ -32,7 +32,7 @@ public class AudioPlayerView: EZAudioPlot {
   private var plot: EZAudioPlot = EZAudioPlot(frame: CGRect.init())
     
   // Brand Color
-  private var brandColor : UIColor = UIColor(red: 245.0 / 255.0, green: 0.0 / 255.0, blue: 87.0 / 255.0, alpha: 1.0)
+  private var brandColor : UIColor = UIColor(red: 124.0 / 255.0, green: 219.0 / 255.0, blue: 213.0 / 255.0, alpha: 1.0)
   
   // Holds the errors of waveform
   enum WaveFormError: Error {

@@ -28,6 +28,9 @@ public class AudioRecorderView: EZAudioPlot {
   
   // Tracker which observes the microphone
   var microphoneTracker = AKMicrophoneTracker()
+    
+  // Brand Color
+  private var brandColor : UIColor = UIColor(red: 124.0 / 255.0, green: 219.0 / 255.0, blue: 213.0 / 255.0, alpha: 1.0)
   
   private override init(frame: CGRect) {
     // Call super constructor
@@ -74,7 +77,7 @@ public class AudioRecorderView: EZAudioPlot {
     self.plot.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     
     // Set the wave line color
-    self.plot.waveColor = UIColor(red: 245.0 / 255.0, green: 0.0 / 255.0, blue: 87.0 / 255.0, alpha: 1.0)
+    self.plot.waveColor = self.brandColor
     
     // Set amplitude and frequency to zero to create a straight line
     self.plot.amplitude = 0

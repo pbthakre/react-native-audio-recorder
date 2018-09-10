@@ -109,9 +109,9 @@
 		74326B61212C3642007BE829 /* AudioRecorder */ = {
 			isa = PBXGroup;
 			children = (
-				74326B5B212C3638007BE829 /* AudioRecorderView.swift */,
-				74326B5D212C3638007BE829 /* AudioRecorderViewManager.swift */,
 				74326B5C212C3638007BE829 /* AudioRecorderViewModule.m */,
+				74326B5D212C3638007BE829 /* AudioRecorderViewManager.swift */,
+				74326B5B212C3638007BE829 /* AudioRecorderView.swift */,
 			);
 			name = AudioRecorder;
 			sourceTree = "<group>";

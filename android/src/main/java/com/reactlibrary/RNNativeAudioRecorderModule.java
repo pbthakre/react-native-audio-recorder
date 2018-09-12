@@ -1,12 +1,8 @@
-
 package com.reactlibrary;
-
-import android.widget.Toast;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
 
 public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
 
@@ -24,7 +20,6 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void setupRecorder() {
-    //Toast.makeText(getReactApplicationContext(), message, duration).show();
       System.out.println("hello"+"\n"+"world");
   }
 }

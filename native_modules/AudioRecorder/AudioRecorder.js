@@ -14,7 +14,6 @@ export default class AudioRecorder extends Component<Props> {
   }
 
   setupRecorder() {
-    console.log(AudioRecorderNative)
     return AudioRecorderNative.setupRecorder();
   };
 

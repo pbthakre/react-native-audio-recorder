@@ -18,10 +18,11 @@ import java.io.File;
 
 // Represents the AudioRecorderViewManager which manages the AudioRecorderView
 public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
+  // The react app context
   private final ReactApplicationContext reactContext;
 
-
-  private AudioRecording mAudioRecording;
+  // The audio recording engine wrapper
+  private AudioRecording audioRecording;
 
   // The promise response
   private WritableNativeMap jsonResponse = new WritableNativeMap();
@@ -43,8 +44,10 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
   public void setupRecorder(Promise promise) {
     System.out.println("Setup Recorder");
 
-    mAudioRecording = new AudioRecording();
+    // Instantiate the audio recording engine
+    audioRecording = new AudioRecording();
 
+    // Create the promise response
     jsonResponse = new WritableNativeMap();
     jsonResponse.putString("success", String.valueOf(false));
     jsonResponse.putString("error", "");
@@ -62,34 +65,46 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
   private void startRecording(Double startTimeInMs, String filePath, Promise promise) {
     System.out.println("Start Recording");
 
+    // Instantiate an event listener on the audio recording engine
     AudioRecording.OnAudioRecordListener onRecordListener = new AudioRecording.OnAudioRecordListener() {
+      // Recording started
+      @Override
+      public void onRecordingStarted() {
+        System.out.println("onStart");
+      }
 
+      // Recording finished
       @Override
       public void onRecordFinished() {
         System.out.println("onFinish");
       }
 
+      // Recording failed
       @Override
       public void onError(int e) {
         System.out.println("onError" + e);
       }
-
-      @Override
-      public void onRecordingStarted() {
-        System.out.println("onStart");
-      }
     };
 
+    // Get the root directory
     File root = android.os.Environment.getExternalStorageDirectory();
-    File dir = new File (root.getAbsolutePath() + "/download");
 
+    // Create a new file instance at the destination folder
+    File dir = new File (root.getAbsolutePath() + "/records");
+
+    // Create a destination path of the folder the current timestamp and the file extension
     String fPath = dir + "/" + System.currentTimeMillis() + ".aac";
 
-    mAudioRecording.setOnAudioRecordListener(onRecordListener);
-    mAudioRecording.setFile(fPath);
+    // Set the listener on the audio recording engine
+    audioRecording.setOnAudioRecordListener(onRecordListener);
 
-    mAudioRecording.startRecording();
+    // Set the destination file path on the audio recording engine
+    audioRecording.setFile(fPath);
 
+    // Start the recording
+    audioRecording.startRecording();
+
+    // Create the promise response
     jsonResponse = new WritableNativeMap();
     jsonResponse.putString("success", String.valueOf(false));
     jsonResponse.putString("error", "");
@@ -105,10 +120,11 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
   // Stops audio recording and stores the recorded data in a file
   @ReactMethod
   private void stopRecording(Promise promise) {
-    if( mAudioRecording != null){
-      mAudioRecording.stopRecording(false);
+    if(audioRecording != null){
+      audioRecording.stopRecording(false);
     }
 
+    // Create the promise response
     jsonResponse = new WritableNativeMap();
     jsonResponse.putString("success", String.valueOf(false));
     jsonResponse.putString("error", "");

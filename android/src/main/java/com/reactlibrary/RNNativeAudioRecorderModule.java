@@ -28,7 +28,7 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
   private WritableNativeMap jsonResponse = new WritableNativeMap();
 
   // The constructor
-  public RNNativeAudioRecorderModule(ReactApplicationContext reactContext) {
+  RNNativeAudioRecorderModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
   }
@@ -45,16 +45,16 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
     System.out.println("Setup Recorder");
 
     // Instantiate the audio recording engine
-    audioRecording = new AudioRecording();
+    this.audioRecording = new AudioRecording();
 
     // Create the promise response
-    jsonResponse = new WritableNativeMap();
-    jsonResponse.putString("success", String.valueOf(false));
-    jsonResponse.putString("error", "");
-    jsonResponse.putString("value", "");
+    this.jsonResponse = new WritableNativeMap();
+    this.jsonResponse.putString("success", String.valueOf(false));
+    this.jsonResponse.putString("error", "");
+    this.jsonResponse.putString("value", "");
 
     try {
-      promise.resolve(jsonResponse);
+      promise.resolve(this.jsonResponse);
     } catch (Error e) {
       promise.reject("Error", e);
     }
@@ -96,22 +96,22 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
     String fPath = dir + "/" + System.currentTimeMillis() + ".m4a";
 
     // Set the listener on the audio recording engine
-    audioRecording.setOnAudioRecordListener(onRecordListener);
+    this.audioRecording.setOnAudioRecordListener(onRecordListener);
 
     // Set the destination file path on the audio recording engine
-    audioRecording.setFile(fPath);
+    this.audioRecording.setFile(fPath);
 
     // Start the recording
-    audioRecording.startRecording();
+    this.audioRecording.startRecording();
 
     // Create the promise response
-    jsonResponse = new WritableNativeMap();
-    jsonResponse.putString("success", String.valueOf(false));
-    jsonResponse.putString("error", "");
-    jsonResponse.putString("value", "");
+    this.jsonResponse = new WritableNativeMap();
+    this.jsonResponse.putString("success", String.valueOf(false));
+    this.jsonResponse.putString("error", "");
+    this.jsonResponse.putString("value", "");
 
     try {
-      promise.resolve(jsonResponse);
+      promise.resolve(this.jsonResponse);
     } catch (Error e) {
       promise.reject("Error", e);
     }
@@ -120,18 +120,18 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
   // Stops audio recording and stores the recorded data in a file
   @ReactMethod
   private void stopRecording(Promise promise) {
-    if(audioRecording != null){
-      audioRecording.stopRecording(false);
+    if(this.audioRecording != null){
+      this.audioRecording.stopRecording(false);
     }
 
     // Create the promise response
-    jsonResponse = new WritableNativeMap();
-    jsonResponse.putString("success", String.valueOf(false));
-    jsonResponse.putString("error", "");
-    jsonResponse.putString("value", "");
+    this.jsonResponse = new WritableNativeMap();
+    this.jsonResponse.putString("success", String.valueOf(false));
+    this.jsonResponse.putString("error", "");
+    this.jsonResponse.putString("value", "");
 
     try {
-      promise.resolve(jsonResponse);
+      promise.resolve(this.jsonResponse);
     } catch (Error e) {
       promise.reject("Error", e);
     }

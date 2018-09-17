@@ -66,10 +66,10 @@ public class AudioRecordThread implements Runnable {
 
     try {
       // Start the recording
-      audioRecord.startRecording();
+      this.audioRecord.startRecording();
     } catch (Exception e) {
       System.out.println(e);
-      mediaCodec.release();
+      this.mediaCodec.release();
       throw new IOException(e);
     }
   }
@@ -77,43 +77,44 @@ public class AudioRecordThread implements Runnable {
   // Start the thread
   @Override
   public void run() {
-    if (onRecorderFailedListener != null) {
+    if (this.onRecorderFailedListener != null) {
       System.out.println("onRecorderStarted");
-      onRecorderFailedListener.onRecorderStarted();
+      this.onRecorderFailedListener.onRecorderStarted();
     }
 
     // Access the buffer info
     MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
 
     // Create an input buffer
-    ByteBuffer[] codecInputBuffers = mediaCodec.getInputBuffers();
+    ByteBuffer[] codecInputBuffers = this.mediaCodec.getInputBuffers();
 
     // Create an output buffer
-    ByteBuffer[] codecOutputBuffers = mediaCodec.getOutputBuffers();
+    ByteBuffer[] codecOutputBuffers = this.mediaCodec.getOutputBuffers();
 
     try {
       // While thread was not stopped do
       while (!Thread.interrupted()) {
         // Let codec handle incoming data (from microphone)
-        boolean success = handleCodecInput(audioRecord, mediaCodec, codecInputBuffers, Thread.currentThread().isAlive());
-        if (success)
+        boolean success = handleCodecInput(this.audioRecord, this.mediaCodec, codecInputBuffers, Thread.currentThread().isAlive());
+        if (success) {
           // Let codec handle outgoing data (to destination file)
-          handleCodecOutput(mediaCodec, codecOutputBuffers, bufferInfo, outputStream);
+          handleCodecOutput(this.mediaCodec, codecOutputBuffers, bufferInfo, this.outputStream);
+        }
       }
     } catch (IOException e) {
       System.out.println(e);
     } finally {
       // Stop codec and audio record engine
-      mediaCodec.stop();
-      audioRecord.stop();
+      this.mediaCodec.stop();
+      this.audioRecord.stop();
 
       // Free memory
-      mediaCodec.release();
-      audioRecord.release();
+      this.mediaCodec.release();
+      this.audioRecord.release();
 
       try {
         // Close the file stream
-        outputStream.close();
+        this.outputStream.close();
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -126,7 +127,7 @@ public class AudioRecordThread implements Runnable {
                                    boolean running) throws IOException {
 
     // Create array for storing incoming audio data
-    byte[] audioRecordData = new byte[bufferSize];
+    byte[] audioRecordData = new byte[this.bufferSize];
 
     // Get the length of the incoming data
     int length = audioRecord.read(audioRecordData, 0, audioRecordData.length);
@@ -134,13 +135,13 @@ public class AudioRecordThread implements Runnable {
     // Check length validity
     if (length == AudioRecord.ERROR_BAD_VALUE ||
             length == AudioRecord.ERROR_INVALID_OPERATION ||
-            length != bufferSize) {
+            length != this.bufferSize) {
 
       // If length is not equal to buffer size, meaning data was lost, throw error
-      if (length != bufferSize) {
-        if (onRecorderFailedListener != null) {
+      if (length != this.bufferSize) {
+        if (this.onRecorderFailedListener != null) {
           System.out.println("length != BufferSize calling onRecordFailed");
-          onRecorderFailedListener.onRecorderFailed();
+          this.onRecorderFailedListener.onRecorderFailed();
         }
         return false;
       }
@@ -193,7 +194,7 @@ public class AudioRecordThread implements Runnable {
           byte[] header = createAdtsHeader(bufferInfo.size - bufferInfo.offset);
 
           // Write the header to the file
-          outputStream.write(header);
+          this.outputStream.write(header);
 
           // Create an array for the audio data
           byte[] data = new byte[encoderOutputBuffer.remaining()];
@@ -202,7 +203,7 @@ public class AudioRecordThread implements Runnable {
           encoderOutputBuffer.get(data);
 
           // Write the data to the file
-          outputStream.write(data);
+          this.outputStream.write(data);
         }
 
         // Clear the buffer

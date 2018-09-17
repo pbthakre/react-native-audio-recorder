@@ -194,7 +194,7 @@ public class AudioRecordThread implements Runnable {
           byte[] header = createAdtsHeader(bufferInfo.size - bufferInfo.offset);
 
           // Write the header to the file
-          this.outputStream.write(header);
+          outputStream.write(header);
 
           // Create an array for the audio data
           byte[] data = new byte[encoderOutputBuffer.remaining()];
@@ -203,7 +203,7 @@ public class AudioRecordThread implements Runnable {
           encoderOutputBuffer.get(data);
 
           // Write the data to the file
-          this.outputStream.write(data);
+          outputStream.write(data);
         }
 
         // Clear the buffer

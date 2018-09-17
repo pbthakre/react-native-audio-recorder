@@ -19,7 +19,7 @@ public class AudioRecordThread implements Runnable {
   // The recording settings
   private static final int SAMPLE_RATE = 44100;
   private static final int SAMPLE_RATE_INDEX = 4;
-  private static final int CHANNELS = 1;
+  private static final int CHANNELS = 2;
   private static final int BIT_RATE = 32000;
 
   // The calculated buffer size
@@ -47,7 +47,7 @@ public class AudioRecordThread implements Runnable {
   // The constructor
   AudioRecordThread(OutputStream outputStream, AudioRecordThread.OnRecorderFailedListener onRecorderFailedListener) throws IOException {
     // Calculate the buffer size based on the other settings
-    this.bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+    this.bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT);
 
     // Instantiate the audio record engine based on the calculated buffer size
     this.audioRecord = createAudioRecord(this.bufferSize);
@@ -242,7 +242,7 @@ public class AudioRecordThread implements Runnable {
   private AudioRecord createAudioRecord(int bufferSize) {
     // Instantiate audio record
     AudioRecord audioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC, SAMPLE_RATE,
-            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.CHANNEL_IN_STEREO,
             AudioFormat.ENCODING_PCM_16BIT, bufferSize * 10);
 
     // An error occured while instantiating

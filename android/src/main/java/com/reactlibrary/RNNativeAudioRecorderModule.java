@@ -90,10 +90,10 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
     File root = android.os.Environment.getExternalStorageDirectory();
 
     // Create a new file instance at the destination folder
-    File dir = new File (root.getAbsolutePath() + "/records");
+    File dir = new File (root.getAbsolutePath() + "/download");
 
     // Create a destination path of the folder the current timestamp and the file extension
-    String fPath = dir + "/" + System.currentTimeMillis() + ".aac";
+    String fPath = dir + "/" + System.currentTimeMillis() + ".m4a";
 
     // Set the listener on the audio recording engine
     audioRecording.setOnAudioRecordListener(onRecordListener);

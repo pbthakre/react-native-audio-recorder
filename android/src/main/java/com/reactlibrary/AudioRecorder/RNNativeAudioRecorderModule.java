@@ -6,7 +6,7 @@
 //  Copyright © 2018 Audvice GmbH. All rights reserved.
 //
 
-package com.reactlibrary;
+package com.reactlibrary.AudioRecorder;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;

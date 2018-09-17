@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package com.reactlibrary.AudioRecorder;
 
 import java.io.File;
 import java.io.FileNotFoundException;

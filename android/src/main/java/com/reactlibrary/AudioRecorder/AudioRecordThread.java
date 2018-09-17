@@ -1,4 +1,4 @@
-package com.reactlibrary;
+package com.reactlibrary.AudioRecorder;
 
 import java.io.IOException;
 import java.io.OutputStream;

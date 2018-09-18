@@ -14,6 +14,8 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.WritableNativeMap;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 
 // Represents the AudioRecorderViewManager which manages the AudioRecorderView
@@ -104,6 +106,9 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
     // Start the recording
     this.audioRecording.startRecording();
 
+    // Send event for resuming waveform
+    EventBus.getDefault().post(new WaveformEvent(1));
+
     // Create the promise response
     this.jsonResponse = new WritableNativeMap();
     this.jsonResponse.putString("success", String.valueOf(false));
@@ -121,6 +126,8 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
   @ReactMethod
   private void stopRecording(Promise promise) {
     if(this.audioRecording != null){
+      // Send event for pausing waveform
+      EventBus.getDefault().post(new WaveformEvent(2));
       this.audioRecording.stopRecording(false);
     }
 

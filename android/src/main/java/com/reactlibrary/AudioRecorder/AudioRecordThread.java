@@ -11,6 +11,8 @@ import android.media.MediaRecorder;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 
+import org.greenrobot.eventbus.EventBus;
+
 // The thread for audio recording
 public class AudioRecordThread implements Runnable {
   // The class tag for identification
@@ -94,6 +96,9 @@ public class AudioRecordThread implements Runnable {
     try {
       // While thread was not stopped do
       while (!Thread.interrupted()) {
+        // Send current amplitude
+        EventBus.getDefault().post(new AmplitudeUpdateEvent(getAmplitude()));
+
         // Let codec handle incoming data (from microphone)
         boolean success = handleCodecInput(this.audioRecord, this.mediaCodec, codecInputBuffers, Thread.currentThread().isAlive());
         if (success) {
@@ -101,6 +106,8 @@ public class AudioRecordThread implements Runnable {
           handleCodecOutput(this.mediaCodec, codecOutputBuffers, bufferInfo, this.outputStream);
         }
       }
+
+      // EventBus.getDefault().post(new WaveformEvent(2));
     } catch (IOException e) {
       System.out.println(e);
     } finally {
@@ -303,5 +310,23 @@ public class AudioRecordThread implements Runnable {
     }
 
     return mediaCodec;
+  }
+
+  // Calculates and returns the amplitude of the microphone
+  protected float getAmplitude() {
+    short[] buffer = new short[bufferSize];
+
+    audioRecord.read(buffer, 0, bufferSize);
+
+    int max = 0;
+    for (short s : buffer)
+    {
+      if (Math.abs(s) > max)
+      {
+        max = Math.abs(s);
+      }
+    }
+
+    return max;
   }
 }

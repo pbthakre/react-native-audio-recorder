@@ -57,6 +57,8 @@ public class AudioRecorderView extends RelativeLayout {
     // Apply layout from xml
     inflate(context, R.layout.audio_recorder_view, this);
 
+    // TODO: Extend SiriWave so that other parameters can be set
+
     // Init the waveform
     runOnUiThread(new Runnable() {
       @Override
@@ -88,7 +90,7 @@ public class AudioRecorderView extends RelativeLayout {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        plot.amplitude = finalAmplitude;
+        plot.setMaxAmplitude(finalAmplitude);
       }
     });
   }

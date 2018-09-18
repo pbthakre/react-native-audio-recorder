@@ -1,5 +1,5 @@
 //
-//  RNNativeAudioRecorderPackage.java
+//  AudioRecorderPackage.java
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 10.09.18.
@@ -19,10 +19,10 @@ import com.facebook.react.uimanager.ViewManager;
 import com.facebook.react.bridge.JavaScriptModule;
 
 // Represents the bridge which enables access to AudioRecorderView(Manager) in React Native
-public class RNNativeAudioRecorderPackage implements ReactPackage {
+public class AudioRecorderPackage implements ReactPackage {
   @Override
   public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-    return Arrays.<NativeModule>asList(new RNNativeAudioRecorderModule(reactContext));
+    return Arrays.<NativeModule>asList(new AudioRecorderModule(reactContext));
   }
 
   // Deprecated from RN 0.47

@@ -1,5 +1,5 @@
 //
-//  RNNativeAudioRecorderModule.java
+//  AudioRecorderModule.java
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 10.09.18.
@@ -19,7 +19,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.File;
 
 // Represents the AudioRecorderViewManager which manages the AudioRecorderView
-public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
+public class AudioRecorderModule extends ReactContextBaseJavaModule {
   // The react app context
   private final ReactApplicationContext reactContext;
 
@@ -30,7 +30,7 @@ public class RNNativeAudioRecorderModule extends ReactContextBaseJavaModule {
   private WritableNativeMap jsonResponse = new WritableNativeMap();
 
   // The constructor
-  RNNativeAudioRecorderModule(ReactApplicationContext reactContext) {
+  AudioRecorderModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
   }

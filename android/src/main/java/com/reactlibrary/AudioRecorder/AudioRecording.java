@@ -1,3 +1,11 @@
+//
+//  AudioRecording.java
+//  reactnativeaudiorecorder
+//
+//  Created by Michael Andorfer on 17.09.18.
+//  Copyright © 2018 Audvice GmbH. All rights reserved.
+//
+
 package com.reactlibrary.AudioRecorder;
 
 import java.io.File;

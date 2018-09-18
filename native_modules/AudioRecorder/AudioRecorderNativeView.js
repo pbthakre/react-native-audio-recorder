@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { requireNativeComponent, Dimensions, StyleSheet } from 'react-native'
+import { requireNativeComponent, Dimensions, StyleSheet, Platform } from 'react-native'
 
 const AudioRecorderView = requireNativeComponent('AudioRecorderView', AudioRecorderUIView);
 
@@ -18,9 +18,11 @@ export default class AudioRecorderUIView extends Component {
   };
 
   render () {
-    // Send the dimensions of the component to the native ui
-    if (this.state.dimensions) {
-      AudioRecorderNative.setDimensions(this.state.dimensions.width, this.state.dimensions.height)
+    if (Platform.OS === 'ios') {
+      // Send the dimensions of the component to the native ui
+      if (this.state.dimensions) {
+        AudioRecorderNative.setDimensions(this.state.dimensions.width, this.state.dimensions.height)
+      }
     }
     return <AudioRecorderView style={styles.recorder} onLayout={this.onLayout} width={!this.props.width ? styles.recorder.width : this.props.width} height={!this.props.height ? styles.recorder.height : this.props.height}/>
   }

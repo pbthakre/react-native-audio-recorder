@@ -1,5 +1,5 @@
 //
-//  RNNativeAudioRecorderModule.m
+//  RNNativeAudioRecorderModule.java
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 10.09.18.

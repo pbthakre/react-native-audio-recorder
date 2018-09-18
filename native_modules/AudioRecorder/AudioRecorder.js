@@ -28,6 +28,7 @@ export default class AudioRecorder extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
+        <AudioRecorderUIView style={styles.native} width={this.props.width} height={this.props.height}/>
       </View>
     );
   }

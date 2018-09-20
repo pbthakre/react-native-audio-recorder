@@ -49,6 +49,9 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
     // Instantiate the audio recording engine
     this.audioRecording = new AudioRecording();
 
+    // Send event for resuming waveform
+    // EventBus.getDefault().post(new WaveformEvent(1));
+
     // Create the promise response
     this.jsonResponse = new WritableNativeMap();
     this.jsonResponse.putString("success", String.valueOf(false));

@@ -114,8 +114,6 @@ public class AudioRecordThread implements Runnable {
           handleCodecOutput(this.mediaCodec, codecOutputBuffers, bufferInfo, this.outputStream);
         }
       }
-
-      // EventBus.getDefault().post(new WaveformEvent(2));
     } catch (IOException e) {
       System.out.println(e);
     } finally {
@@ -322,19 +320,27 @@ public class AudioRecordThread implements Runnable {
 
   // Calculates and returns the amplitude of the microphone
   protected float getAmplitude() {
-    short[] buffer = new short[bufferSize];
+    try {
+      // Create buffer array
+      short[] buffer = new short[bufferSize];
 
-    audioRecord.read(buffer, 0, bufferSize);
+      // Read data from buffer
+      int bufferReadResult = audioRecord.read(buffer, 0, bufferSize);
 
-    int max = 0;
-    for (short s : buffer)
-    {
-      if (Math.abs(s) > max)
-      {
-        max = Math.abs(s);
+      // Sum up the values of the buffer
+      Float sumLevel = 0.0f;
+      for (int i = 0; i < bufferReadResult; i++) {
+        sumLevel += buffer[i];
       }
+
+      // Calculate the average level/amplitude
+      Float lastLevel = Math.abs((sumLevel / bufferReadResult));
+
+      return lastLevel;
+    } catch (Exception e) {
+      e.printStackTrace();
     }
 
-    return max;
+    return 0.0f;
   }
 }

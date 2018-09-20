@@ -11,7 +11,6 @@ package com.reactlibrary.AudioRecorder;
 import android.content.Context;
 import android.widget.RelativeLayout;
 
-import com.am.siriview.DrawView;
 import com.reactlibrary.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,7 +29,7 @@ public class AudioRecorderView extends RelativeLayout {
   private Timer timer;
 
   // The plot which represents the waveform
-  private DrawView plot;
+  private DynamicWaveformView plot;
 
   // The current amplitude measured by the microphone
   private Float trackedAmplitude;
@@ -65,30 +64,25 @@ public class AudioRecorderView extends RelativeLayout {
     // Apply layout from xml
     inflate(context, R.layout.audio_recorder_view, this);
 
-    // TODO: Extend SiriWave so that other parameters can be set
-
     // Init the waveform
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        plot = (DrawView) findViewById(R.id.audio_recorder_waveform);
-        plot.amplitude = 0;
-        plot.frequency = 0;
-        plot.numberOfWaves = 1;
-        plot.phaseShift = 0.5f;
-      }
-    });
+    plot = findViewById(R.id.audio_recorder_waveform);
+    plot.setStrokeWidth(5);
+    plot.setAmplitude(0);
+    plot.setFrequency(0);
+
+    // Draw straight line
+    resumeWaveform();
   }
 
   // Update the waveform according to amplitude change
   private void refreshWaveformWithAmplitude() {
     // Stop further processing if amplitude is not available
     if (this.trackedAmplitude == null) {
-      return;
+      this.trackedAmplitude = 0.0f;
     }
 
     // Threshold amplitude so that baseline is quite straight
-    Float amplitude = this.trackedAmplitude;
+    Float amplitude = this.trackedAmplitude / 10;
     if (amplitude < 0.25) {
       amplitude = 0.0f;
     }
@@ -98,18 +92,22 @@ public class AudioRecorderView extends RelativeLayout {
     runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        plot.setMaxAmplitude(finalAmplitude);
+        plot.setAmplitude(finalAmplitude);
       }
     });
   }
 
   // Resume plot, but keep access level private
   public void resumeWaveform() {
+    if (this.timer != null) {
+      pauseWaveform();
+    }
+
     // Create the timer
     this.timer = new Timer();
 
     // Set number of sinus waves
-    this.plot.frequency = 4;
+    this.plot.setFrequency(4.00f);
 
     // Start the timer for amplitude update processing on waveform
     this.timer.scheduleAtFixedRate(new TimerTask() {
@@ -131,7 +129,7 @@ public class AudioRecorderView extends RelativeLayout {
 
   // Clear plot, but keep access level private
   public void clearWaveform() {
-    this.plot.amplitude = 10;
-    this.plot.frequency = 0;
+    plot.setAmplitude(0);
+    plot.setFrequency(0);
   }
 }

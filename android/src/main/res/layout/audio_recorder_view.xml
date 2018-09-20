@@ -3,19 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000">
+    android:background="#ffffff">
 
-    <com.am.siriview.DrawView
+    <com.reactlibrary.AudioRecorder.DynamicWaveformView
         android:id="@+id/audio_recorder_waveform"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:background="#ffffff"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="0dp"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp"
-        app:wave_color="#7CDBD5"
-    />
+        app:waveAmount="1"
+        app:waveColor="@color/brandColor"
+        app:waveFrequency="0.0"
+        app:waveHeight="10dp"
+        app:waveInitialPhaseOffset="0"
+        app:wavePhaseShift="0.5"
+        app:waveVerticalPosition="2" />
 </RelativeLayout>

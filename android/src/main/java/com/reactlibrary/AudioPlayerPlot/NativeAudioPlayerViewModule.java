@@ -1,5 +1,5 @@
 //
-//  RNNativeAudioPlayerViewModule.java
+//  NativeAudioPlayerViewModule.java
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 10.09.18.
@@ -12,12 +12,12 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 
 // Represents the AudioPlayerViewManager which manages the AudioRecorderView
-public class RNNativeAudioPlayerViewModule extends ReactContextBaseJavaModule {
+public class NativeAudioPlayerViewModule extends ReactContextBaseJavaModule {
   // The react app context
   private final ReactApplicationContext reactContext;
 
   // The constructor
-  RNNativeAudioPlayerViewModule(ReactApplicationContext reactContext) {
+  NativeAudioPlayerViewModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
   }

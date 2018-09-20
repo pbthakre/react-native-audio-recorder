@@ -1,3 +1,11 @@
+//
+//  AudioPlayerView.java
+//  reactnativeaudiorecorder
+//
+//  Created by Michael Andorfer on 20.09.18.
+//  Copyright © 2018 Audvice GmbH. All rights reserved.
+//
+
 package com.reactlibrary.AudioPlayerPlot;
 
 import android.content.Context;

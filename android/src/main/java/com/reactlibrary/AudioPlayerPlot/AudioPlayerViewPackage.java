@@ -1,5 +1,5 @@
 //
-//  RNNativeAudioPlayerViewPackage.java
+//  AudioPlayerViewPackage.java
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 10.09.18.
@@ -19,10 +19,10 @@ import java.util.Collections;
 import java.util.List;
 
 // Represents the bridge which enables access to AudioRecorderView(Manager) in React Native
-public class RNNativeAudioPlayerViewPackage implements ReactPackage {
+public class AudioPlayerViewPackage implements ReactPackage {
   @Override
   public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-    return Arrays.<NativeModule>asList(new RNNativeAudioPlayerViewModule(reactContext));
+    return Arrays.<NativeModule>asList(new NativeAudioPlayerViewModule(reactContext));
   }
 
   // Deprecated from RN 0.47

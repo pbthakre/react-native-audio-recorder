@@ -65,10 +65,10 @@ public class AudioRecorderView extends RelativeLayout {
     inflate(context, R.layout.audio_recorder_view, this);
 
     // Init the waveform
-    plot = findViewById(R.id.audio_recorder_waveform);
-    plot.setStrokeWidth(5);
-    plot.setAmplitude(0);
-    plot.setFrequency(0);
+    this.plot = findViewById(R.id.audio_recorder_waveform);
+    this.plot.setStrokeWidth(5);
+    this.plot.setAmplitude(0);
+    this.plot.setFrequency(0);
 
     // Draw straight line
     resumeWaveform();

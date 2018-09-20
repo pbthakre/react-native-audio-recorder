@@ -26,6 +26,6 @@ public class AudioPlayerView extends RelativeLayout {
   // Initialize the waveform
   public void init() {
     // Apply layout from xml
-    inflate(context, R.layout.audio_recorder_view, this);
+    inflate(context, R.layout.audio_player_view, this);
   }
 }

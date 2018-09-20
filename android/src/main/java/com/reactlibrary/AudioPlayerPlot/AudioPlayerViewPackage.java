@@ -2,7 +2,7 @@
 //  AudioPlayerViewPackage.java
 //  reactnativeaudiorecorder
 //
-//  Created by Michael Andorfer on 10.09.18.
+//  Created by Michael Andorfer on 20.09.18.
 //  Copyright © 2018 Audvice GmbH. All rights reserved.
 //
 
@@ -22,7 +22,7 @@ import java.util.List;
 public class AudioPlayerViewPackage implements ReactPackage {
   @Override
   public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-    return Arrays.<NativeModule>asList(new NativeAudioPlayerViewModule(reactContext));
+    return Arrays.<NativeModule>asList(new AudioPlayerViewModule(reactContext));
   }
 
   // Deprecated from RN 0.47

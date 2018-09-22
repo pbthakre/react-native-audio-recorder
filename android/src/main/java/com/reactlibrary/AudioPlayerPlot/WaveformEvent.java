@@ -2,7 +2,7 @@
 //  WaveformEvent.java
 //  reactnativeaudiorecorder
 //
-//  Created by Michael Andorfer on 17.09.18.
+//  Created by Michael Andorfer on 21.09.18.
 //  Copyright © 2018 Audvice GmbH. All rights reserved.
 //
 

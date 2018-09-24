@@ -15,6 +15,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.reactlibrary.R;
+
 // Represents the base class for the waveform of a file
 abstract public class BaseStaticWaveform extends View {
   // The file data
@@ -24,7 +26,7 @@ abstract public class BaseStaticWaveform extends View {
   protected Paint paint;
 
   // The default line color
-  protected int color = Color.BLUE;
+  protected int color = getResources().getColor(R.color.brandColor);
 
   // Constructor
   public BaseStaticWaveform(Context context) {

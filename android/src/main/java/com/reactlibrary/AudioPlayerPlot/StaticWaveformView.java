@@ -10,13 +10,12 @@ package com.reactlibrary.AudioPlayerPlot;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.reactlibrary.R;
-
-import android.graphics.Color;
 
 // Represents the waveform of a file
 public class StaticWaveformView extends BaseStaticWaveform {
@@ -50,12 +49,13 @@ public class StaticWaveformView extends BaseStaticWaveform {
     // Init baseline
     this.baseLine = new Paint();
     this.baseLine.setColor(getResources().getColor(R.color.brandColor));
+    this.baseLine.setStrokeWidth(5);
   }
 
   // Setter for density
   public void setDensity(float density) {
     if (this.density > 180) {
-      this.baseLine.setStrokeWidth(1);
+      this.baseLine.setStrokeWidth(5);
       this.gap = 1;
     } else {
       this.gap = 4;
@@ -72,28 +72,26 @@ public class StaticWaveformView extends BaseStaticWaveform {
   // Draw the file data as waveform
   @Override
   protected void onDraw(Canvas canvas) {
-    if (baseLine.getColor() != Color.BLUE) {
-      baseLine.setColor(Color.RED);
-    }
-    if (bytes != null) {
-      float barWidth = getWidth() / density;
-      float div = bytes.length / density;
-      canvas.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2, baseLine);
-      paint.setStrokeWidth(barWidth - gap);
+    if (this.bytes != null) {
+      float barWidth = getWidth() / this.density;
+      float div = this.bytes.length / this.density;
+      canvas.drawLine(0, getHeight() / 2, getWidth(), getHeight() / 2, this.baseLine);
+      this.paint.setStrokeWidth(barWidth - this.gap);
+      this.paint.setColor(getResources().getColor(R.color.brandColor));
 
-      for (int i = 0; i < density; i++) {
+      for (int i = 0; i < this.density; i++) {
         int bytePosition = (int) Math.ceil(i * div);
         int top = canvas.getHeight() / 2
-                + (128 - Math.abs(bytes[bytePosition]))
+                + (128 - Math.abs(this.bytes[bytePosition]))
                 * (canvas.getHeight() / 2) / 128;
 
         int bottom = canvas.getHeight() / 2
-                - (128 - Math.abs(bytes[bytePosition]))
+                - (128 - Math.abs(this.bytes[bytePosition]))
                 * (canvas.getHeight() / 2) / 128;
 
         float barX = (i * barWidth) + (barWidth / 2);
-        canvas.drawLine(barX, bottom, barX, canvas.getHeight() / 2, paint);
-        canvas.drawLine(barX, top, barX, canvas.getHeight() / 2, paint);
+        canvas.drawLine(barX, bottom, barX, canvas.getHeight() / 2, this.paint);
+        canvas.drawLine(barX, top, barX, canvas.getHeight() / 2, this.paint);
       }
       super.onDraw(canvas);
     }

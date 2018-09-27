@@ -13,8 +13,12 @@ public class WaveformEvent {
   //1: Draw waveform of file
   public final int code;
 
+  // The file url to load
+  public final String fileUrl;
+
   // Constructor
-  WaveformEvent(int code) {
+  WaveformEvent(int code, String fileUrl) {
     this.code = code;
+    this.fileUrl = fileUrl;
   }
 }

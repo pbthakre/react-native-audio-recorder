@@ -11,7 +11,6 @@ package com.reactlibrary.AudioPlayerPlot;
 import android.content.Context;
 import android.widget.RelativeLayout;
 
-import com.reactlibrary.AudioRecorder.AmplitudeUpdateEvent;
 import com.reactlibrary.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -30,10 +29,10 @@ public class AudioPlayerView extends RelativeLayout {
   // The plot which represents the waveform
   private StaticWaveformView plot;
 
-  // Method to listen for amplitude changes received from AudioRecordThread
+  // Method to listen for update requests
   @Subscribe(threadMode = ThreadMode.MAIN)
-  public void onWaveformEvent(AmplitudeUpdateEvent event) {
-    // this.trackedAmplitude = event.amplitude;
+  public void onWaveformEvent(WaveformEvent event) {
+    this.updateWaveformWithData(event.fileUrl);
   }
 
   // The constructor
@@ -85,7 +84,22 @@ public class AudioPlayerView extends RelativeLayout {
     File root = android.os.Environment.getExternalStorageDirectory();
 
     // Get a instance of the file
-    File dir = new File(root.getAbsolutePath() + "/download/" + "1537429704977.m4a");
+    File dir = new File(root.getAbsolutePath() + "/download/" + "1538066744795.m4a");
+
+    // Read the data
+    byte[] data = fileToBytes(dir);
+
+    // Set the plot data with the data from the file
+    this.plot.setData(data);
+  }
+
+  // Add the data to the plot (waveform)
+  public void updateWaveformWithData(String fileUrl)  {
+    // Get the root directory
+    // File root = android.os.Environment.getExternalStorageDirectory();
+
+    // Get a instance of the file
+    File dir = new File(fileUrl);
 
     // Read the data
     byte[] data = fileToBytes(dir);

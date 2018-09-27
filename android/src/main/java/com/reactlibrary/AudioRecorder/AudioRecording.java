@@ -96,7 +96,7 @@ public class AudioRecording {
   }
 
   // Stops the recording by stopping the thread
-  public synchronized void stopRecording(Boolean cancel){
+  public synchronized File stopRecording(Boolean cancel){
     System.out.println("Recording stopped");
 
     // Check if the recording thread exists
@@ -109,18 +109,22 @@ public class AudioRecording {
       // If file has no data, throw error
       if (this.file.length() == 0L) {
         this.onAudioRecordListener.onError(this.IO_ERROR);
-        return;
+        return null;
       }
 
       // If cancel flag is false
       // the recording was finished
       if (!cancel) {
         this.onAudioRecordListener.onRecordFinished();
+        return this.file;
       } else {
         // Otherwise it was forced to cancel so delete the file
         this.deleteFile();
+        return null;
       }
     }
+
+    return null;
   }
 
   // Deletes the created file

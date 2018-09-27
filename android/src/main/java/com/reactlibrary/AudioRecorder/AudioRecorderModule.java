@@ -8,11 +8,9 @@
 
 package com.reactlibrary.AudioRecorder;
 
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Promise;
-import com.facebook.react.bridge.WritableNativeMap;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
+import com.facebook.react.bridge.*;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -27,7 +25,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   private AudioRecording audioRecording;
 
   // The promise response
-  private WritableNativeMap jsonResponse = new WritableNativeMap();
+  private WritableNativeMap jsonResponse = null;
 
   // The constructor
   AudioRecorderModule(ReactApplicationContext reactContext) {
@@ -46,22 +44,19 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   public void setupRecorder(Promise promise) {
     System.out.println("Setup Recorder");
 
-    // Instantiate the audio recording engine
-    this.audioRecording = new AudioRecording();
-
-    // Send event for resuming waveform
-    // EventBus.getDefault().post(new WaveformEvent(1));
-
-    // Create the promise response
-    this.jsonResponse = new WritableNativeMap();
-    this.jsonResponse.putString("success", String.valueOf(false));
-    this.jsonResponse.putString("error", "");
-    this.jsonResponse.putString("value", "");
-
     try {
+      // Instantiate the audio recording engine
+      this.audioRecording = new AudioRecording();
+
+      // Create the promise response
+      this.jsonResponse = new WritableNativeMap();
+      this.jsonResponse.putBoolean("success", true);
+      this.jsonResponse.putString("error", "");
+      this.jsonResponse.putString("value", "");
+
       promise.resolve(this.jsonResponse);
-    } catch (Error e) {
-      promise.reject("Error", e);
+    } catch (Exception e) {
+      promise.reject("Error", e.getLocalizedMessage(), e);
     }
   }
 
@@ -70,80 +65,95 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   private void startRecording(Double startTimeInMs, String filePath, Promise promise) {
     System.out.println("Start Recording");
 
-    // Instantiate an event listener on the audio recording engine
-    AudioRecording.OnAudioRecordListener onRecordListener = new AudioRecording.OnAudioRecordListener() {
-      // Recording started
-      @Override
-      public void onRecordingStarted() {
-        System.out.println("onStart");
-      }
-
-      // Recording finished
-      @Override
-      public void onRecordFinished() {
-        System.out.println("onFinish");
-      }
-
-      // Recording failed
-      @Override
-      public void onError(int e) {
-        System.out.println("onError" + e);
-      }
-    };
-
-    // Get the root directory
-    File root = android.os.Environment.getExternalStorageDirectory();
-
-    // Create a new file instance at the destination folder
-    File dir = new File (root.getAbsolutePath() + "/download");
-
-    // Create a destination path of the folder the current timestamp and the file extension
-    String fPath = dir + "/" + System.currentTimeMillis() + ".m4a";
-
-    // Set the listener on the audio recording engine
-    this.audioRecording.setOnAudioRecordListener(onRecordListener);
-
-    // Set the destination file path on the audio recording engine
-    this.audioRecording.setFile(fPath);
-
-    // Start the recording
-    this.audioRecording.startRecording();
-
-    // Send event for resuming waveform
-    EventBus.getDefault().post(new WaveformEvent(1));
-
-    // Create the promise response
-    this.jsonResponse = new WritableNativeMap();
-    this.jsonResponse.putString("success", String.valueOf(false));
-    this.jsonResponse.putString("error", "");
-    this.jsonResponse.putString("value", "");
-
     try {
-      promise.resolve(this.jsonResponse);
-    } catch (Error e) {
-      promise.reject("Error", e);
+      // Instantiate an event listener on the audio recording engine
+      AudioRecording.OnAudioRecordListener onRecordListener = new AudioRecording.OnAudioRecordListener() {
+        // Recording started
+        @Override
+        public void onRecordingStarted() {
+          System.out.println("onStart");
+        }
+
+        // Recording finished
+        @Override
+        public void onRecordFinished() {
+          System.out.println("onFinish");
+        }
+
+        // Recording failed
+        @Override
+        public void onError(int e) {
+          System.out.println("onError" + e);
+        }
+      };
+
+      // Get the root directory
+      File root = android.os.Environment.getExternalStorageDirectory();
+
+      // Create a new file instance at the destination folder
+      File dir = new File (root.getAbsolutePath() + "/download");
+
+      // Create a destination path of the folder the current timestamp and the file extension
+      String fPath = dir + "/" + System.currentTimeMillis() + ".m4a";
+
+      // Set the listener on the audio recording engine
+      this.audioRecording.setOnAudioRecordListener(onRecordListener);
+
+      // Set the destination file path on the audio recording engine
+      this.audioRecording.setFile(fPath);
+
+      // Start the recording
+      this.audioRecording.startRecording();
+
+      // Send event for resuming waveform
+      EventBus.getDefault().post(new WaveformEvent(1));
+
+      // Create the promise response
+      this.jsonResponse = new WritableNativeMap();
+      this.jsonResponse.putBoolean("success", true);
+      this.jsonResponse.putString("error", "");
+      this.jsonResponse.putString("value", "");
+
+      promise.resolve(jsonResponse);
+    } catch (Exception e) {
+      promise.reject("Error", e.getLocalizedMessage(), e);
     }
   }
 
   // Stops audio recording and stores the recorded data in a file
   @ReactMethod
   private void stopRecording(Promise promise) {
-    if(this.audioRecording != null){
-      // Send event for pausing waveform
-      EventBus.getDefault().post(new WaveformEvent(2));
-      this.audioRecording.stopRecording(false);
-    }
-
-    // Create the promise response
-    this.jsonResponse = new WritableNativeMap();
-    this.jsonResponse.putString("success", String.valueOf(false));
-    this.jsonResponse.putString("error", "");
-    this.jsonResponse.putString("value", "");
-
     try {
+      File recordedFile = null;
+
+      if(this.audioRecording != null){
+        // Send event for pausing waveform
+        EventBus.getDefault().post(new WaveformEvent(2));
+
+        // Get the file location back from the audio recorder
+        recordedFile = this.audioRecording.stopRecording(false);
+      }
+
+      // Read the file duration from the file meta data
+      Uri uri = Uri.parse(recordedFile.getAbsolutePath());
+      MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+      mmr.setDataSource(null,uri);
+      String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+
+      // Create the promise response
+      this.jsonResponse = new WritableNativeMap();
+      this.jsonResponse.putBoolean("success", true);
+      this.jsonResponse.putString("error", "");
+
+      WritableNativeMap metaDataArray = new WritableNativeMap();
+      metaDataArray.putString("fileUrl", recordedFile.getAbsolutePath());
+      metaDataArray.putString("fileDurationInMs", durationStr);
+
+      this.jsonResponse.putMap("value", metaDataArray);
+
       promise.resolve(this.jsonResponse);
-    } catch (Error e) {
-      promise.reject("Error", e);
+    } catch (Exception e) {
+      promise.reject("Error", e.getLocalizedMessage(), e);
     }
   }
 }

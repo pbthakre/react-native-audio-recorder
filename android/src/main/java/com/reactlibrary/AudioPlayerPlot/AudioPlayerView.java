@@ -9,6 +9,8 @@
 package com.reactlibrary.AudioPlayerPlot;
 
 import android.content.Context;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.widget.RelativeLayout;
 
 import com.reactlibrary.R;
@@ -80,17 +82,8 @@ public class AudioPlayerView extends RelativeLayout {
     // characteristic style
     this.plot.setDensity(512f);
 
-    // Get the root directory
-    File root = android.os.Environment.getExternalStorageDirectory();
-
-    // Get a instance of the file
-    File dir = new File(root.getAbsolutePath() + "/download/" + "1538066744795.m4a");
-
-    // Read the data
-    byte[] data = fileToBytes(dir);
-
     // Set the plot data with the data from the file
-    this.plot.setData(data);
+    this.plot.setData(null);
   }
 
   // Add the data to the plot (waveform)
@@ -99,10 +92,20 @@ public class AudioPlayerView extends RelativeLayout {
     // File root = android.os.Environment.getExternalStorageDirectory();
 
     // Get a instance of the file
-    File dir = new File(fileUrl);
+    File audioFile = new File(fileUrl);
+
+    // Read the file duration from the file meta data
+    Uri uri = Uri.parse(audioFile.getAbsolutePath());
+    MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+    mmr.setDataSource(null,uri);
+    String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+    float durationInMS = Float.parseFloat(durationStr);
+
+    // Set the duration
+    this.plot.setFileDuration(durationInMS);
 
     // Read the data
-    byte[] data = fileToBytes(dir);
+    byte[] data = fileToBytes(audioFile);
 
     // Set the plot data with the data from the file
     this.plot.setData(data);

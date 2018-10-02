@@ -22,7 +22,7 @@ abstract public class BaseStaticWaveform extends View {
     protected byte[] bytes;
 
     // The wrapper for the style information
-    protected Paint paint;
+    protected Paint waveform;
 
     // The default line color
     protected int color = getResources().getColor(R.color.brandColor);
@@ -50,13 +50,13 @@ abstract public class BaseStaticWaveform extends View {
 
     // Init the waveform
     private void init(AttributeSet attributeSet) {
-        paint = new Paint();
+        this.waveform = new Paint();
     }
 
     // Setter for line color
     public void setColor(int color) {
         this.color = color;
-        this.paint.setColor(this.color);
+        this.waveform.setColor(this.color);
     }
 
     // Setter for file data

@@ -10,6 +10,7 @@ package com.reactlibrary.AudioRecorder;
 
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.util.Log;
 import com.facebook.react.bridge.*;
 
 import org.greenrobot.eventbus.EventBus;
@@ -18,6 +19,9 @@ import java.io.File;
 
 // Represents the AudioRecorderViewManager which manages the AudioRecorderView
 public class AudioRecorderModule extends ReactContextBaseJavaModule {
+  // The class identifier
+  public static final String TAG = "AudioRecorderModule";
+
   // The react app context
   private final ReactApplicationContext reactContext;
 
@@ -42,7 +46,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   // Instantiates all the things needed for recording
   @ReactMethod
   public void setupRecorder(Promise promise) {
-    System.out.println("Setup Recorder");
+    Log.i(TAG, "Setup Recorder");
 
     try {
       // Instantiate the audio recording engine
@@ -63,45 +67,9 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   // Starts the recording of audio
   @ReactMethod
   private void startRecording(Double startTimeInMs, String filePath, Promise promise) {
-    System.out.println("Start Recording");
+    Log.i(TAG, "Start Recording");
 
     try {
-      // Instantiate an event listener on the audio recording engine
-      AudioRecording.OnAudioRecordListener onRecordListener = new AudioRecording.OnAudioRecordListener() {
-        // Recording started
-        @Override
-        public void onRecordingStarted() {
-          System.out.println("onStart");
-        }
-
-        // Recording finished
-        @Override
-        public void onRecordFinished() {
-          System.out.println("onFinish");
-        }
-
-        // Recording failed
-        @Override
-        public void onError(int e) {
-          System.out.println("onError" + e);
-        }
-      };
-
-      // Get the root directory
-      File root = android.os.Environment.getExternalStorageDirectory();
-
-      // Create a new file instance at the destination folder
-      File dir = new File (root.getAbsolutePath() + "/download");
-
-      // Create a destination path of the folder the current timestamp and the file extension
-      String fPath = dir + "/" + System.currentTimeMillis() + ".m4a";
-
-      // Set the listener on the audio recording engine
-      this.audioRecording.setOnAudioRecordListener(onRecordListener);
-
-      // Set the destination file path on the audio recording engine
-      this.audioRecording.setFile(fPath);
-
       // Start the recording
       this.audioRecording.startRecording();
 
@@ -131,7 +99,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
         EventBus.getDefault().post(new WaveformEvent(2));
 
         // Get the file location back from the audio recorder
-        recordedFile = this.audioRecording.stopRecording(false);
+        recordedFile = this.audioRecording.stopRecording();
       }
 
       // Read the file duration from the file meta data

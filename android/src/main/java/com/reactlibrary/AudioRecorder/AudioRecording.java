@@ -19,9 +19,6 @@ public class AudioRecording {
   // The class tag for identification
   private static final String TAG = "AudioRecording";
 
-  // The destination file instance
-  private File file;
-
   // The encoder which processes the polled data
   private AudioEncoder audioEncoder;
 
@@ -30,11 +27,6 @@ public class AudioRecording {
 
   // The constructor
   AudioRecording() {}
-
-  // Setter method for destination file instance
-  public void setFile(String filePath) {
-    this.file = new File(filePath);
-  }
 
   // Initiates the recording by starting a thread
   public void startRecording() throws IOException {

@@ -12,6 +12,7 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.util.Log;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -163,6 +164,21 @@ public class AudioSoftwarePoller {
         // Get the result of the operation
         read_result = audio_recorder.read(this_buffer, 0, samples_per_frame);
 
+        // Read data from buffer
+        int bufferReadResult = read_result;
+
+        // Sum up the values of the buffer
+        Float sumLevel = 0.0f;
+        for (int i = 0; i < bufferReadResult; i++) {
+          sumLevel += this_buffer[i];
+        }
+
+        // Calculate the average level/amplitude and scaled it by factor 5
+        Float lastLevel = Math.abs((sumLevel / bufferReadResult)) * 5;
+
+        // Send current amplitude to waveform
+        EventBus.getDefault().post(new AmplitudeUpdateEvent(lastLevel));
+
         // Log information about the process
         if (VERBOSE)
           Log.i(TAG, String.valueOf(buffer_write_index) + " - " + String.valueOf(buffer_write_index + samples_per_frame - 1));
@@ -183,5 +199,4 @@ public class AudioSoftwarePoller {
       }
     }
   }
-
 }

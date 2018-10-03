@@ -10,8 +10,8 @@ A React Native module which serves with a native module for audio recording, and
 2. Head into the project folder:  
 `$ cd ProjectName`
 
-3. Since we have not published this project to the NPM registry yet, you have to install the project directly from GitHub:  
-`$ npm install audvice/react-native-audio-recorder#develop --save`
+3. Install from NPM: 
+`$ npm install react-native-native-audio-recorder --save`
 
 4. Run the following command to add the package to your project:  
 `$ npm react-native link`

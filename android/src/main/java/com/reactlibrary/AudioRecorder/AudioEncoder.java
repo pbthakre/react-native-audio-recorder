@@ -18,8 +18,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 // Encodes audio data to fit a desired format
 public class AudioEncoder {
@@ -137,12 +139,11 @@ public class AudioEncoder {
   }
 
   // Stop the encoding
-  public File stop() {
-    if (!this.encodingService.isShutdown()) {
-      this.encodingService.submit(new EncoderTask(this, EncoderTaskType.FINALIZE_ENCODER));
-    }
+  public File stop() throws ExecutionException, InterruptedException {
+    Future f = this.encodingService.submit(new EncoderTask(this, EncoderTaskType.FINALIZE_ENCODER));
+    f.get();
 
-    return destinationPath;
+    return this.destinationPath;
   }
 
   // Callback for stopping

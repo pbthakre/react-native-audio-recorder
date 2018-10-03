@@ -12,6 +12,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 // The audio recording engine wrapper
 public class AudioRecording {
@@ -56,7 +57,7 @@ public class AudioRecording {
   }
 
   // Stops the recording by stopping the thread
-  public File stopRecording(){
+  public File stopRecording() throws ExecutionException, InterruptedException {
     Log.i(TAG, "Recording stopped");
 
     File destinationPath = null;

@@ -108,6 +108,14 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
       mmr.setDataSource(null,uri);
       String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
 
+      // Retry while duration is 0 meaning file was not ready for reading
+      while(Float.parseFloat(durationStr) == 0) {
+        uri = Uri.parse(recordedFile.getAbsolutePath());
+        mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(null,uri);
+        durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+      }
+
       // Create the promise response
       this.jsonResponse = new WritableNativeMap();
       this.jsonResponse.putBoolean("success", true);

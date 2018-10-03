@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { requireNativeComponent, Dimensions, StyleSheet } from 'react-native'
+import { requireNativeComponent, Dimensions, StyleSheet, Platform } from 'react-native'
 
 const AudioPlayerView = requireNativeComponent('AudioPlayerView', AudioPlayerUIView);
 
@@ -18,9 +18,11 @@ export default class AudioPlayerUIView extends Component {
   };
 
   render () {
-    // Send the dimensions of the component to the native ui
-    if (this.state.dimensions) {
-      AudioPlayerNative.setDimensions(this.state.dimensions.width, this.state.dimensions.height)
+    if (Platform.OS === 'ios') {
+      // Send the dimensions of the component to the native ui
+      if (this.state.dimensions) {
+        AudioPlayerNative.setDimensions(this.state.dimensions.width, this.state.dimensions.height)
+      }
     }
     return <AudioPlayerView style={styles.default} onLayout={this.onLayout} width={!this.props.width ? styles.default.width : this.props.width} height={!this.props.height ? styles.default.height : this.props.height}/>
   }

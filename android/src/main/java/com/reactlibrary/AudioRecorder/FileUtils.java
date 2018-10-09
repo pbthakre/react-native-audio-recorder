@@ -87,4 +87,9 @@ public class FileUtils {
     File recordingDir = FileUtils.getRootStorageDirectory(OUTPUT_DIR);
     return createTempFile(recordingDir, filename.split("\\.")[0], filename.split("\\.")[1]);
   }
+
+  public static void deleteFile(String filePath) {
+    File file = new File(filePath);
+    file.delete();
+  }
 }

@@ -70,8 +70,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
     Log.i(TAG, "Start Recording");
 
     try {
-      // Start the recording
-      this.audioRecording.startRecording();
+      this.audioRecording.startRecording(startTimeInMs, filePath);
 
       // Send event for resuming waveform
       EventBus.getDefault().post(new WaveformEvent(1));

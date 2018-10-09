@@ -8,6 +8,7 @@
 
 package com.reactlibrary.AudioRecorder;
 
+import android.icu.text.SimpleDateFormat;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
@@ -110,8 +111,12 @@ public class AudioEncoder {
     eosSentToAudioEncoder = false;
     stopReceived = false;
 
+    // Create filename from timestamp for the new file
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+    String fileName  = dateFormat.format(new Date()) + "--rec.m4a";
+
     // Define the destination path/name
-    destinationPath = FileUtils.createTempFileInRootAppStorage("recording-" + new Date().getTime() + ".m4a");
+    destinationPath = FileUtils.createTempFileInRootAppStorage(fileName);
 
     // Setup buffer info object
     this.audioBufferInfo = new MediaCodec.BufferInfo();

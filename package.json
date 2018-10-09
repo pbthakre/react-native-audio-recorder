@@ -1,6 +1,6 @@
 {
   "name": "react-native-native-audio-recorder",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Native Audio Recorder for React Native supporting Audio Recording, Feedback Plot and Audio File Waveform",
   "main": "index.js",
   "scripts": {

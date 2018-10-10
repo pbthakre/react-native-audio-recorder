@@ -23,6 +23,6 @@
 
   // Recording
   RCT_EXTERN_METHOD(setupRecorder: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
-  RCT_EXTERN_METHOD(startRecording: (double)startTimeInMS file:(NSString)filePath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
+  RCT_EXTERN_METHOD(startRecording: (double)startTimeInMs file:(NSString)filePath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
   RCT_EXTERN_METHOD(stopRecording: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 @end

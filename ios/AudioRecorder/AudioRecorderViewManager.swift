@@ -67,7 +67,7 @@ class AudioRecorderViewManager : RCTViewManager {
   private var jsonArray: JSON = [
     "success": false,
     "error": "",
-    "value": ["fileUrl": "", "fileDurationInMS": "0"]
+    "value": ["fileUrl": "", "fileDurationInMs": "0"]
   ]
 
   // Error for testing error handling
@@ -383,7 +383,7 @@ class AudioRecorderViewManager : RCTViewManager {
       }
         
       // Set the file duration in JSON
-      self.jsonArray["value"]["fileDurationInMS"].stringValue = String(format: "%.0f", self.tape.duration * 1000)
+      self.jsonArray["value"]["fileDurationInMs"].stringValue = String(format: "%.0f", self.tape.duration * 1000)
 
       // Reset everything from previous recording
       resetDataFromPreviousRecording(
@@ -443,7 +443,7 @@ class AudioRecorderViewManager : RCTViewManager {
       )
         
       // Set the file duration in JSON
-      self.jsonArray["value"]["fileDurationInMS"].stringValue = String(format: "%.0f", (self.finalTape?.duration)! * 1000)
+      self.jsonArray["value"]["fileDurationInMs"].stringValue = String(format: "%.0f", (self.finalTape?.duration)! * 1000)
 
       // Reset the final tape to be ready for the next session
       setupFinalTape(

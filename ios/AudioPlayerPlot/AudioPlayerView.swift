@@ -48,10 +48,18 @@ public class AudioPlayerView: EZAudioPlot {
     
     // Set width to use 100% (relative)
     self.autoresizingMask = [.flexibleWidth]
+    
+    // Get the screen width
+    let screenSize: CGRect = UIScreen.main.bounds
+    self.windowWidth = Double(screenSize.width);
   }
 
   // Detect layout changes
   override public func layoutSubviews() {
+    // Get the screen width
+    let screenSize: CGRect = UIScreen.main.bounds
+    self.windowWidth = Double(screenSize.width);
+    
     // Calculate the number of pixels per second for six seconds
     let pixelPerSecondForSixSeconds = self.windowWidth / 6
     
@@ -97,6 +105,10 @@ public class AudioPlayerView: EZAudioPlot {
   
   // Add the data to the plot (waveform)
   public func updateWaveformWithData(fileUrl: URL, onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void)  {
+    // Get the screen width
+    let screenSize: CGRect = UIScreen.main.bounds
+    self.windowWidth = Double(screenSize.width);
+    
     // Read the file from storage
     let file : EZAudioFile? = EZAudioFile(url: fileUrl)
     
@@ -112,9 +124,6 @@ public class AudioPlayerView: EZAudioPlot {
       
       // Run ui update on main thread
       DispatchQueue.main.async() {
-        // Add the data to the plot
-        self.plot.updateBuffer(data?.buffers[0], withBufferSize: (data?.bufferSize)!)
-        
         // Calculate the number of pixels per second for six seconds
         let pixelPerSecondForSixSeconds = self.windowWidth / 6
         
@@ -133,6 +142,9 @@ public class AudioPlayerView: EZAudioPlot {
         // Set the plot and layer width to the calculated width
         self.plot.frame.size.width = CGFloat(calculatedPlotWidth)
         self.plot.waveformLayer.frame.size.width = CGFloat(calculatedPlotWidth)
+        
+        // Add the data to the plot
+        self.plot.updateBuffer(data?.buffers[0], withBufferSize: (data?.bufferSize)!)
         
         // Create a straight line after the file waveform
         let backLine = UIView(frame: CGRect(x: (self.windowWidth / 2) + calculatedPlotWidth, y: (self.componentHeight / 2) - 1.5, width: self.windowWidth / 2, height: 3))

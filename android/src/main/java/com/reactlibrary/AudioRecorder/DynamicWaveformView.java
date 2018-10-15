@@ -18,6 +18,8 @@ import android.view.View;
 
 import com.reactlibrary.R;
 
+import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
+
 // Represents the real-time waveform for recording
 public class DynamicWaveformView extends View {
   // The wrapper for the line information
@@ -144,15 +146,21 @@ public class DynamicWaveformView extends View {
   }
 
   // Setter for amplitude
-  public void setAmplitude(float amplitude) {
-    this.amplitude = amplitude;
-    invalidate();
-    updatePath();
+  public void setAmplitude(final float amplitudeLocal) {
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        amplitude = amplitudeLocal;
+        updatePath();
+        invalidate();
+      }
+    });
   }
 
   // Setter for frequency
   public void setFrequency(float frequency) {
     this.frequency = frequency;
+    clearAnimation();
     invalidate();
   }
 

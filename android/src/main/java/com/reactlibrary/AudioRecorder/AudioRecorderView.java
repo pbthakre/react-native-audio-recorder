@@ -20,8 +20,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
-
 public class AudioRecorderView extends RelativeLayout {
   private Context context;
 
@@ -83,42 +81,40 @@ public class AudioRecorderView extends RelativeLayout {
 
     // Threshold amplitude so that baseline is quite straight
     Float amplitude = this.trackedAmplitude / 10;
-    if (amplitude < 0.25) {
+    if (amplitude < 1.0f) {
       amplitude = 0.0f;
     }
 
-    // Update waveform by setting new amplitude
-    final Float finalAmplitude = amplitude;
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        plot.setAmplitude(finalAmplitude);
-      }
-    });
+    plot.setAmplitude(amplitude);
+
   }
 
   // Resume plot, but keep access level private
   public void resumeWaveform() {
-    if (this.timer != null) {
-      pauseWaveform();
-    }
-
-    // Create the timer
-    this.timer = new Timer();
-
-    // Set number of sinus waves
-    this.plot.setFrequency(4.00f);
-
-    // Start the timer for amplitude update processing on waveform
-    this.timer.scheduleAtFixedRate(new TimerTask() {
-        @Override
-        public void run() {
-          refreshWaveformWithAmplitude();
+    new Thread(new Runnable() {
+      public void run() {
+        if (timer != null) {
+          pauseWaveform();
         }
-      },
-      0,
-      1
-    );
+
+        // Create the timer
+        timer = new Timer();
+
+        // Set number of sinus waves
+        plot.setFrequency(4.00f);
+
+        // Start the timer for amplitude update processing on waveform
+        timer.scheduleAtFixedRate(new TimerTask() {
+                                   @Override
+                                   public void run() {
+                                     refreshWaveformWithAmplitude();
+                                   }
+                                 },
+            0,
+            10
+        );
+      }
+    }).start();
   }
 
   // Pause plot, but keep access level private

@@ -80,7 +80,7 @@ public class AudioPlayerView extends RelativeLayout {
     // Define the number of bars used for the waveform (1 - 256)
     // More than 256 means that the the bars are overlapping and the waveform get its
     // characteristic style
-    this.plot.setDensity(512f);
+    this.plot.setDensity(1024f);
 
     // Set the plot data with the data from the file
     this.plot.setData(null);

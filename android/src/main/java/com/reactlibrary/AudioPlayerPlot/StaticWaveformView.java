@@ -66,7 +66,7 @@ public class StaticWaveformView extends BaseStaticWaveform {
       this.baseLine.setStrokeWidth(5);
       this.gap = 0;
     } else {
-      this.gap = 4;
+      this.gap = 0;
     }
     this.density = density;
     if (density > 256) {
@@ -125,8 +125,10 @@ public class StaticWaveformView extends BaseStaticWaveform {
         canvas.drawLine(barX + widthPixels / 2f , top, barX + widthPixels / 2f, canvas.getHeight() / 2f, this.waveform);
       }
 
+      canvas.drawLine((widthPixels / 2f), (getHeight() / 2f), (widthPixels / 2f) + calculatedPlotWidth, (getHeight() / 2f), this.waveform);
+
       // Draw the second part of the baseline after the waveform
-      canvas.drawLine((widthPixels / 2f) + calculatedPlotWidth, (getHeight() / 2f) - 3f, (widthPixels / 2f) + calculatedPlotWidth + (widthPixels / 2f), (getHeight() / 2f) + 3f, this.baseLine);
+      canvas.drawLine((widthPixels / 2f) + calculatedPlotWidth, (getHeight() / 2f), (widthPixels / 2f) + calculatedPlotWidth + (widthPixels / 2f), (getHeight() / 2f), this.baseLine);
 
       super.onDraw(canvas);
     }

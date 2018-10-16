@@ -127,14 +127,10 @@ public class DynamicWaveformView extends View {
 
       float maxAmplitude = halfHeight - (halfHeight - waveHeight);
 
-      // Progress is a value between 1.0 and -0.5, determined by the current wave idx, which is used to alter the wave's amplitude.
-      float progress = 1.0f - (float) i / waveNumber;
-      float normedAmplitude = (1.5f * progress - 0.5f) * amplitude;
-
       for (int x = 0; x < width; x++) {
         float scaling = (float) (-Math.pow(1 / mid * (x - mid), 2) + 1);
 
-        float y = (float) (scaling * maxAmplitude * normedAmplitude * Math.sin(2 * Math.PI * (x / width) * frequency + phase + initialPhaseOffset) + halfHeight);
+        float y = (float) (scaling * maxAmplitude * amplitude * Math.sin(2 * Math.PI * (x / width) * frequency + phase + initialPhaseOffset) + halfHeight);
 
         if (x == 0) {
           path.moveTo(x, y);

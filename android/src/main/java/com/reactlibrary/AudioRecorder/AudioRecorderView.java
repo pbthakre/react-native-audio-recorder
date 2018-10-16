@@ -80,13 +80,12 @@ public class AudioRecorderView extends RelativeLayout {
     }
 
     // Threshold amplitude so that baseline is quite straight
-    Float amplitude = this.trackedAmplitude / 10;
-    if (amplitude < 1.0f) {
+    Float amplitude = (this.trackedAmplitude);
+    if (amplitude > 20.00f) {
       amplitude = 0.0f;
     }
 
     plot.setAmplitude(amplitude);
-
   }
 
   // Resume plot, but keep access level private

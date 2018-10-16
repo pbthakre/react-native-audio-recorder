@@ -138,7 +138,7 @@ public class AudioSoftwarePoller {
       // Init the audio recorder
       AudioRecord audio_recorder;
       audio_recorder = new AudioRecord(
-          MediaRecorder.AudioSource.MIC,       // source
+          MediaRecorder.AudioSource.VOICE_RECOGNITION,       // source
           SAMPLE_RATE,                         // sample rate, hz
           CHANNEL_CONFIG,                      // channels
           AUDIO_FORMAT,                        // audio format
@@ -164,20 +164,21 @@ public class AudioSoftwarePoller {
         // Get the result of the operation
         read_result = audio_recorder.read(this_buffer, 0, samples_per_frame);
 
-        // Read data from buffer
-        int bufferReadResult = read_result;
-
-        // Sum up the values of the buffer
-        Float sumLevel = 0.0f;
-        for (int i = 0; i < bufferReadResult; i++) {
-          sumLevel += this_buffer[i];
+        // Calculate the amplitude
+        double amplitude = 0;
+        for (int i = 0; i < this_buffer.length / 2; i++) {
+          double y = (this_buffer[i * 2] | this_buffer[i * 2 + 1] << 8) / 32768.0;
+          // depending on your endianness:
+          // double y = (audioData[i * 2] <<8 | audioData[i * 2 + 1]) / 32768.0
+          amplitude += Math.abs(y);
         }
+        amplitude = amplitude / this_buffer.length / 2;
 
-        // Calculate the average level/amplitude and scaled it by factor 5
-        Float lastLevel = Math.abs((sumLevel / bufferReadResult)) * 5;
+        // Scale amplitude
+        amplitude *= 500;
 
-        // Send current amplitude to waveform
-        EventBus.getDefault().post(new AmplitudeUpdateEvent(lastLevel));
+        // Send amplitude to waveform
+        EventBus.getDefault().post(new AmplitudeUpdateEvent((float) amplitude));
 
         // Log information about the process
         if (VERBOSE)

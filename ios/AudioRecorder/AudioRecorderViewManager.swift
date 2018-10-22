@@ -103,9 +103,11 @@ class AudioRecorderViewManager : RCTViewManager {
     do {
       // Remove temporary files from temp directory
       AKAudioFile.cleanTempDirectory()
-
+        
       // Stop AudioKit to prevent errors of duplicate initialization
       try AudioKit.stop()
+        
+        
 
       // Completed without error
       onSuccess(true)
@@ -353,9 +355,7 @@ class AudioRecorderViewManager : RCTViewManager {
       // Store the audio data as file on the storage
       exportFinalTapeToFile(
         onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
+          self.jsonArray["success"] = true
         },
         onError: { error in
           self.jsonArray["success"] = false
@@ -366,9 +366,7 @@ class AudioRecorderViewManager : RCTViewManager {
       // Reset the final tape to be ready for the next session
       setupFinalTape(
         onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
+          self.jsonArray["success"] = true
         },
         onError: { error in
           self.jsonArray["success"] = false
@@ -388,9 +386,7 @@ class AudioRecorderViewManager : RCTViewManager {
       // Reset everything from previous recording
       resetDataFromPreviousRecording(
         onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
+          self.jsonArray["success"] = true
         },
         onError: { error in
           self.jsonArray["success"] = false
@@ -403,9 +399,7 @@ class AudioRecorderViewManager : RCTViewManager {
       // Overwrite the previous tape partially with the content of the current tape
       overwritePartially(
         onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
+          self.jsonArray["success"] = true
         },
         onError: { error in
           self.jsonArray["success"] = false
@@ -419,9 +413,7 @@ class AudioRecorderViewManager : RCTViewManager {
       // Store the audio data as file on the storage
       deleteFile(
         onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
+          self.jsonArray["success"] = true
         },
         onError: { error in
           self.jsonArray["success"] = false
@@ -432,9 +424,7 @@ class AudioRecorderViewManager : RCTViewManager {
       // Store the audio data as file on the storage
       exportFinalTapeToFile(
         onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
+          self.jsonArray["success"] = true
         },
         onError: { error in
           self.jsonArray["success"] = false
@@ -448,9 +438,7 @@ class AudioRecorderViewManager : RCTViewManager {
       // Reset the final tape to be ready for the next session
       setupFinalTape(
         onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
+          self.jsonArray["success"] = true
         },
         onError: { error in
           self.jsonArray["success"] = false
@@ -467,9 +455,7 @@ class AudioRecorderViewManager : RCTViewManager {
       // Reset everything from previous recording
       resetDataFromPreviousRecording(
         onSuccess: { success in
-          if (success) {
-            self.jsonArray["success"] = true
-          }
+          self.jsonArray["success"] = true
         },
         onError: { error in
           self.jsonArray["success"] = false
@@ -483,68 +469,63 @@ class AudioRecorderViewManager : RCTViewManager {
 
   // Instantiates all the things needed for recording
   @objc public func setupRecorder(_ resolve:RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
+    // Define the error storage
+    var e : Error?;
+    
     // Cleanup before initialize the new session
     cleanupRecorder(
       onSuccess: { success in
-        if (success) {
-          self.jsonArray["success"] = true
-        }
+        self.jsonArray["success"] = true
       },
       onError: { error in
         self.jsonArray["success"] = false
-        reject("Error", self.jsonArray.rawString(), error)
+        e = error
       }
     )
 
     // Init a new recording session
     initRecorderSession(
       onSuccess: { success in
-        if (success) {
-          self.jsonArray["success"] = true
-        }
+        self.jsonArray["success"] = true
       },
       onError: { error in
         self.jsonArray["success"] = false
-        reject("Error", self.jsonArray.rawString(), error)
+        e = error
       }
     )
 
     // Setup the virtual devices e. g. mixer
     setupVirtualDevices(
       onSuccess: { success in
-        if (success) {
-          self.jsonArray["success"] = true
-        }
+        self.jsonArray["success"] = true
       },
       onError: { error in
         self.jsonArray["success"] = false
-        reject("Error", self.jsonArray.rawString(), error)
+        e = error
       }
     )
 
     // Start the AudioKit engine
     startEngine(
       onSuccess: { success in
-        if (success) {
-          self.jsonArray["success"] = true
-        }
+        self.jsonArray["success"] = true
       },
       onError: { error in
         self.jsonArray["success"] = false
-        reject("Error", self.jsonArray.rawString(), error)
+
+        e = error
       }
     )
 
     // Setup the final tape
     setupFinalTape(
       onSuccess: { success in
-        if (success) {
-          self.jsonArray["success"] = true
-        }
+        self.jsonArray["success"] = true
       },
       onError: { error in
         self.jsonArray["success"] = false
-        reject("Error", self.jsonArray.rawString(), error)
+        //reject("Error", self.jsonArray.rawString(), error)
+        e = error
       }
     )
 
@@ -554,8 +535,13 @@ class AudioRecorderViewManager : RCTViewManager {
     // Initialize the waveform
     self.currentView?.setupWaveform(microphoneTracker: self.microphoneTracker);
 
-    // Recorder setup finished without errors
-    resolve(self.jsonArray.rawString());
+    if (e == nil)  {
+      // Recorder setup finished without errors
+      resolve(self.jsonArray.rawString());
+    } else {
+      // Recorder setup finished with errors
+      reject("Error", self.jsonArray.rawString(), e)
+    }
   }
 
   // Starts the recording of audio
@@ -601,6 +587,9 @@ class AudioRecorderViewManager : RCTViewManager {
 
   // Stops audio recording and stores the recorded data in a file
   @objc public func stopRecording(_ resolve:@escaping RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
+    // Define the error storage
+    var e : Error?;
+    
     // Microphone monitoring is muted
     self.micBooster.gain = 0
 
@@ -619,16 +608,20 @@ class AudioRecorderViewManager : RCTViewManager {
     // Create tape from and store the recorded audio data
     createAndStoreTapeFromRecordings(
       onSuccess: { success in
-        if (success) {
-          self.jsonArray["success"] = true
-          // Inform bridge/React about success
-          resolve(self.jsonArray.rawString());
-        }
+        self.jsonArray["success"] = true
       },
       onError: { error in
         self.jsonArray["success"] = false
-        reject("Error", self.jsonArray.rawString(), error)
+        e = error
       }
     )
+    
+    if (e == nil)  {
+      // Recorder stopping finished without errors
+      resolve(self.jsonArray.rawString());
+    } else {
+      // Recorder stopping finished with errors
+      reject("Error", self.jsonArray.rawString(), e)
+    }
   }
 }

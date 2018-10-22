@@ -81,10 +81,8 @@ class AudioPlayerViewManager : RCTViewManager {
     self.retry(10, task: { success, onError in
       self.currentView?.updateWaveformWithData(fileUrl: URL(string: fileUrl)!, onSuccess: success, onError: onError) },
       onSuccess: { success in
-        if (success) {
-          self.jsonArray["success"] = true
-          resolve(self.jsonArray.rawString());
-        }
+        self.jsonArray["success"] = true
+        resolve(self.jsonArray.rawString());
       },
       onError: { error in
         self.jsonArray["success"] = false

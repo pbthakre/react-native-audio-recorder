@@ -6,6 +6,8 @@ import {
 
 import AudioPlayerUIView from './AudioPlayerPlotNativeView'
 import AudioPlayerNative from './AudioPlayerPlotNativeModule';
+import AudioRecorderUIView
+  from "react-native-native-audio-recorder/native_modules/AudioRecorder/AudioRecorderNativeView";
 
 type Props = {};
 export default class AudioPlayerPlot extends Component<Props> {
@@ -20,7 +22,7 @@ export default class AudioPlayerPlot extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <AudioPlayerUIView style={this.props.style} width={this.props.width} height={this.props.height}/>
+        <AudioPlayerUIView style={this.props.style} width={this.props.width} height={this.props.height} backgroundColor={this.props.backgroundColor} lineColor={this.props.lineColor}/>
       </View>
     );
   }

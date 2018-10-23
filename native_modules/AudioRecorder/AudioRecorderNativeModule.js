@@ -7,6 +7,10 @@ export default {
     return AudioRecorderViewManager.setDimensions(width, height);
   },
 
+  passProperties (backgroundColor, lineColor) {
+    return AudioRecorderViewManager.passProperties(backgroundColor, lineColor);
+  },
+
   setupRecorder () {
     return AudioRecorderViewManager.setupRecorder();
   },

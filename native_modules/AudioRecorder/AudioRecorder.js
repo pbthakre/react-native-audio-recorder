@@ -28,7 +28,7 @@ export default class AudioRecorder extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <AudioRecorderUIView style={styles.native} width={this.props.width} height={this.props.height}/>
+        <AudioRecorderUIView style={styles.native} width={this.props.width} height={this.props.height} backgroundColor={this.props.backgroundColor} lineColor={this.props.lineColor}/>
       </View>
     );
   }
@@ -37,8 +37,7 @@ export default class AudioRecorder extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'white',
+    alignItems: 'center'
   },
   native: {
     flex: 1

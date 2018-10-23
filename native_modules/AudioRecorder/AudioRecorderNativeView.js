@@ -24,6 +24,9 @@ export default class AudioRecorderUIView extends Component {
         AudioRecorderNative.setDimensions(this.state.dimensions.width, this.state.dimensions.height)
       }
     }
+
+    AudioRecorderNative.passProperties(this.props.backgroundColor, this.props.lineColor)
+
     return <AudioRecorderView style={styles.recorder} onLayout={this.onLayout} width={!this.props.width ? styles.recorder.width : this.props.width} height={!this.props.height ? styles.recorder.height : this.props.height}/>
   }
 }
@@ -32,6 +35,6 @@ const styles = StyleSheet.create({
   recorder: {
     width: Dimensions.get('window').width,
     height: '66%',
-    backgroundColor: 'white'
+    backgroundColor: 'transparent'
   }
 });

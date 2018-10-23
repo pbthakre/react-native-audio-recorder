@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import {
+  Platform,
   StyleSheet,
   View
-} from 'react-native';
+} from "react-native";
 
 import AudioRecorderUIView from './AudioRecorderNativeView'
 import AudioRecorderNative from './AudioRecorderNativeModule';
@@ -25,8 +26,21 @@ export default class AudioRecorder extends Component<Props> {
     }
   };
 
-  stopRecording() {
-    return AudioRecorderNative.stopRecording();
+  async stopRecording() {
+    const promise = await AudioRecorderNative.stopRecording().then(params => {
+      let parsedParams;
+      if (Platform.OS === 'ios') {
+        parsedParams = JSON.parse(params);
+      } else {
+        parsedParams = params;
+      }
+
+      return parsedParams
+    });
+
+    return new Promise((resolve, reject) => {
+      resolve(promise)
+    })
   };
 
   render() {

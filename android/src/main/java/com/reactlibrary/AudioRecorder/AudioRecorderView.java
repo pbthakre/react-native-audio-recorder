@@ -76,6 +76,7 @@ public class AudioRecorderView extends RelativeLayout {
     this.plot.setStrokeWidth(5);
     this.plot.setAmplitude(0);
     this.plot.setFrequency(0);
+    this.plot.setWaveColor();
 
     // Draw straight line
     resumeWaveform();
@@ -133,7 +134,7 @@ public class AudioRecorderView extends RelativeLayout {
 
   // Clear plot, but keep access level private
   public void clearWaveform() {
-    plot.setAmplitude(0);
-    plot.setFrequency(0);
+    this.plot.setAmplitude(0);
+    this.plot.setFrequency(0);
   }
 }

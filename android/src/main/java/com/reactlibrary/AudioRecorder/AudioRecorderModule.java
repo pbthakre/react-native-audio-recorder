@@ -46,7 +46,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
 
   // Pass properties from React Native to the waveform
   @ReactMethod
-  public void passProperties(String backgroundColor, String lineColor, Double pixelsPerSecond) {
+  public void passProperties(String backgroundColor, String lineColor) {
     // Send event for passing properties to view
     EventBus.getDefault().post(new WaveformEvent(3, backgroundColor, lineColor));
   }
@@ -55,6 +55,8 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void setupRecorder(Promise promise) {
     Log.i(TAG, "Setup Recorder");
+
+    EventBus.getDefault().post(new WaveformEvent(2, null, null));
 
     try {
       // Instantiate the audio recording engine

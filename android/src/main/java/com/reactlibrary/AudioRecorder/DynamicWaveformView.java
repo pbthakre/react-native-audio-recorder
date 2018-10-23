@@ -17,6 +17,7 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 
+import android.widget.RelativeLayout;
 import com.reactlibrary.R;
 
 import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
@@ -96,7 +97,7 @@ public class DynamicWaveformView extends View {
     phaseShift = a.getFloat(R.styleable.DynamicWaveformView_wavePhaseShift, phaseShift);
     initialPhaseOffset = a.getFloat(R.styleable.DynamicWaveformView_waveInitialPhaseOffset, initialPhaseOffset);
     waveHeight = a.getDimension(R.styleable.DynamicWaveformView_waveHeight, waveHeight);
-    waveColor = a.getColor(R.styleable.DynamicWaveformView_waveColor, waveColor);
+    waveColor = this.lineColor;
     waveVerticalPosition = a.getFloat(R.styleable.DynamicWaveformView_waveVerticalPosition, waveVerticalPosition);
     waveNumber = a.getInteger(R.styleable.DynamicWaveformView_waveAmount, waveNumber);
 
@@ -105,7 +106,7 @@ public class DynamicWaveformView extends View {
     paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     paint.setStyle(Paint.Style.STROKE);
     paint.setStrokeWidth(2);
-    paint.setColor(waveColor);
+    paint.setColor(this.lineColor);
 
     // Keep our attributes array for later usage
     a.recycle();
@@ -114,6 +115,7 @@ public class DynamicWaveformView extends View {
   // Draws the path and updates view
   @Override
   protected void onDraw(Canvas canvas) {
+    this.setWaveColor();
     canvas.drawPath(path, paint);
     updatePath();
   }
@@ -168,14 +170,14 @@ public class DynamicWaveformView extends View {
   }
 
   // Setter for line color
-  public void setWaveColor(int waveColor) {
-    paint.setColor(waveColor);
+  public void setWaveColor() {
+    this.paint.setColor(this.lineColor);
     invalidate();
   }
 
   // Setter for line width
   public void setStrokeWidth(float strokeWidth) {
-    paint.setStrokeWidth(strokeWidth);
+    this.paint.setStrokeWidth(strokeWidth);
     invalidate();
   }
 }

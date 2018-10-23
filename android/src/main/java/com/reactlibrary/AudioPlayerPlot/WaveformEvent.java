@@ -16,9 +16,21 @@ public class WaveformEvent {
   // The file url to load
   public final String fileUrl;
 
+  // The background color of the waveform
+  public final String backgroundColor;
+
+  // The line color of the waveform
+  public final String lineColor;
+
+  // The number of pixels per second visible on the screen
+  public final Double pixelsPerSecond;
+
   // Constructor
-  WaveformEvent(int code, String fileUrl) {
+  WaveformEvent(int code, String fileUrl, String backgroundColor, String lineColor, Double pixelsPerSecond) {
     this.code = code;
     this.fileUrl = fileUrl;
+    this.backgroundColor = backgroundColor;
+    this.lineColor = lineColor;
+    this.pixelsPerSecond = pixelsPerSecond;
   }
 }

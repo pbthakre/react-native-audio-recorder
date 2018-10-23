@@ -19,7 +19,7 @@
 // Represents the bridge which enables access to AudioPlayerView(Manager) in React Native
 @interface RCT_EXTERN_MODULE(AudioPlayerViewManager, RCTViewManager)
   // General
-  RCT_EXTERN_METHOD(passProperties: (NSString)backgroundColor propLineColor:(NSString)lineColor);
+  RCT_EXTERN_METHOD(passProperties: (NSString)backgroundColor propLineColor:(NSString)lineColor pixels:(double)pixelsPerSecond);
   RCT_EXTERN_METHOD(setDimensions: (double)width dimHeight:(double)height);
 
   // Waveform

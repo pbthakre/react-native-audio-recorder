@@ -11,6 +11,7 @@ package com.reactlibrary.AudioRecorder;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -59,6 +60,12 @@ public class DynamicWaveformView extends View {
 
   // The current amplitude.
   private float amplitude = 0.01f;
+
+  // The background color of the waveform
+  protected int backgroundColor = Color.TRANSPARENT;
+
+  // The line color of the waveform
+  protected int lineColor = getResources().getColor(R.color.brandColor);
 
   // Constructor
   public DynamicWaveformView(Context context) {

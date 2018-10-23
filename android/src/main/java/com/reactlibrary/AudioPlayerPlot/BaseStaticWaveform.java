@@ -9,6 +9,7 @@
 package com.reactlibrary.AudioPlayerPlot;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -24,8 +25,14 @@ abstract public class BaseStaticWaveform extends View {
     // The wrapper for the style information
     protected Paint waveform;
 
-    // The default line color
-    protected int color = getResources().getColor(R.color.brandColor);
+    // The background color of the waveform
+    protected int backgroundColor = Color.TRANSPARENT;
+
+    // The line color of the waveform
+    protected int lineColor = getResources().getColor(R.color.brandColor);
+
+    // The pixels per second
+    protected Double pixelsPerSecond = 6.0;
 
     // Constructor
     public BaseStaticWaveform(Context context) {
@@ -54,9 +61,8 @@ abstract public class BaseStaticWaveform extends View {
     }
 
     // Setter for line color
-    public void setColor(int color) {
-        this.color = color;
-        this.waveform.setColor(this.color);
+    public void setColor() {
+        this.waveform.setColor(this.lineColor);
     }
 
     // Setter for file data

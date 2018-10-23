@@ -7,8 +7,8 @@ export default {
     return AudioPlayerViewManager.setDimensions(width, height);
   },
 
-  passProperties (backgroundColor, lineColor) {
-    return AudioPlayerViewManager.passProperties(backgroundColor, lineColor);
+  passProperties (backgroundColor, lineColor, pixelsPerSecond) {
+    return AudioPlayerViewManager.passProperties(backgroundColor, lineColor, pixelsPerSecond);
   },
 
   renderByFile(fileUrl) {

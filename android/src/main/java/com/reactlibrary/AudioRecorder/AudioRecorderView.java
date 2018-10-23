@@ -9,6 +9,7 @@
 package com.reactlibrary.AudioRecorder;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.widget.RelativeLayout;
 
 import com.reactlibrary.R;
@@ -46,6 +47,14 @@ public class AudioRecorderView extends RelativeLayout {
     } else if (event.code == 2) {
       pauseWaveform();
       clearWaveform();
+    } else if (event.code == 3) {
+      if (event.backgroundColor != null) {
+        this.plot.backgroundColor = Color.parseColor(event.backgroundColor);
+      }
+
+      if (event.lineColor != null) {
+        this.plot.lineColor = Color.parseColor(event.lineColor);
+      }
     }
   }
 

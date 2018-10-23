@@ -27,7 +27,7 @@ export default class AudioPlayerUIView extends Component {
       }
     }
 
-    AudioPlayerNative.passProperties(this.props.backgroundColor, this.props.lineColor)
+    AudioPlayerNative.passProperties(this.props.backgroundColor, this.props.lineColor, this.props.pixelsPerSecond)
 
     return <AudioPlayerView style={styles.default} onLayout={this.onLayout} width={!this.props.width ? styles.default.width : this.props.width} height={!this.props.height ? styles.default.height : this.props.height}/>
   }

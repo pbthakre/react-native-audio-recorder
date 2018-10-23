@@ -30,6 +30,9 @@ public class AudioPlayerView: EZAudioPlot {
   
   // The color of the line
   public var lineColor: UIColor = UIColor(red: 124.0 / 255.0, green: 219.0 / 255.0, blue: 213.0 / 255.0, alpha: 1.0)
+  
+  // The number of pixels per second
+  public var pixelsPerSecond: Double = 0.0
     
   // The duration of the loaded file in seconds
   private var fileDuration: Double = 0
@@ -63,11 +66,8 @@ public class AudioPlayerView: EZAudioPlot {
     let screenSize: CGRect = UIScreen.main.bounds
     self.windowWidth = Double(screenSize.width);
     
-    // Calculate the number of pixels per second for six seconds
-    let pixelPerSecondForSixSeconds = self.windowWidth / 6
-    
     // Calculate the plot width based on the number of pixels and the file duration
-    let calcWidth = pixelPerSecondForSixSeconds * self.fileDuration
+    let calcWidth = self.pixelsPerSecond * self.fileDuration
 
     // Set the plot and layer width to the calculated width
     self.plot.frame.size.width = CGFloat(calcWidth)

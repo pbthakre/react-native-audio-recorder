@@ -14,8 +14,16 @@ public class WaveformEvent {
   //2: Pause Waveform
   public final int code;
 
+  // The background color of the waveform
+  public final String backgroundColor;
+
+  // The line color of the waveform
+  public final String lineColor;
+
   // Constructor
-  WaveformEvent(int code) {
+  WaveformEvent(int code, String backgroundColor, String lineColor) {
     this.code = code;
+    this.backgroundColor = backgroundColor;
+    this.lineColor = lineColor;
   }
 }

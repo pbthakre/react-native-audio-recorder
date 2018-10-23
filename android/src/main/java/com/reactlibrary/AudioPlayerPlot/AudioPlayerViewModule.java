@@ -8,6 +8,7 @@
 
 package com.reactlibrary.AudioPlayerPlot;
 
+import android.graphics.Color;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -36,12 +37,19 @@ public class AudioPlayerViewModule extends ReactContextBaseJavaModule {
     return "AudioPlayerViewManager";
   }
 
+  // Pass properties from React Native to the waveform
+  @ReactMethod
+  public void passProperties(String backgroundColor, String lineColor, Double pixelsPerSecond) {
+    // Send event for passing properties to view
+    EventBus.getDefault().post(new WaveformEvent(2, "", backgroundColor, lineColor, pixelsPerSecond));
+  }
+
   // Render a waveform from audio file data
   @ReactMethod
   private void renderByFile(String filePath, Promise promise) {
     try {
       // Send event for updating player waveform
-      EventBus.getDefault().post(new WaveformEvent(1, filePath));
+      EventBus.getDefault().post(new WaveformEvent(1, filePath, null, null, null));
 
       // Create the promise response
       this.jsonResponse = new WritableNativeMap();

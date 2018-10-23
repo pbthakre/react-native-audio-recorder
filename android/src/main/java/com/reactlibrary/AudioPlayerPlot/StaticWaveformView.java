@@ -51,7 +51,7 @@ public class StaticWaveformView extends BaseStaticWaveform {
   protected void init() {
     // Init baseline
     this.baseLine = new Paint();
-    this.baseLine.setColor(getResources().getColor(R.color.brandColor));
+    this.baseLine.setColor(this.lineColor);
     this.baseLine.setStrokeWidth(5);
   }
 
@@ -84,11 +84,8 @@ public class StaticWaveformView extends BaseStaticWaveform {
     DisplayMetrics metrics = getResources().getDisplayMetrics();
     int widthPixels = metrics.widthPixels;
 
-    // Calculate the number of pixels per second for six seconds
-    float pixelPerSecondForSixSeconds = widthPixels / 6f;
-
     // Calculate the plot width based on the number of pixels per second and the file duration
-    float calculatedPlotWidth = pixelPerSecondForSixSeconds * (this.fileDuration / 1000);
+    float calculatedPlotWidth = this.pixelsPerSecond.floatValue() * (this.fileDuration / 1000);
 
     // Check if data is available
     if (this.bytes != null) {

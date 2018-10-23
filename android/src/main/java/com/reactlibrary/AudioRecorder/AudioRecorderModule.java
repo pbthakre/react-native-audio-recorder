@@ -8,6 +8,7 @@
 
 package com.reactlibrary.AudioRecorder;
 
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.util.Log;
@@ -43,6 +44,13 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
     return "AudioRecorderViewManager";
   }
 
+  // Pass properties from React Native to the waveform
+  @ReactMethod
+  public void passProperties(String backgroundColor, String lineColor, Double pixelsPerSecond) {
+    // Send event for passing properties to view
+    EventBus.getDefault().post(new WaveformEvent(3, backgroundColor, lineColor));
+  }
+
   // Instantiates all the things needed for recording
   @ReactMethod
   public void setupRecorder(Promise promise) {
@@ -73,7 +81,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
       this.audioRecording.startRecording(filePath, startTimeInMs);
 
       // Send event for resuming waveform
-      EventBus.getDefault().post(new WaveformEvent(1));
+      EventBus.getDefault().post(new WaveformEvent(1, null, null));
 
       // Create the promise response
       this.jsonResponse = new WritableNativeMap();
@@ -95,7 +103,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
 
       if(this.audioRecording != null){
         // Send event for pausing waveform
-        EventBus.getDefault().post(new WaveformEvent(2));
+        EventBus.getDefault().post(new WaveformEvent(2, null, null));
 
         // Get the file location back from the audio recorder
         recordedFile = this.audioRecording.stopRecording();

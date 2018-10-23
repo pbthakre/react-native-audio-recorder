@@ -9,6 +9,7 @@
 package com.reactlibrary.AudioPlayerPlot;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.widget.RelativeLayout;
@@ -34,7 +35,21 @@ public class AudioPlayerView extends RelativeLayout {
   // Method to listen for update requests
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onWaveformEvent(WaveformEvent event) {
-    this.updateWaveformWithData(event.fileUrl);
+    if (event.code == 1) {
+      this.updateWaveformWithData(event.fileUrl);
+    }
+
+    if (event.code == 2) {
+      if (event.backgroundColor != null) {
+        this.plot.backgroundColor = Color.parseColor(event.backgroundColor);
+      }
+
+      if (event.lineColor != null) {
+        this.plot.lineColor = Color.parseColor(event.lineColor);
+      }
+
+      this.plot.pixelsPerSecond = event.pixelsPerSecond;
+    }
   }
 
   // The constructor
@@ -75,7 +90,7 @@ public class AudioPlayerView extends RelativeLayout {
     this.plot = findViewById(R.id.audio_player_waveform);
 
     // Set the plot line color
-    this.plot.setColor(R.color.brandColor);
+    this.plot.setColor();
 
     // Define the number of bars used for the waveform (1 - 256)
     // More than 256 means that the the bars are overlapping and the waveform get its

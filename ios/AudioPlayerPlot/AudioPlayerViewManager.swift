@@ -42,7 +42,7 @@ class AudioPlayerViewManager : RCTViewManager {
   }
   
   // Received properties from React Native and sets them on the view
-  @objc public func passProperties(_ backgroundColor:String, propLineColor lineColor:String) {
+  @objc public func passProperties(_ backgroundColor:String, propLineColor lineColor:String, pixels pixelsPerSecond:Double) {
     if (backgroundColor != "") {
       let transparentColor = UIColor(white: 1, alpha: 0.0)
       self.currentView?.bgColor = ColorHelper.hexStringToUIColor(hex: backgroundColor, fallback: transparentColor)
@@ -52,6 +52,8 @@ class AudioPlayerViewManager : RCTViewManager {
       let brandColor = UIColor(red: 124.0 / 255.0, green: 219.0 / 255.0, blue: 213.0 / 255.0, alpha: 1.0)
       self.currentView?.lineColor = ColorHelper.hexStringToUIColor(hex: lineColor, fallback: brandColor)
     }
+    
+    self.currentView?.pixelsPerSecond = pixelsPerSecond
     
     DispatchQueue.main.async {
       self.currentView?.layoutSubviews()

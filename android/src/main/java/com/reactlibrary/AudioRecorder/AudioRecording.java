@@ -52,7 +52,7 @@ public class AudioRecording {
   AudioRecording() { }
 
   // Initiates the recording by starting a thread
-  public void startRecording(Double startTimeInMs, String filePath) throws IOException {
+  public void startRecording(String filePath, Double startTimeInMs) throws IOException {
     Log.i(TAG, "Recording started");
 
     // If -1 then overwriting flag is set to false, "first" new recording

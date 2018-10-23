@@ -560,7 +560,7 @@ class AudioRecorderViewManager : RCTViewManager {
   }
 
   // Starts the recording of audio
-  @objc public func startRecording(_ startTimeInMs:Double, file filePath:NSString, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+  @objc public func startRecording(_ filePath:NSString, startTime startTimeInMs:Double, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Microphone will be monitored while recording
     // only if headphones are plugged
     if AKSettings.headPhonesPlugged {

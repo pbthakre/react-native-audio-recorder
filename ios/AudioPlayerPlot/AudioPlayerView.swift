@@ -24,15 +24,18 @@ public class AudioPlayerView: EZAudioPlot {
 
   // The height of the component received from React Native
   public var windowHeight: Double = 0.00
+  
+  // The background color of the view calculated from the received color
+  public var bgColor: UIColor = UIColor(white: 1, alpha: 0.0)
+  
+  // The color of the line
+  public var lineColor: UIColor = UIColor(red: 124.0 / 255.0, green: 219.0 / 255.0, blue: 213.0 / 255.0, alpha: 1.0)
     
   // The duration of the loaded file in seconds
   private var fileDuration: Double = 0
   
   // The plot which represents the waveform
   private var plot: EZAudioPlot = EZAudioPlot(frame: CGRect.init())
-    
-  // Brand Color
-  private var brandColor : UIColor = UIColor(red: 124.0 / 255.0, green: 219.0 / 255.0, blue: 213.0 / 255.0, alpha: 1.0)
   
   // Holds the errors of waveform
   enum WaveFormError: Error {
@@ -69,6 +72,10 @@ public class AudioPlayerView: EZAudioPlot {
     // Set the plot and layer width to the calculated width
     self.plot.frame.size.width = CGFloat(calcWidth)
     self.plot.waveformLayer.frame.size.width = CGFloat(calcWidth)
+    
+    self.plot.backgroundColor = self.bgColor
+    self.backgroundColor = self.bgColor
+    self.plot.color = self.lineColor
   }
   
   required public init?(coder aDecoder: NSCoder) {
@@ -90,7 +97,7 @@ public class AudioPlayerView: EZAudioPlot {
       self.plot.shouldMirror = true
 
       // Set the color of the line
-      self.plot.color = self.brandColor
+      self.plot.color = self.lineColor
 
       // Set line width
       self.plot.waveformLayer.lineWidth = 3
@@ -132,7 +139,7 @@ public class AudioPlayerView: EZAudioPlot {
         
         // Create a straight line before the file waveform
         let frontLine = UIView(frame: CGRect(x: 0, y: (self.componentHeight / 2) - 1.5, width: self.windowWidth / 2, height: 3))
-        frontLine.backgroundColor = self.brandColor
+        frontLine.backgroundColor = self.lineColor
         self.addSubview(frontLine)
         self.bringSubview(toFront: frontLine)
         
@@ -148,7 +155,7 @@ public class AudioPlayerView: EZAudioPlot {
         
         // Create a straight line after the file waveform
         let backLine = UIView(frame: CGRect(x: (self.windowWidth / 2) + calculatedPlotWidth, y: (self.componentHeight / 2) - 1.5, width: self.windowWidth / 2, height: 3))
-        backLine.backgroundColor = self.brandColor
+        backLine.backgroundColor = self.lineColor
         self.addSubview(backLine)
         self.bringSubview(toFront: backLine)
       }

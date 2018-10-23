@@ -87,6 +87,23 @@ class AudioRecorderViewManager : RCTViewManager {
   override class func requiresMainQueueSetup() -> Bool {
     return true
   }
+    
+  // Received properties from React Native and sets them on the view
+  @objc public func passProperties(_ backgroundColor:String, propLineColor lineColor:String) {
+    if (backgroundColor != "") {
+      let transparentColor = UIColor(white: 1, alpha: 0.0)
+      self.currentView?.bgColor = ColorHelper.hexStringToUIColor(hex: backgroundColor, fallback: transparentColor)
+    }
+    
+    if (lineColor != "") {
+      let brandColor = UIColor(red: 124.0 / 255.0, green: 219.0 / 255.0, blue: 213.0 / 255.0, alpha: 1.0)
+      self.currentView?.lineColor = ColorHelper.hexStringToUIColor(hex: lineColor, fallback: brandColor)
+    }
+    
+    DispatchQueue.main.async {
+      self.currentView?.layoutSubviews()
+    }
+  }
 
   // Sets the dimensions of the AudioRecorderView to the component dimensions received from React Native
   @objc public func setDimensions(_ width:Double, dimHeight height:Double) {
@@ -106,8 +123,6 @@ class AudioRecorderViewManager : RCTViewManager {
         
       // Stop AudioKit to prevent errors of duplicate initialization
       try AudioKit.stop()
-        
-        
 
       // Completed without error
       onSuccess(true)

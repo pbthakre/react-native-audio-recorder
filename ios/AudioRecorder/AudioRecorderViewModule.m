@@ -19,6 +19,7 @@
 // Represents the bridge which enables access to AudioRecorderView(Manager) in React Native
 @interface RCT_EXTERN_MODULE(AudioRecorderViewManager, RCTViewManager)
   // General
+  RCT_EXTERN_METHOD(passProperties: (NSString)backgroundColor propLineColor:(NSString)lineColor);
   RCT_EXTERN_METHOD(setDimensions: (double)width dimHeight:(double)height);
 
   // Recording

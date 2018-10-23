@@ -20,18 +20,22 @@ public class AudioRecorderView: EZAudioPlot {
   // The height of the component received from React Native
   public var componentHeight: Double = 0.00
   
+  // The background color of the view calculated from the received color
+  public var bgColor: UIColor = UIColor(white: 1, alpha: 0.0)
+  
+  // The color of the line
+  public var lineColor: UIColor = UIColor(red: 124.0 / 255.0, green: 219.0 / 255.0, blue: 213.0 / 255.0, alpha: 1.0)
+  
   // The plot which represents the waveform
   private var plot : SwiftSiriWaveformView = SwiftSiriWaveformView()
   
   // The timer which calls the waveform update method
-  var timer: Timer?
+  private var timer: Timer?
   
   // Tracker which observes the microphone
-  var microphoneTracker = AKMicrophoneTracker()
-    
-  // Brand Color
-  private var brandColor : UIColor = UIColor(red: 124.0 / 255.0, green: 219.0 / 255.0, blue: 213.0 / 255.0, alpha: 1.0)
+  private var microphoneTracker = AKMicrophoneTracker()
   
+  // Constructor
   private override init(frame: CGRect) {
     // Call super constructor
     super.init(frame: frame)
@@ -42,7 +46,7 @@ public class AudioRecorderView: EZAudioPlot {
     // Set width to use 100% (relative)
     self.autoresizingMask = [.flexibleWidth]
   }
-  
+
   // Initializes our waveform with defined properties
   func setupWaveform(microphoneTracker: AKMicrophoneTracker) {
     DispatchQueue.main.async {
@@ -65,6 +69,12 @@ public class AudioRecorderView: EZAudioPlot {
     }
   }
   
+  // Propagate view update
+  public override func layoutSubviews() {
+    self.plot.backgroundColor = self.bgColor
+    self.plot.waveColor = self.lineColor
+  }
+  
   // Setup the plot with custom properties
   private func setupWaveformPlot(microphoneTracker: AKMicrophoneTracker) {
     // Set the tracker
@@ -77,7 +87,7 @@ public class AudioRecorderView: EZAudioPlot {
     self.plot.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     
     // Set the wave line color
-    self.plot.waveColor = self.brandColor
+    self.plot.waveColor = self.lineColor
     
     // Set amplitude and frequency to zero to create a straight line
     self.plot.amplitude = 0
@@ -93,7 +103,7 @@ public class AudioRecorderView: EZAudioPlot {
     self.plot.primaryLineWidth = 5
 
     // Set the background color of the plot
-    self.plot.backgroundColor = UIColor.white
+    self.plot.backgroundColor = self.bgColor
     
     // Set the speed of the wave form
     self.plot.phaseShift = 0.5

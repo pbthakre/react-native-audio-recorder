@@ -37,10 +37,10 @@ class AudioRecorderViewManager : RCTViewManager {
   var finalTape: AKAudioFile? = nil
 
   // The name of the file where the current recording is stored in
-  private var fileName = "recording.mp4"
+  private var fileName = "recording.m4a"
 
   // The file url of the file which should be overwritten
-  private var fileToOverwrite = "recording.mp4"
+  private var fileToOverwrite = "recording.m4a"
     
   // The duration of the file where the current recording is stored in - in milliseconds
   private var fileDuration = 0
@@ -243,7 +243,7 @@ class AudioRecorderViewManager : RCTViewManager {
       formatter.timeZone = TimeZone.current
       formatter.dateFormat = "yyyy-MM-dd-HH-mm-ss"
       let dateString = formatter.string(from: now)
-      self.fileName = dateString + "--rec.mp4"
+      self.fileName = dateString + "--rec.m4a"
     } else {
       // Set file name of overwritten file to the given one
       self.fileName = (NSURL(string: self.fileToOverwrite)?.lastPathComponent)!
@@ -253,7 +253,7 @@ class AudioRecorderViewManager : RCTViewManager {
     self.finalTape?.exportAsynchronously(
       name: self.fileName,
       baseDir: .documents,
-      exportFormat: .mp4) {
+      exportFormat: .m4a) {
         exportedFile, error in
           print("myExportCallBack has been triggered. It means that export ended")
           if error == nil {

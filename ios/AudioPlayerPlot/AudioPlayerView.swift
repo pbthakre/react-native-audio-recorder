@@ -139,12 +139,6 @@ public class AudioPlayerView: EZAudioPlot {
       
       // Run ui update on main thread
       DispatchQueue.main.async() {
-        // Create a straight line before the file waveform
-        let frontLine = UIView(frame: CGRect(x: 0, y: (self.componentHeight / 2) - 1.5, width: self.windowWidth / 2, height: 3))
-        frontLine.backgroundColor = self.lineColor
-        self.addSubview(frontLine)
-        self.bringSubview(toFront: frontLine)
-        
         // Calculate the plot width based on the number of pixels and the file duration
         let calculatedPlotWidth = self.pixelsPerSecond * self.fileDuration
         
@@ -157,12 +151,6 @@ public class AudioPlayerView: EZAudioPlot {
         
         // Add the data to the plot
         self.plot.updateBuffer(data?.buffers[0], withBufferSize: (data?.bufferSize)!)
-        
-        // Create a straight line after the file waveform
-        let backLine = UIView(frame: CGRect(x: (self.windowWidth / 2) + calculatedPlotWidth, y: (self.componentHeight / 2) - 1.5, width: self.windowWidth / 2, height: 3))
-        backLine.backgroundColor = self.lineColor
-        self.addSubview(backLine)
-        self.bringSubview(toFront: backLine)
       }
       
       // Completed without error

@@ -18,10 +18,10 @@ public class AudioPlayerView: EZAudioPlot {
   
   // The height of the component received from React Native
   public var componentHeight: Double = 0.00
-
+  
   // The width of the component received from React Native
   public var windowWidth: Double = 0.00
-
+  
   // The height of the component received from React Native
   public var windowHeight: Double = 0.00
   
@@ -33,7 +33,7 @@ public class AudioPlayerView: EZAudioPlot {
   
   // The number of pixels per second
   public var pixelsPerSecond: Double = 0.0
-    
+  
   // The duration of the loaded file in seconds
   private var fileDuration: Double = 0
   
@@ -59,7 +59,7 @@ public class AudioPlayerView: EZAudioPlot {
     let screenSize: CGRect = UIScreen.main.bounds
     self.windowWidth = Double(screenSize.width);
   }
-
+  
   // Detect layout changes
   override public func layoutSubviews() {
     // Get the screen width
@@ -68,7 +68,7 @@ public class AudioPlayerView: EZAudioPlot {
     
     // Calculate the plot width based on the number of pixels and the file duration
     let calcWidth = self.pixelsPerSecond * self.fileDuration
-
+    
     // Set the plot and layer width to the calculated width
     self.plot.frame.size.width = CGFloat(calcWidth)
     self.plot.waveformLayer.frame.size.width = CGFloat(calcWidth)
@@ -87,24 +87,24 @@ public class AudioPlayerView: EZAudioPlot {
     DispatchQueue.main.async {
       // Create view
       self.plot = EZAudioPlot(frame: self.frame)
-
+      
       // Set width and height to use 100 % (relative)
       self.plot.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-
+      
       // Set plot properties to generate waveform like plot
       self.plot.plotType = .buffer
       self.plot.shouldFill = true
       self.plot.shouldMirror = true
-
+      
       // Set the color of the line
       self.plot.color = self.lineColor
-
+      
       // Set line width
       self.plot.waveformLayer.lineWidth = 3
-
+      
       // Cut off lines which go beyond the view bounds
       self.plot.clipsToBounds = true
-
+      
       // Add the view
       self.addSubview(self.plot)
     }
@@ -115,6 +115,14 @@ public class AudioPlayerView: EZAudioPlot {
     // Get the screen width
     let screenSize: CGRect = UIScreen.main.bounds
     self.windowWidth = Double(screenSize.width);
+    
+    // Copy the file to avoid race condition on file access
+    let filemgr = FileManager.default
+    do {
+      try filemgr.copyItem(atPath: fileUrl.absoluteString, toPath: fileUrl.absoluteString + ".m4a")
+    } catch {
+      // TODO: add exception handling
+    }
     
     // Read the file from storage
     let file : EZAudioFile? = EZAudioFile(url: fileUrl)
@@ -131,17 +139,14 @@ public class AudioPlayerView: EZAudioPlot {
       
       // Run ui update on main thread
       DispatchQueue.main.async() {
-        // Calculate the number of pixels per second for six seconds
-        let pixelPerSecondForSixSeconds = self.windowWidth / 6
-        
-        // Calculate the plot width based on the number of pixels and the file duration
-        let calculatedPlotWidth = pixelPerSecondForSixSeconds * self.fileDuration
-        
         // Create a straight line before the file waveform
         let frontLine = UIView(frame: CGRect(x: 0, y: (self.componentHeight / 2) - 1.5, width: self.windowWidth / 2, height: 3))
         frontLine.backgroundColor = self.lineColor
         self.addSubview(frontLine)
         self.bringSubview(toFront: frontLine)
+        
+        // Calculate the plot width based on the number of pixels and the file duration
+        let calculatedPlotWidth = self.pixelsPerSecond * self.fileDuration
         
         // Plot starts at the middle of the screen so that the straight line can the take the other half
         self.plot.frame.origin.x = CGFloat(self.windowWidth / 2)

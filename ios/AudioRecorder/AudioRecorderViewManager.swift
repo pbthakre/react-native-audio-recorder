@@ -539,7 +539,6 @@ class AudioRecorderViewManager : RCTViewManager {
       },
       onError: { error in
         self.jsonArray["success"] = false
-        //reject("Error", self.jsonArray.rawString(), error)
         e = error
       }
     )
@@ -610,6 +609,8 @@ class AudioRecorderViewManager : RCTViewManager {
 
     // Stop the recorder
     self.recorder.stop()
+    
+    self.microphoneTracker.stop()
 
     // Stop rendering the waveform
     self.currentView?.pauseWaveform()

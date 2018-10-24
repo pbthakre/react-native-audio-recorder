@@ -28,14 +28,7 @@ export default class AudioRecorder extends Component<Props> {
 
   async stopRecording() {
     const promise = await AudioRecorderNative.stopRecording().then(params => {
-      let parsedParams;
-      if (Platform.OS === 'ios') {
-        parsedParams = JSON.parse(params);
-      } else {
-        parsedParams = params;
-      }
-
-      return parsedParams
+      return params
     });
 
     return new Promise((resolve, reject) => {

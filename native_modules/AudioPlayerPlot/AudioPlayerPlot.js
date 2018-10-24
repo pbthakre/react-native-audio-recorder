@@ -31,8 +31,7 @@ export default class AudioPlayerPlot extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'white',
+    alignItems: 'center'
   },
   native: {
     flex: 1

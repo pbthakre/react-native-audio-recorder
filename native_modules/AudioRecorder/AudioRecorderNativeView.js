@@ -34,7 +34,6 @@ export default class AudioRecorderUIView extends Component {
 const styles = StyleSheet.create({
   recorder: {
     width: Dimensions.get('window').width,
-    height: '66%',
-    backgroundColor: 'transparent'
+    height: '66%'
   }
 });

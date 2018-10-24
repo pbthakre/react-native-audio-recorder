@@ -20,7 +20,7 @@
 		74326C3E212C3B92007BE829 /* AudioKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 74326C3A212C3B69007BE829 /* AudioKitUI.framework */; };
 		74326C92212C3FE3007BE829 /* AudioKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74326C39212C3B69007BE829 /* AudioKit.framework */; };
 		74326C93212C3FE3007BE829 /* AudioKitUI.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 74326C3A212C3B69007BE829 /* AudioKitUI.framework */; };
-		74FE7FDF217EFF0D0085D44D /* ColorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74FE7FDE217EFF0D0085D44D /* ColorHelper.swift */; };
+		74FE8027217F53450085D44D /* ColorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74FE8026217F53450085D44D /* ColorHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -52,7 +52,7 @@
 		74326C39212C3B69007BE829 /* AudioKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioKit.framework; path = Frameworks/AudioKit.framework; sourceTree = "<group>"; };
 		74326C3A212C3B69007BE829 /* AudioKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioKitUI.framework; path = Frameworks/AudioKitUI.framework; sourceTree = "<group>"; };
 		743D20BA2122BEDB00A3F546 /* RNNativeAudioRecorder-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNNativeAudioRecorder-Bridging-Header.h"; sourceTree = "<group>"; };
-		74FE7FDE217EFF0D0085D44D /* ColorHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorHelper.swift; path = Helpers/ColorHelper.swift; sourceTree = "<group>"; };
+		74FE8026217F53450085D44D /* ColorHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorHelper.swift; path = Helpers/ColorHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,9 +121,9 @@
 		74326B65212C368E007BE829 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				74FE8026217F53450085D44D /* ColorHelper.swift */,
 				74326B62212C368A007BE829 /* AudioPlayerHelper.h */,
 				74326B63212C368A007BE829 /* AudioPlayerHelper.m */,
-				74FE7FDE217EFF0D0085D44D /* ColorHelper.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -195,7 +195,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				74326B5F212C3638007BE829 /* AudioRecorderViewModule.m in Sources */,
-				74FE7FDF217EFF0D0085D44D /* ColorHelper.swift in Sources */,
+				74FE8027217F53450085D44D /* ColorHelper.swift in Sources */,
 				74326B60212C3638007BE829 /* AudioRecorderViewManager.swift in Sources */,
 				74326B64212C368A007BE829 /* AudioPlayerHelper.m in Sources */,
 				74326B68212C369F007BE829 /* SwiftyJSON.swift in Sources */,

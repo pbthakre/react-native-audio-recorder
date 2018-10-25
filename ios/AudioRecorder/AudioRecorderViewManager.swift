@@ -283,7 +283,7 @@ class AudioRecorderViewManager : RCTViewManager {
       // Completed without error
       onSuccess(true)
     } catch {
-      print("Failed.")
+      print("Reset data failed.")
 
       // Aborted with error
       self.jsonArray["error"].stringValue = error.localizedDescription
@@ -314,23 +314,23 @@ class AudioRecorderViewManager : RCTViewManager {
       newFile = try self.finalTape?.appendedBy(file: self.tape)
       self.finalTape = newFile
 
-      // The first sample to be extracted
-      firstSampleToExtract = Int(((self.finalTape?.sampleRate)! * (self.finalTape?.duration)!) + 1)
-
-      // The last sample to be extracted
-      lastSampleToExtract = previousTape.sampleRate * previousTape.duration
-
-      // Extract the first part of the previous file (starting from zero to the point from which should be overwritten
-      let previousTapeExtractedAfter = try previousTape.extracted(fromSample: Int64(firstSampleToExtract), toSample: Int64(lastSampleToExtract))
-
-      // Append the last part of the previous tape to the final tape
-      newFile = try self.finalTape?.appendedBy(file: previousTapeExtractedAfter)
-      self.finalTape = newFile
+      // Only add the final part if final part is not completely overwritten by the new part
+      if (Int(self.finalTape!.samplesCount) < previousTape.samplesCount) {
+        // The first sample to be extracted
+        firstSampleToExtract = Int(self.finalTape!.samplesCount)
+        
+        // Extract the final part of the previous file
+        let previousTapeExtractedAfter = try previousTape.extracted(fromSample: Int64(firstSampleToExtract))
+        
+        // Append the last part of the previous tape to the final tape
+        newFile = try self.finalTape?.appendedBy(file: previousTapeExtractedAfter)
+        self.finalTape = newFile
+      }
 
       // Completed without error
       onSuccess(true)
     } catch {
-      print("Failed.")
+      print("Partial overwrite failed.")
 
       // Aborted with error
       self.jsonArray["error"].stringValue = error.localizedDescription
@@ -566,9 +566,9 @@ class AudioRecorderViewManager : RCTViewManager {
       self.micBooster.gain = 1
     }
 
-    // If -1 then overwriting flag is set to false, "first" new recording
+    // If file path is empty overwriting flag is set to false, "first" new recording
     // otherwise set overwriting flag to true, prepare overwriting from specific point
-    if (startTimeInMs >= 0 && filePath != "") {
+    if (filePath != "") {
       self.isOverwriting = true
       self.pointToOverwriteRecordingInSeconds = Double(startTimeInMs) / Double(1000)
       self.fileToOverwrite = filePath as String

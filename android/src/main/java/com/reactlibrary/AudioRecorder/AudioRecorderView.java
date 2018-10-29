@@ -10,6 +10,7 @@ package com.reactlibrary.AudioRecorder;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 import android.widget.RelativeLayout;
 
 import com.reactlibrary.R;
@@ -26,6 +27,12 @@ public class AudioRecorderView extends RelativeLayout {
 
   // The timer which calls the waveform update method
   private Timer timer;
+
+  // The task the timer executes
+  private TimerTask refreshWaveformTask;
+
+  // The handler of the timer
+  final Handler handler = new Handler();
 
   // The plot which represents the waveform
   private DynamicWaveformView plot;
@@ -106,19 +113,18 @@ public class AudioRecorderView extends RelativeLayout {
           pauseWaveform();
         }
 
-        // Create the timer
-        timer = new Timer();
-
         // Set number of sinus waves
         plot.setFrequency(4.00f);
 
+        // Create the timer
+        timer = new Timer();
+
+        // Initialize the TimerTask's job
+        initializeTimerTask();
+
         // Start the timer for amplitude update processing on waveform
-        timer.scheduleAtFixedRate(new TimerTask() {
-                                   @Override
-                                   public void run() {
-                                     refreshWaveformWithAmplitude();
-                                   }
-                                 },
+        timer.scheduleAtFixedRate(
+            refreshWaveformTask,
             0,
             10
         );
@@ -128,13 +134,27 @@ public class AudioRecorderView extends RelativeLayout {
 
   // Pause plot, but keep access level private
   public void pauseWaveform() {
-    this.timer.cancel();
-    this.timer.purge();
+    if (this.timer != null) {
+      this.timer.cancel();
+      this.timer = null;
+    }
   }
 
   // Clear plot, but keep access level private
   public void clearWaveform() {
     this.plot.setAmplitude(0);
     this.plot.setFrequency(0);
+  }
+
+  public void initializeTimerTask() {
+    refreshWaveformTask = new TimerTask() {
+      public void run() {
+        handler.post(new Runnable() {
+          public void run() {
+            refreshWaveformWithAmplitude();
+          }
+        });
+      }
+    };
   }
 }

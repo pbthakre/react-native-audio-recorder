@@ -55,12 +55,16 @@ public class AudioRecording {
   public void startRecording(String filePath, Double startTimeInMs) throws IOException {
     Log.i(TAG, "Recording started");
 
-    // If -1 then overwriting flag is set to false, "first" new recording
+    // If file path is empty overwriting flag is set to false, "first" new recording
     // otherwise set overwriting flag to true, prepare overwriting from specific point
-    if (startTimeInMs >= 0 && !filePath.equals("")) {
+    if (!filePath.equals("")) {
       this.isOverwriting = true;
       this.pointToOverwriteRecordingInSeconds = startTimeInMs / 1000;
-      this.filePath = filePath;
+
+      // Remove timestamp string which is added automatically by Android
+      String filePathCleaned = filePath.substring(0, filePath.indexOf("?"));
+
+      this.filePath = filePathCleaned;
     } else {
       this.isOverwriting = false;
     }
@@ -95,10 +99,6 @@ public class AudioRecording {
 
     // If in overwriting mode
     if (isOverwriting) {
-      /// -----------------------------------------------------------------------------------------------
-      /// 1. Cut out the first part of the original file
-      /// the part which should not be overwritten
-
       // Get the file which should be overwritten
       String previousTape = filePath;
       Movie originalFile = MovieCreator.build(previousTape);
@@ -119,36 +119,47 @@ public class AudioRecording {
       long startSample = findNextSyncSample(track, startTime);
       long endSample = findNextSyncSample(track, endTime);
 
-      // Extract the desired samples and add them back to the clean original file
-      originalFile.addTrack(new CroppedTrack(track, startSample, endSample));
+      Movie originalFileCut = null;
 
-      // Write the extracted samples to a temp file
-      Container out1 = new DefaultMp4Builder().build(originalFile);
-      FileOutputStream fos1 = new FileOutputStream(String.format("/storage/emulated/0/Audvice/original-cut.mp4", startTime, endTime));
-      FileChannel fc1 = fos1.getChannel();
-      out1.writeContainer(fc1);
-      fc1.close();
-      fos1.close();
-
-      /// -----------------------------------------------------------------------------------------------
-      /// 2. Merge the first part and the new recorded part
-      /// meaning the part which should not be overwritten and the part which should be used to overwrite
-
-      // Get the first part of the original file
-      String originalCutTape = "/storage/emulated/0/Audvice/original-cut.mp4";
-      Movie originalFileCut = MovieCreator.build(originalCutTape);
-
-      // Get the current recorded part
-      String currentTape = destinationPath.getAbsolutePath();
-      Movie currentFile = MovieCreator.build(currentTape);
+      String originalCutTape = "/storage/emulated/0/Audvice/original-cut.m4a";
+      String originalCurrentMergedTape = "/storage/emulated/0/Audvice/original-current-merged.m4a";
 
       // Init a track list
       List<Track> audioTracks = new LinkedList<Track>();
 
-      // Get all tracks of the original file
-      for (Track t : originalFileCut.getTracks()) {
-        audioTracks.add(t);
+      /// -----------------------------------------------------------------------------------------------
+      /// 1. Cut out the first part of the original file
+      /// the part which should not be overwritten
+
+      // Only add the previous part if we are not overwriting from zero
+      if (this.pointToOverwriteRecordingInSeconds > 0) {
+        // Extract the desired samples and add them back to the clean original file
+        originalFile.addTrack(new CroppedTrack(track, startSample, endSample));
+
+        // Write the extracted samples to a temp file
+        Container out1 = new DefaultMp4Builder().build(originalFile);
+        FileOutputStream fos1 = new FileOutputStream(String.format("/storage/emulated/0/Audvice/original-cut.m4a", startTime, endTime));
+        FileChannel fc1 = fos1.getChannel();
+        out1.writeContainer(fc1);
+        fc1.close();
+        fos1.close();
+
+        /// -----------------------------------------------------------------------------------------------
+        /// 2. Merge the first part and the new recorded part
+        /// meaning the part which should not be overwritten and the part which should be used to overwrite
+
+        // Get the first part of the original file
+        originalFileCut = MovieCreator.build(originalCutTape);
+
+        // Get all tracks of the original file
+        for (Track t : originalFileCut.getTracks()) {
+          audioTracks.add(t);
+        }
       }
+
+      // Get the current recorded part
+      String currentTape = destinationPath.getAbsolutePath();
+      Movie currentFile = MovieCreator.build(currentTape);
 
       // Get all tracks of the current file
       audioTracks.add(currentFile.getTracks().get(0));
@@ -161,13 +172,9 @@ public class AudioRecording {
 
       // Save the merged parts (first part original and new one) into a temp file
       Container outs2 = new DefaultMp4Builder().build(originalCurrentMergedFile);
-      FileChannel fcs2 = new RandomAccessFile(String.format("/storage/emulated/0/Audvice/original-current-merged.mp4"), "rw").getChannel();
+      FileChannel fcs2 = new RandomAccessFile(String.format(originalCurrentMergedTape), "rw").getChannel();
       outs2.writeContainer(fcs2);
       fcs2.close();
-
-      /// -----------------------------------------------------------------------------------------------
-      /// 3. Get the second (remaining) part of the original file and merge it with the two other already merged parts
-      ///
 
       // Get the duration of the original file
       IsoFile isoFile = new IsoFile(previousTape);
@@ -181,20 +188,26 @@ public class AudioRecording {
           isoFile2.getMovieBox().getMovieHeaderBox().getDuration() /
           isoFile2.getMovieBox().getMovieHeaderBox().getTimescale();
 
-      // Get the file with the merged parts
-      String originalCurrentMergedTape = "/storage/emulated/0/Audvice/original-current-merged.mp4";
-      Movie originalCurrentMergedFileCopy = MovieCreator.build(originalCurrentMergedTape);
+      // Get the duration of the the merged file
+      IsoFile isoFile3 = new IsoFile(originalCurrentMergedTape);
+      double lengthInSecondsCurrentMergedFile = (double)
+          isoFile3.getMovieBox().getMovieHeaderBox().getDuration() /
+          isoFile3.getMovieBox().getMovieHeaderBox().getTimescale();
 
-      // Start time is the point to overwrite from + the length of the current file
-      // End time is the length of the original file
-      startTime = this.pointToOverwriteRecordingInSeconds + lengthInSecondsCurrentFile;
-      endTime = lengthInSecondsOriginalFile;
+      // Only add the final part if final part is not completely overwritten by the new part
+      if (lengthInSecondsCurrentMergedFile < lengthInSecondsOriginalFile) {
+        /// -----------------------------------------------------------------------------------------------
+        /// 3. Get the second (remaining) part of the original file and merge it with the two other already merged parts
+        ///
 
-      // Appending the second part of the original file is only necessary if
-      // the duration of the first part + the duration of the new part are not higher than the
-      // duration of the original file meaning the second part is completely overwritten and
-      // therefore merging is not necessary anymore
-      if (startTime < endTime) {
+        // Get the file with the merged parts
+        Movie originalCurrentMergedFileCopy = MovieCreator.build(originalCurrentMergedTape);
+
+        // Start time is the point to overwrite from + the length of the current file
+        // End time is the length of the original file
+        startTime = lengthInSecondsCurrentMergedFile;
+        endTime = lengthInSecondsOriginalFile;
+
         // Create a list for the tracks
         audioTracks = new LinkedList<Track>();
 
@@ -225,16 +238,28 @@ public class AudioRecording {
 
         // Create filename from timestamp for the new file
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        String fileName  = dateFormat.format(new Date()) + "--rec.mp4";
+        String fileName  = dateFormat.format(new Date()) + "--rec.m4a";
         destinationPath = new File("/storage/emulated/0/Audvice/" + fileName);
 
         Container out2 = new DefaultMp4Builder().build(originalCurrentMergedCut);
-        FileOutputStream fos2 = new FileOutputStream(String.format("/storage/emulated/0/Audvice/" + fileName, startTime, endTime));
+        FileOutputStream fos2 = new FileOutputStream(String.format(destinationPath.getAbsolutePath()));
         FileChannel fc2 = fos2.getChannel();
         out2.writeContainer(fc2);
         fc2.close();
         fos2.close();
+      } else {
+        // Create filename from timestamp for the new file
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        String fileName  = dateFormat.format(new Date()) + "--rec.m4a";
+        destinationPath = new File("/storage/emulated/0/Audvice/" + fileName);
 
+        Container out2 = new DefaultMp4Builder().build(originalCurrentMergedFile);
+        FileOutputStream fos2 = new FileOutputStream(String.format(destinationPath.getAbsolutePath(), startTime, endTime));
+        FileChannel fc2 = fos2.getChannel();
+        out2.writeContainer(fc2);
+        fc2.close();
+        fos2.close();
+      }
 
         /// -----------------------------------------------------------------------------------------------
         /// 4. Cleanup
@@ -242,10 +267,10 @@ public class AudioRecording {
 
         // Delete temporary files
         FileUtils.deleteFile(previousTape);
+        FileUtils.deleteFile(currentTape);
         FileUtils.deleteFile(originalCutTape);
         FileUtils.deleteFile(originalCurrentMergedTape);
       }
-    }
 
     return destinationPath;
   }

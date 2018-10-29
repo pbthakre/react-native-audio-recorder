@@ -294,21 +294,28 @@ class AudioRecorderViewManager : RCTViewManager {
   // Partially overwrites the previous tape with the content of the current tape
   private func overwritePartially(onSuccess: @escaping (Bool) -> Void, onError: @escaping (Error) -> Void) {
     do {
+      // Create a instance for the new file
+      var newFile : AKAudioFile? = nil
+      
       // The tape which should be overwritten
       let previousTape = try AKAudioFile(forReading: URL(string: self.fileToOverwrite)!)
-
+      
       // The first sample to be extracted
       var firstSampleToExtract = 0
-
-      // The last sample to be extracted
-      var lastSampleToExtract = previousTape.sampleRate * self.pointToOverwriteRecordingInSeconds
-
-      // Extract the first part of the previous file (starting from zero to the point from which should be overwritten
-      let previousTapeExtractedBefore = try previousTape.extracted(fromSample: Int64(firstSampleToExtract), toSample: Int64(lastSampleToExtract))
-
-      // Append the the first part of the previous tape to the final tape
-      var newFile = try self.finalTape?.appendedBy(file: previousTapeExtractedBefore)
-      self.finalTape = newFile
+      
+      // Only add the previous part if we are not overwriting from zero
+      if (self.pointToOverwriteRecordingInSeconds > 0) {
+      
+        // The last sample to be extracted
+        let lastSampleToExtract = previousTape.sampleRate * self.pointToOverwriteRecordingInSeconds
+        
+        // Extract the first part of the previous file (starting from zero to the point from which should be overwritten
+        let previousTapeExtractedBefore = try previousTape.extracted(fromSample: Int64(firstSampleToExtract), toSample: Int64(lastSampleToExtract))
+        
+        // Append the the first part of the previous tape to the final tape
+        newFile = try self.finalTape?.appendedBy(file: previousTapeExtractedBefore)
+        self.finalTape = newFile
+      }
 
       // Append the new recorded tape (the part which replaces the old part in the previous file)
       newFile = try self.finalTape?.appendedBy(file: self.tape)

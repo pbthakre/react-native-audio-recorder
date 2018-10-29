@@ -3,9 +3,7 @@ import { requireNativeComponent, Dimensions, StyleSheet, Platform } from 'react-
 
 const AudioPlayerView = requireNativeComponent('AudioPlayerView', AudioPlayerUIView);
 
-import AudioPlayerNative from './AudioPlayerPlotNativeModule';
-import AudioRecorderNative
-  from "react-native-native-audio-recorder/native_modules/AudioRecorder/AudioRecorderNativeModule";
+import AudioPlayerNativeModule from './AudioPlayerPlotNativeModule';
 
 export default class AudioPlayerUIView extends Component {
   constructor (props) {
@@ -23,11 +21,11 @@ export default class AudioPlayerUIView extends Component {
     if (Platform.OS === 'ios') {
       // Send the dimensions of the component to the native ui
       if (this.state.dimensions) {
-        AudioPlayerNative.setDimensions(this.state.dimensions.width, this.state.dimensions.height)
+        AudioPlayerNativeModule.setDimensions(this.state.dimensions.width, this.state.dimensions.height)
       }
     }
 
-    AudioPlayerNative.passProperties(this.props.backgroundColor, this.props.lineColor, this.props.pixelsPerSecond)
+    AudioPlayerNativeModule.passProperties(this.props.backgroundColor, this.props.lineColor, this.props.pixelsPerSecond)
 
     return <AudioPlayerView style={styles.default} onLayout={this.onLayout} width={!this.props.width ? styles.default.width : this.props.width} height={!this.props.height ? styles.default.height : this.props.height}/>
   }

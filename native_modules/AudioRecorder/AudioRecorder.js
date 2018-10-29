@@ -5,8 +5,8 @@ import {
   View
 } from "react-native";
 
-import AudioRecorderUIView from './AudioRecorderNativeView'
-import AudioRecorderNative from './AudioRecorderNativeModule';
+import AudioRecorderNativeView from './AudioRecorderNativeView'
+import AudioRecorderNativeModule from './AudioRecorderNativeModule';
 
 type Props = {};
 export default class AudioRecorder extends Component<Props> {
@@ -15,19 +15,19 @@ export default class AudioRecorder extends Component<Props> {
   }
 
   setupRecorder() {
-    return AudioRecorderNative.setupRecorder();
+    return AudioRecorderNativeModule.setupRecorder();
   };
 
   startRecording(filePath, startTimeInMs) {
     if (!filePath) {
-      return AudioRecorderNative.startRecording('', -1);
+      return AudioRecorderNativeModule.startRecording('', -1);
     } else {
-      return AudioRecorderNative.startRecording(filePath, startTimeInMs);
+      return AudioRecorderNativeModule.startRecording(filePath, startTimeInMs);
     }
   };
 
   async stopRecording() {
-    const promise = await AudioRecorderNative.stopRecording().then(params => {
+    const promise = await AudioRecorderNativeModule.stopRecording().then(params => {
       let parsedParams;
       if (Platform.OS === 'ios') {
         parsedParams = JSON.parse(params);
@@ -46,7 +46,7 @@ export default class AudioRecorder extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <AudioRecorderUIView style={styles.native} width={this.props.width} height={this.props.height} backgroundColor={this.props.backgroundColor} lineColor={this.props.lineColor}/>
+        <AudioRecorderNativeView style={styles.native} width={this.props.width} height={this.props.height} backgroundColor={this.props.backgroundColor} lineColor={this.props.lineColor}/>
       </View>
     );
   }

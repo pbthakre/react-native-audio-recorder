@@ -4,10 +4,8 @@ import {
   View
 } from 'react-native';
 
-import AudioPlayerUIView from './AudioPlayerPlotNativeView'
-import AudioPlayerNative from './AudioPlayerPlotNativeModule';
-import AudioRecorderUIView
-  from "react-native-native-audio-recorder/native_modules/AudioRecorder/AudioRecorderNativeView";
+import AudioPlayerNativeView from './AudioPlayerPlotNativeView'
+import AudioPlayerNativeModule from './AudioPlayerPlotNativeModule';
 
 type Props = {};
 export default class AudioPlayerPlot extends Component<Props> {
@@ -16,13 +14,13 @@ export default class AudioPlayerPlot extends Component<Props> {
   }
 
   renderByFile(fileUrl) {
-    return AudioPlayerNative.renderByFile(fileUrl);
+    return AudioPlayerNativeModule.renderByFile(fileUrl);
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <AudioPlayerUIView style={this.props.style} width={this.props.width} height={this.props.height} backgroundColor={this.props.backgroundColor} lineColor={this.props.lineColor} pixelsPerSecond={this.props.pixelsPerSecond}/>
+        <AudioPlayerNativeView style={this.props.style} width={this.props.width} height={this.props.height} backgroundColor={this.props.backgroundColor} lineColor={this.props.lineColor} pixelsPerSecond={this.props.pixelsPerSecond}/>
       </View>
     );
   }

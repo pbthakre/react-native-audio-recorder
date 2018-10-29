@@ -103,11 +103,10 @@ public class AudioPlayerView extends RelativeLayout {
 
   // Add the data to the plot (waveform)
   public void updateWaveformWithData(String fileUrl)  {
-    // Get the root directory
-    // File root = android.os.Environment.getExternalStorageDirectory();
+    String filePathCleaned = fileUrl.substring(0, fileUrl.indexOf("?"));
 
     // Get a instance of the file
-    File audioFile = new File(fileUrl);
+    File audioFile = new File(filePathCleaned);
 
     // Read the file duration from the file meta data
     Uri uri = Uri.parse(audioFile.getAbsolutePath());

@@ -8,7 +8,6 @@
 
 package com.reactlibrary.AudioRecorder;
 
-import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.util.Log;
@@ -23,9 +22,6 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   // The class identifier
   public static final String TAG = "AudioRecorderModule";
 
-  // The react app context
-  private final ReactApplicationContext reactContext;
-
   // The audio recording engine wrapper
   private AudioRecording audioRecording;
 
@@ -35,20 +31,21 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   // The constructor
   AudioRecorderModule(ReactApplicationContext reactContext) {
     super(reactContext);
-    this.reactContext = reactContext;
   }
 
-  // Defines the name under which the module/manager is accessable from React Native
+  // Defines the name under which the module/manager is accessible from React Native
   @Override
   public String getName() {
+    // !!! This is not a wrong, don't change this,
+    // this is necessary as in Android RN the module is the manager
     return "AudioRecorderViewManager";
   }
 
   // Pass properties from React Native to the waveform
   @ReactMethod
   public void passProperties(String backgroundColor, String lineColor) {
-    // Send event for passing properties to view
-    EventBus.getDefault().post(new WaveformEvent(3, backgroundColor, lineColor));
+    // Send event for updating waveform with new parameters
+    EventBus.getDefault().post(new DynamicWaveformEvent(3, backgroundColor, lineColor));
   }
 
   // Instantiates all the things needed for recording
@@ -56,7 +53,8 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   public void setupRecorder(Promise promise) {
     Log.i(TAG, "Setup Recorder");
 
-    EventBus.getDefault().post(new WaveformEvent(2, null, null));
+    // Send event for pausing the waveform
+    EventBus.getDefault().post(new DynamicWaveformEvent(2, null, null));
 
     try {
       // Instantiate the audio recording engine
@@ -83,7 +81,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
       this.audioRecording.startRecording(filePath, startTimeInMs);
 
       // Send event for resuming waveform
-      EventBus.getDefault().post(new WaveformEvent(1, null, null));
+      EventBus.getDefault().post(new DynamicWaveformEvent(1, null, null));
 
       // Create the promise response
       this.jsonResponse = new WritableNativeMap();
@@ -105,7 +103,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
 
       if(this.audioRecording != null){
         // Send event for pausing waveform
-        EventBus.getDefault().post(new WaveformEvent(2, null, null));
+        EventBus.getDefault().post(new DynamicWaveformEvent(2, null, null));
 
         // Get the file location back from the audio recorder
         recordedFile = this.audioRecording.stopRecording();

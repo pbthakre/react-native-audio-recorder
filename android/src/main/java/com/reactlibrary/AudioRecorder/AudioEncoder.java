@@ -14,6 +14,7 @@ import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
 import android.util.Log;
+import com.reactlibrary.Helpers.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -337,7 +338,6 @@ public class AudioEncoder {
         }
       }
     }
-    long endTime = System.nanoTime();
   }
 
   // The method for logging stats

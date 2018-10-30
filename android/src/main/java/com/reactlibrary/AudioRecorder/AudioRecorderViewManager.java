@@ -15,9 +15,6 @@ public class AudioRecorderViewManager extends SimpleViewManager<AudioRecorderVie
   // The identifier for React native
   private static final String REACT_CLASS = "AudioRecorderView";
 
-  // The view
-  private AudioRecorderView audioRecorderView = null;
-
   @Override
   public String getName() {
     return REACT_CLASS;
@@ -25,8 +22,6 @@ public class AudioRecorderViewManager extends SimpleViewManager<AudioRecorderVie
 
   @Override
   public AudioRecorderView createViewInstance(ThemedReactContext context) {
-    AudioRecorderView newView = new AudioRecorderView(context);
-    this.audioRecorderView = newView;
-    return newView;
+    return new AudioRecorderView(context);
   }
 }

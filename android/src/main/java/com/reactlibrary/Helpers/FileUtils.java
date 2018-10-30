@@ -6,13 +6,12 @@
 //  Copyright © 2018 Audvice GmbH. All rights reserved.
 //
 
-package com.reactlibrary.AudioRecorder;
+package com.reactlibrary.Helpers;
 
 import android.os.Environment;
 import android.util.Log;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 // Helper class for file access
 public class FileUtils {
@@ -21,6 +20,27 @@ public class FileUtils {
 
   // The directory for storing the audio files in
   static final String OUTPUT_DIR = "Audvice";
+
+  // Reads the bytes of a file
+  public static byte[] fileToBytes(File file) {
+    // Get the file size in bytes
+    int size = (int) file.length();
+
+    // Create the array where the bytes are stored in
+    byte[] bytes = new byte[size];
+
+    try {
+      // Read the bytes and store it in the array
+      BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
+      buf.read(bytes, 0, bytes.length);
+      buf.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return bytes;
+  }
 
   // Returns a Java File initialized to a directory of given name
   // at the root storage location, with preference to external storage.

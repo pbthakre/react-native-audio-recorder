@@ -8,7 +8,6 @@
 
 package com.reactlibrary.AudioPlayerPlot;
 
-import android.graphics.Color;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -19,19 +18,15 @@ import org.greenrobot.eventbus.EventBus;
 
 // Represents the AudioPlayerViewManager which manages the AudioRecorderView
 public class AudioPlayerViewModule extends ReactContextBaseJavaModule {
-  // The react app context
-  private final ReactApplicationContext reactContext;
-
   // The promise response
   private WritableNativeMap jsonResponse = new WritableNativeMap();
 
   // The constructor
   AudioPlayerViewModule(ReactApplicationContext reactContext) {
     super(reactContext);
-    this.reactContext = reactContext;
   }
 
-  // Defines the name under which the module/manager is accessable from React Native
+  // Defines the name under which the module/manager is accessible from React Native
   @Override
   public String getName() {
     return "AudioPlayerViewManager";
@@ -40,16 +35,16 @@ public class AudioPlayerViewModule extends ReactContextBaseJavaModule {
   // Pass properties from React Native to the waveform
   @ReactMethod
   public void passProperties(String backgroundColor, String lineColor, Double pixelsPerSecond) {
-    // Send event for passing properties to view
-    EventBus.getDefault().post(new WaveformEvent(2, "", backgroundColor, lineColor, pixelsPerSecond));
+    // Send event for updating waveform with new parameters
+    EventBus.getDefault().post(new StaticWaveformEvent(2, "", backgroundColor, lineColor, pixelsPerSecond));
   }
 
   // Render a waveform from audio file data
   @ReactMethod
   private void renderByFile(String filePath, Promise promise) {
     try {
-      // Send event for updating player waveform
-      EventBus.getDefault().post(new WaveformEvent(1, filePath, null, null, null));
+      // Send event for updating waveform with new audio file data
+      EventBus.getDefault().post(new StaticWaveformEvent(1, filePath, null, null, null));
 
       // Create the promise response
       this.jsonResponse = new WritableNativeMap();

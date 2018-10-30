@@ -17,7 +17,6 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 
-import android.widget.RelativeLayout;
 import com.reactlibrary.R;
 
 import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
@@ -63,10 +62,10 @@ public class DynamicWaveformView extends View {
   private float amplitude = 0.01f;
 
   // The background color of the waveform
-  protected int backgroundColor = Color.TRANSPARENT;
+  private int backgroundColor = Color.TRANSPARENT;
 
   // The line color of the waveform
-  protected int lineColor = getResources().getColor(R.color.brandColor);
+  private int lineColor = getResources().getColor(R.color.brandColor);
 
   // Constructor
   public DynamicWaveformView(Context context) {
@@ -92,21 +91,21 @@ public class DynamicWaveformView extends View {
   // Init the waveform with the parameters from the layout file
   public void init(Context context, AttributeSet attrs) {
     TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DynamicWaveformView);
-    frequency = a.getFloat(R.styleable.DynamicWaveformView_waveFrequency, frequency);
-    IdleAmplitude = a.getFloat(R.styleable.DynamicWaveformView_waveIdleAmplitude, IdleAmplitude);
-    phaseShift = a.getFloat(R.styleable.DynamicWaveformView_wavePhaseShift, phaseShift);
-    initialPhaseOffset = a.getFloat(R.styleable.DynamicWaveformView_waveInitialPhaseOffset, initialPhaseOffset);
-    waveHeight = a.getDimension(R.styleable.DynamicWaveformView_waveHeight, waveHeight);
-    waveColor = this.lineColor;
-    waveVerticalPosition = a.getFloat(R.styleable.DynamicWaveformView_waveVerticalPosition, waveVerticalPosition);
-    waveNumber = a.getInteger(R.styleable.DynamicWaveformView_waveAmount, waveNumber);
+    this.frequency = a.getFloat(R.styleable.DynamicWaveformView_waveFrequency, frequency);
+    this.IdleAmplitude = a.getFloat(R.styleable.DynamicWaveformView_waveIdleAmplitude, IdleAmplitude);
+    this.phaseShift = a.getFloat(R.styleable.DynamicWaveformView_wavePhaseShift, phaseShift);
+    this.initialPhaseOffset = a.getFloat(R.styleable.DynamicWaveformView_waveInitialPhaseOffset, initialPhaseOffset);
+    this.waveHeight = a.getDimension(R.styleable.DynamicWaveformView_waveHeight, waveHeight);
+    this.waveColor = this.lineColor;
+    this.waveVerticalPosition = a.getFloat(R.styleable.DynamicWaveformView_waveVerticalPosition, waveVerticalPosition);
+    this.waveNumber = a.getInteger(R.styleable.DynamicWaveformView_waveAmount, waveNumber);
 
     // Create a path
-    path = new Path();
-    paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    paint.setStyle(Paint.Style.STROKE);
-    paint.setStrokeWidth(2);
-    paint.setColor(this.lineColor);
+    this.path = new Path();
+    this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    this.paint.setStyle(Paint.Style.STROKE);
+    this.paint.setStrokeWidth(2);
+    this.paint.setColor(this.lineColor);
 
     // Keep our attributes array for later usage
     a.recycle();
@@ -179,5 +178,15 @@ public class DynamicWaveformView extends View {
   public void setStrokeWidth(float strokeWidth) {
     this.paint.setStrokeWidth(strokeWidth);
     invalidate();
+  }
+
+  // Setter for background color
+  public void setBackgroundColor(int backgroundColor) {
+    this.backgroundColor = backgroundColor;
+  }
+
+  // Setter for line color
+  public void setLineColor(int lineColor) {
+    this.lineColor = lineColor;
   }
 }

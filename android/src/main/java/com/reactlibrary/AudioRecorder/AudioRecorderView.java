@@ -76,11 +76,11 @@ public class AudioRecorderView extends RelativeLayout {
       clearWaveform();
     } else if (event.code == 3) { // Set the properties received from RN
       if (event.backgroundColor != null) {
-        this.plot.backgroundColor = Color.parseColor(event.backgroundColor);
+        this.plot.setBackgroundColor(Color.parseColor(event.backgroundColor));
       }
 
       if (event.lineColor != null) {
-        this.plot.lineColor = Color.parseColor(event.lineColor);
+        this.plot.setLineColor(Color.parseColor(event.lineColor));
       }
     }
   }

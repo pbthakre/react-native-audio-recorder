@@ -67,22 +67,6 @@ public class AudioSoftwarePoller {
     this.audioEncoder = avcEncoder;
   }
 
-  // Set the number of samples per frame (Default is 1024). Call this before startPolling().
-  // The output of emptyBuffer() will be equal to, or a multiple of, this value.
-  public void setSamplesPerFrame(int samples_per_frame) {
-    if (!is_recording)
-      this.recorderTask.samples_per_frame = samples_per_frame;
-  }
-
-  // Return the number of microseconds represented by each audio frame
-  // calculated with the sampling rate and samples per frame
-  public long getMicroSecondsPerFrame(){
-    if(US_PER_FRAME == 0){
-      US_PER_FRAME = (SAMPLE_RATE / recorderTask.samples_per_frame) * 1000000;
-    }
-    return US_PER_FRAME;
-  }
-
   // Reuse buffer
   public void recycleInputBuffer(byte[] buffer){
     recorderTask.data_buffer.offer(buffer);

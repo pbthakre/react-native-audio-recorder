@@ -8,7 +8,6 @@
 
 package com.reactlibrary.AudioRecorder;
 
-import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.util.Log;
@@ -23,9 +22,6 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   // The class identifier
   public static final String TAG = "AudioRecorderModule";
 
-  // The react app context
-  private final ReactApplicationContext reactContext;
-
   // The audio recording engine wrapper
   private AudioRecording audioRecording;
 
@@ -35,19 +31,20 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   // The constructor
   AudioRecorderModule(ReactApplicationContext reactContext) {
     super(reactContext);
-    this.reactContext = reactContext;
   }
 
-  // Defines the name under which the module/manager is accessable from React Native
+  // Defines the name under which the module/manager is accessible from React Native
   @Override
   public String getName() {
+    // !!! This is not a wrong, don't change this,
+    // this is necessary as in Android RN the module is the manager
     return "AudioRecorderViewManager";
   }
 
   // Pass properties from React Native to the waveform
   @ReactMethod
   public void passProperties(String backgroundColor, String lineColor) {
-    // Send event for passing properties to view
+    // Send event for updating waveform with new parameters
     EventBus.getDefault().post(new DynamicWaveformEvent(3, backgroundColor, lineColor));
   }
 
@@ -56,6 +53,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   public void setupRecorder(Promise promise) {
     Log.i(TAG, "Setup Recorder");
 
+    // Send event for pausing the waveform
     EventBus.getDefault().post(new DynamicWaveformEvent(2, null, null));
 
     try {

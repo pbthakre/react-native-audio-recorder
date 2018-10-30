@@ -93,7 +93,7 @@ public class StaticWaveformView extends BaseStaticWaveform {
       canvas.drawLine(0, getHeight() / 2f, widthPixels / 2f, (getHeight() / 2f), this.baseLine);
 
       // Calculate the bar width based on the total plot width
-      float barWidth = calculatedPlotWidth / this.density;
+      float barWidth = (calculatedPlotWidth / this.density) * metrics.density;
       float div = this.bytes.length / this.density;
 
       // Set baseline settings
@@ -125,7 +125,7 @@ public class StaticWaveformView extends BaseStaticWaveform {
       canvas.drawLine((widthPixels / 2f), (getHeight() / 2f), (widthPixels / 2f) + calculatedPlotWidth, (getHeight() / 2f), this.waveform);
 
       // Draw the second part of the baseline after the waveform
-      canvas.drawLine((widthPixels / 2f) + calculatedPlotWidth, (getHeight() / 2f), (widthPixels / 2f) + calculatedPlotWidth + (widthPixels / 2f), (getHeight() / 2f), this.baseLine);
+      canvas.drawLine((widthPixels / 2f) + (calculatedPlotWidth * metrics.density), (getHeight() / 2f), (widthPixels / 2f) + (calculatedPlotWidth * metrics.density) + (widthPixels / 2f), (getHeight() / 2f), this.baseLine);
 
       super.onDraw(canvas);
     }

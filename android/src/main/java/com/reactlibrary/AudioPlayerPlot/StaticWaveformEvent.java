@@ -1,5 +1,5 @@
 //
-//  WaveformEvent.java
+//  StaticWaveformEvent.java
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 21.09.18.
@@ -9,8 +9,8 @@
 package com.reactlibrary.AudioPlayerPlot;
 
 // Represents an event for transmitting waveform state changes
-public class WaveformEvent {
-  //1: Draw waveform of file
+public class StaticWaveformEvent {
+  // 1: Draw waveform of file
   public final int code;
 
   // The file url to load
@@ -26,7 +26,7 @@ public class WaveformEvent {
   public final Double pixelsPerSecond;
 
   // Constructor
-  WaveformEvent(int code, String fileUrl, String backgroundColor, String lineColor, Double pixelsPerSecond) {
+  public StaticWaveformEvent(int code, String fileUrl, String backgroundColor, String lineColor, Double pixelsPerSecond) {
     this.code = code;
     this.fileUrl = fileUrl;
     this.backgroundColor = backgroundColor;

@@ -50,7 +50,7 @@ public class AudioPlayerView extends RelativeLayout {
 
   // Method to listen for waveform update requests
   @Subscribe(threadMode = ThreadMode.MAIN)
-  public void onWaveformEvent(WaveformEvent event) {
+  public void onStaticWaveformEvent(StaticWaveformEvent event) {
     // Update the waveform
     if (event.code == 1) {
       this.updateWaveformWithData(event.fileUrl);

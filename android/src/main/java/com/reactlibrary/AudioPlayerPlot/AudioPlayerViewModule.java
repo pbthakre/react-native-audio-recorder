@@ -36,7 +36,7 @@ public class AudioPlayerViewModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void passProperties(String backgroundColor, String lineColor, Double pixelsPerSecond) {
     // Send event for updating waveform with new parameters
-    EventBus.getDefault().post(new WaveformEvent(2, "", backgroundColor, lineColor, pixelsPerSecond));
+    EventBus.getDefault().post(new StaticWaveformEvent(2, "", backgroundColor, lineColor, pixelsPerSecond));
   }
 
   // Render a waveform from audio file data
@@ -44,7 +44,7 @@ public class AudioPlayerViewModule extends ReactContextBaseJavaModule {
   private void renderByFile(String filePath, Promise promise) {
     try {
       // Send event for updating waveform with new audio file data
-      EventBus.getDefault().post(new WaveformEvent(1, filePath, null, null, null));
+      EventBus.getDefault().post(new StaticWaveformEvent(1, filePath, null, null, null));
 
       // Create the promise response
       this.jsonResponse = new WritableNativeMap();

@@ -1,5 +1,5 @@
 //
-//  WaveformEvent.java
+//  DynamicWaveformEvent.java
 //  reactnativeaudiorecorder
 //
 //  Created by Michael Andorfer on 17.09.18.
@@ -9,7 +9,7 @@
 package com.reactlibrary.AudioRecorder;
 
 // Represents an event for transmitting waveform state changes
-public class WaveformEvent {
+public class DynamicWaveformEvent {
   //1: Resume Waveform
   //2: Pause Waveform
   public final int code;
@@ -21,7 +21,7 @@ public class WaveformEvent {
   public final String lineColor;
 
   // Constructor
-  WaveformEvent(int code, String backgroundColor, String lineColor) {
+  public DynamicWaveformEvent(int code, String backgroundColor, String lineColor) {
     this.code = code;
     this.backgroundColor = backgroundColor;
     this.lineColor = lineColor;

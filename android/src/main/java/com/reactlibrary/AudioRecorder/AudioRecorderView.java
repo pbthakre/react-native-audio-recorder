@@ -48,7 +48,7 @@ public class AudioRecorderView extends RelativeLayout {
 
   // Method to listen for wave form events from module
   @Subscribe(threadMode = ThreadMode.MAIN)
-  public void onWaveformEvent(WaveformEvent event) {
+  public void onDynamicWaveformEvent(DynamicWaveformEvent event) {
     if (event.code == 1) {
       resumeWaveform();
     } else if (event.code == 2) {

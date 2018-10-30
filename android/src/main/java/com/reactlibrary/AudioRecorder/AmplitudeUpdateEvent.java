@@ -14,7 +14,7 @@ public class AmplitudeUpdateEvent {
   public final Float amplitude;
 
   // Constructor
-  AmplitudeUpdateEvent(Float amplitude) {
+  public AmplitudeUpdateEvent(Float amplitude) {
     this.amplitude = amplitude;
   }
 }

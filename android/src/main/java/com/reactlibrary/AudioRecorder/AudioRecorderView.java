@@ -23,8 +23,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class AudioRecorderView extends RelativeLayout {
-  private Context context;
-
   // The timer which calls the waveform update method
   private Timer timer;
 
@@ -40,41 +38,13 @@ public class AudioRecorderView extends RelativeLayout {
   // The current amplitude measured by the microphone
   private Float trackedAmplitude;
 
-  // Method to listen for amplitude changes received from AudioRecordThread
-  @Subscribe(threadMode = ThreadMode.MAIN)
-  public void onRecordingEvent(AmplitudeUpdateEvent event) {
-    this.trackedAmplitude = event.amplitude;
-  }
-
-  // Method to listen for wave form events from module
-  @Subscribe(threadMode = ThreadMode.MAIN)
-  public void onDynamicWaveformEvent(DynamicWaveformEvent event) {
-    if (event.code == 1) {
-      resumeWaveform();
-    } else if (event.code == 2) {
-      pauseWaveform();
-      clearWaveform();
-    } else if (event.code == 3) {
-      if (event.backgroundColor != null) {
-        this.plot.backgroundColor = Color.parseColor(event.backgroundColor);
-      }
-
-      if (event.lineColor != null) {
-        this.plot.lineColor = Color.parseColor(event.lineColor);
-      }
-    }
-  }
-
   // The constructor
   public AudioRecorderView(Context context) {
     super(context);
-    this.context = context;
-    EventBus.getDefault().register(this);
-    this.init();
-  }
 
-  // Initialize the waveform
-  public void init() {
+    // Register the event bus
+    EventBus.getDefault().register(this);
+
     // Apply layout from xml
     inflate(context, R.layout.audio_recorder_view, this);
 
@@ -87,6 +57,32 @@ public class AudioRecorderView extends RelativeLayout {
 
     // Draw straight line
     resumeWaveform();
+  }
+
+  // Method to listen for amplitude changes received from AudioRecordThread
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onAmplitudeUpdateEvent(AmplitudeUpdateEvent event) {
+    this.trackedAmplitude = event.amplitude;
+  }
+
+  // Method to listen for wave form events from module
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onDynamicWaveformEvent(DynamicWaveformEvent event) {
+    // Resume the waveform
+    if (event.code == 1) {
+      resumeWaveform();
+    } else if (event.code == 2) { // Pause the waveform
+      pauseWaveform();
+      clearWaveform();
+    } else if (event.code == 3) { // Set the properties received from RN
+      if (event.backgroundColor != null) {
+        this.plot.backgroundColor = Color.parseColor(event.backgroundColor);
+      }
+
+      if (event.lineColor != null) {
+        this.plot.lineColor = Color.parseColor(event.lineColor);
+      }
+    }
   }
 
   // Update the waveform according to amplitude change
@@ -109,25 +105,25 @@ public class AudioRecorderView extends RelativeLayout {
   public void resumeWaveform() {
     new Thread(new Runnable() {
       public void run() {
-        if (timer != null) {
-          pauseWaveform();
-        }
+      if (timer != null) {
+        pauseWaveform();
+      }
 
-        // Set number of sinus waves
-        plot.setFrequency(4.00f);
+      // Set number of sinus waves
+      plot.setFrequency(4.00f);
 
-        // Create the timer
-        timer = new Timer();
+      // Create the timer
+      timer = new Timer();
 
-        // Initialize the TimerTask's job
-        initializeTimerTask();
+      // Initialize the TimerTask's job
+      initializeTimerTask();
 
-        // Start the timer for amplitude update processing on waveform
-        timer.scheduleAtFixedRate(
-            refreshWaveformTask,
-            0,
-            10
-        );
+      // Start the timer for amplitude update processing on waveform
+      timer.scheduleAtFixedRate(
+          refreshWaveformTask,
+          0,
+          10
+      );
       }
     }).start();
   }
@@ -146,6 +142,7 @@ public class AudioRecorderView extends RelativeLayout {
     this.plot.setFrequency(0);
   }
 
+  // Initialize the waveform (amplitude) update timer task
   public void initializeTimerTask() {
     refreshWaveformTask = new TimerTask() {
       public void run() {

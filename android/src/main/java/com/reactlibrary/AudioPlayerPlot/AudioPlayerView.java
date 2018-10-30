@@ -39,9 +39,6 @@ public class AudioPlayerView extends RelativeLayout {
     // Create the plot with the layout defined in the xml
     this.plot = findViewById(R.id.audio_player_waveform);
 
-    // Set the plot line color
-    this.plot.setColor();
-
     // Define the number of bars used for the waveform (1 - 256)
     // More than 256 means that the the bars are overlapping and the waveform get its
     // characteristic style
@@ -62,14 +59,14 @@ public class AudioPlayerView extends RelativeLayout {
     // Set the properties received from RN
     if (event.code == 2) {
       if (event.backgroundColor != null) {
-        this.plot.backgroundColor = Color.parseColor(event.backgroundColor);
+        this.plot.setBackgroundColor(Color.parseColor(event.backgroundColor));
       }
 
       if (event.lineColor != null) {
-        this.plot.lineColor = Color.parseColor(event.lineColor);
+        this.plot.setLineColor(Color.parseColor(event.lineColor));
       }
 
-      this.plot.pixelsPerSecond = event.pixelsPerSecond;
+      this.plot.setPixelsPerSecond(event.pixelsPerSecond);
     }
   }
 

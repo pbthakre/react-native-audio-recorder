@@ -110,6 +110,7 @@ public class AudioSoftwarePoller {
 
       // Calculate the actual buffer size
       this.buffer_size = samples_per_frame * FRAMES_PER_BUFFER;
+      int recBufferBytePtr = 0;
 
       // Ensure buffer is adequately sized for the AudioRecord
       // object to initialize
@@ -148,10 +149,38 @@ public class AudioSoftwarePoller {
         // Get the result of the operation
         read_result = audio_recorder.read(this_buffer, 0, samples_per_frame);
 
+        // Increase the gain/volume of the audio data
+        int i = 0;
+        while (i < read_result) {
+          float sample = (float)(this_buffer[recBufferBytePtr + i] & 0xFF | this_buffer[recBufferBytePtr + i + 1] << 8);
+
+          // THIS is the point were the work is done:
+          // Or increase level by 20dB:
+          sample *= 10;
+
+          // Or if you prefer any dB value, then calculate the gain factor outside the loop
+          // float gainFactor = (float)Math.pow( 10., dB / 20. );    // dB to gain factor
+          // sample *= gainFactor;
+
+          // Avoid 16-bit-integer overflow when writing back the manipulated data:
+          if (sample >= 32767f) {
+            this_buffer[recBufferBytePtr + i] = (byte)0xFF;
+            this_buffer[recBufferBytePtr + i + 1] = 0x7F;
+          } else if (sample <= -32768f) {
+            this_buffer[recBufferBytePtr + i] = 0x00;
+            this_buffer[recBufferBytePtr + i + 1] = (byte)0x80;
+          } else {
+            int s = (int)(0.5f + sample);  // Here, dithering would be more appropriate
+            this_buffer[recBufferBytePtr + i] = (byte)(s & 0xFF);
+            this_buffer[recBufferBytePtr + i + 1] = (byte)(s >> 8 & 0xFF);
+          }
+          i += 2;
+        }
+
         // Calculate the amplitude
         double amplitude = 0;
-        for (int i = 0; i < this_buffer.length / 2; i++) {
-          double y = (this_buffer[i * 2] | this_buffer[i * 2 + 1] << 8) / 32768.0;
+        for (int j = 0; j < this_buffer.length / 2; j++) {
+          double y = (this_buffer[j * 2] | this_buffer[j * 2 + 1] << 8) / 32768.0;
           // depending on your endianness:
           // double y = (audioData[i * 2] <<8 | audioData[i * 2 + 1]) / 32768.0
           amplitude += Math.abs(y);

@@ -116,12 +116,12 @@ public class AudioPlayerView: EZAudioPlot {
     let screenSize: CGRect = UIScreen.main.bounds
     self.windowWidth = Double(screenSize.width);
     
-    // Copy the file to avoid race condition on file access
-    let filemgr = FileManager.default
+    // Check if file is accessible
     do {
-      try filemgr.copyItem(atPath: fileUrl.absoluteString, toPath: fileUrl.absoluteString + ".m4a")
+      AVAudioFile = try AVAudioFile(forReading: fileUrl)
     } catch {
-      // TODO: add exception handling
+      // File was not ready
+      onError(error)
     }
     
     // Read the file from storage
@@ -139,6 +139,9 @@ public class AudioPlayerView: EZAudioPlot {
       
       // Run ui update on main thread
       DispatchQueue.main.async() {
+        // Clear plot
+        self.plot.clearsContextBeforeDrawing(true)
+        
         // Calculate the plot width based on the number of pixels and the file duration
         let calculatedPlotWidth = self.pixelsPerSecond * self.fileDuration
         
@@ -148,7 +151,7 @@ public class AudioPlayerView: EZAudioPlot {
         // Set the plot and layer width to the calculated width
         self.plot.frame.size.width = CGFloat(calculatedPlotWidth)
         self.plot.waveformLayer.frame.size.width = CGFloat(calculatedPlotWidth)
-        
+      
         // Add the data to the plot
         self.plot.updateBuffer(data?.buffers[0], withBufferSize: (data?.bufferSize)!)
       }

@@ -118,7 +118,7 @@ public class AudioPlayerView: EZAudioPlot {
     
     // Check if file is accessible
     do {
-      AVAudioFile = try AVAudioFile(forReading: fileUrl)
+      let file: AVAudioFile = try AVAudioFile(forReading: fileUrl)
     } catch {
       // File was not ready
       onError(error)
@@ -140,7 +140,7 @@ public class AudioPlayerView: EZAudioPlot {
       // Run ui update on main thread
       DispatchQueue.main.async() {
         // Clear plot
-        self.plot.clearsContextBeforeDrawing(true)
+        self.plot.clearsContextBeforeDrawing = true
         
         // Calculate the plot width based on the number of pixels and the file duration
         let calculatedPlotWidth = self.pixelsPerSecond * self.fileDuration

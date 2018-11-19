@@ -378,6 +378,7 @@ class AudioRecorderViewManager : RCTViewManager {
       exportFinalTapeToFile(
         onSuccess: { success in
           self.jsonArray["success"] = true
+            onSuccess(true)
         },
         onError: { error in
           self.jsonArray["success"] = false
@@ -416,7 +417,6 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       )
 
-      onSuccess(true)
     } else { // Overwrite from - to
       // Overwrite the previous tape partially with the content of the current tape
       overwritePartially(
@@ -447,6 +447,7 @@ class AudioRecorderViewManager : RCTViewManager {
       exportFinalTapeToFile(
         onSuccess: { success in
           self.jsonArray["success"] = true
+            onSuccess(true)
         },
         onError: { error in
           self.jsonArray["success"] = false
@@ -484,8 +485,6 @@ class AudioRecorderViewManager : RCTViewManager {
           onError(error)
         }
       )
-
-      onSuccess(true)
     }
   }
 
@@ -632,19 +631,13 @@ class AudioRecorderViewManager : RCTViewManager {
     createAndStoreTapeFromRecordings(
       onSuccess: { success in
         self.jsonArray["success"] = true
+        resolve(self.jsonArray.rawString());
       },
       onError: { error in
         self.jsonArray["success"] = false
         e = error
+        reject("Error", self.jsonArray.rawString(), e)
       }
     )
-    
-    if (e == nil)  {
-      // Recorder stopping finished without errors
-      resolve(self.jsonArray.rawString());
-    } else {
-      // Recorder stopping finished with errors
-      reject("Error", self.jsonArray.rawString(), e)
-    }
   }
 }

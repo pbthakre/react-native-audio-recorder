@@ -12,7 +12,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.os.Environment;
 import android.widget.RelativeLayout;
 import com.reactlibrary.Helpers.FileUtils;
 import com.reactlibrary.R;
@@ -54,7 +53,7 @@ public class AudioPlayerView extends RelativeLayout {
   public void onStaticWaveformEvent(StaticWaveformEvent event) {
     // Update the waveform
     if (event.code == 1) {
-      this.updateWaveformWithData(event.fileName);
+      this.updateWaveformWithData(event.fileUrl);
     }
 
     // Set the properties received from RN
@@ -72,12 +71,12 @@ public class AudioPlayerView extends RelativeLayout {
   }
 
   // Add the data to the plot (waveform)
-  private void updateWaveformWithData(String fileName)  {
+  private void updateWaveformWithData(String fileUrl)  {
     // Remove timestamp parameter
-    String fileNameCleaned = fileName.substring(0, fileName.indexOf("?"));
+    String filePathCleaned = fileUrl.substring(0, fileUrl.indexOf("?"));
 
     // Get an instance of the file
-    File audioFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileNameCleaned);
+    File audioFile = new File(filePathCleaned);
 
     // Read the file duration from the file meta data
     Uri uri = Uri.parse(audioFile.getAbsolutePath());

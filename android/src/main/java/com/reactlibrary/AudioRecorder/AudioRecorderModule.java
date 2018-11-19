@@ -74,11 +74,11 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
 
   // Starts the recording of audio
   @ReactMethod
-  private void startRecording(String fileName, Double startTimeInMs, Promise promise) {
+  private void startRecording(String filePath, Double startTimeInMs, Promise promise) {
     Log.i(TAG, "Start Recording");
 
     try {
-      this.audioRecording.startRecording(fileName, startTimeInMs);
+      this.audioRecording.startRecording(filePath, startTimeInMs);
 
       // Send event for resuming waveform
       EventBus.getDefault().post(new DynamicWaveformEvent(1, null, null));
@@ -119,7 +119,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
       while(Float.parseFloat(durationStr) == 0) {
         uri = Uri.parse(recordedFile.getAbsolutePath());
         mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(null, uri);
+        mmr.setDataSource(null,uri);
         durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
       }
 
@@ -129,7 +129,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
       this.jsonResponse.putString("error", "");
 
       WritableNativeMap metaDataArray = new WritableNativeMap();
-      metaDataArray.putString("fileName", recordedFile.getName());
+      metaDataArray.putString("fileUrl", recordedFile.getAbsolutePath());
       metaDataArray.putString("fileDurationInMs", durationStr);
 
       this.jsonResponse.putMap("value", metaDataArray);

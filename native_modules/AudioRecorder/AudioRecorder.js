@@ -18,11 +18,11 @@ export default class AudioRecorder extends Component<Props> {
     return AudioRecorderNativeModule.setupRecorder();
   };
 
-  startRecording(file, startTimeInMs) {
-    if (!file) {
+  startRecording(filePath, startTimeInMs) {
+    if (!filePath) {
       return AudioRecorderNativeModule.startRecording('', -1);
     } else {
-      return AudioRecorderNativeModule.startRecording(file, startTimeInMs);
+      return AudioRecorderNativeModule.startRecording(filePath, startTimeInMs);
     }
   };
 

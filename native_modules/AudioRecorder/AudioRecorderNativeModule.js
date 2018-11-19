@@ -15,8 +15,8 @@ export default {
     return AudioRecorderViewManager.setupRecorder();
   },
 
-  startRecording(fileName, startTimeInMs) {
-    return AudioRecorderViewManager.startRecording(fileName, startTimeInMs);
+  startRecording(fileUrl, startTimeInMs) {
+    return AudioRecorderViewManager.startRecording(fileUrl, startTimeInMs);
   },
 
   stopRecording() {

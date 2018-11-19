@@ -67,7 +67,7 @@ class AudioRecorderViewManager : RCTViewManager {
   private var jsonArray: JSON = [
     "success": false,
     "error": "",
-    "value": ["fileName": "", "fileDurationInMs": "0"]
+    "value": ["fileUrl": "", "fileDurationInMs": "0"]
   ]
 
   // Error for testing error handling
@@ -396,8 +396,11 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       )
 
-      // Set the file name of the last recorded file
-      self.jsonArray["value"]["fileName"].stringValue = self.fileName
+      // Make the file url available to React Native
+      if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+        // Set the file url of the last recorded file
+        self.jsonArray["value"]["fileUrl"].stringValue = documentsPathString + "/" + self.fileName
+      }
         
       // Set the file duration in JSON
       self.jsonArray["value"]["fileDurationInMs"].stringValue = String(format: "%.0f", self.tape.duration * 1000)
@@ -465,8 +468,11 @@ class AudioRecorderViewManager : RCTViewManager {
         }
       )
 
-      // Make the file name available to React Native
-      self.jsonArray["value"]["fileName"].stringValue = self.fileName
+      // Make the file url available to React Native
+      if let documentsPathString = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
+        // Set the file url of the last recorded file
+        self.jsonArray["value"]["fileUrl"].stringValue = documentsPathString + "/" + self.fileName
+      }
 
       // Reset everything from previous recording
       resetDataFromPreviousRecording(
@@ -560,20 +566,19 @@ class AudioRecorderViewManager : RCTViewManager {
   }
 
   // Starts the recording of audio
-  @objc public func startRecording(_ fileName:NSString, startTime startTimeInMs:Double, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+  @objc public func startRecording(_ filePath:NSString, startTime startTimeInMs:Double, resolver resolve:RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
     // Microphone will be monitored while recording
     // only if headphones are plugged
     if AKSettings.headPhonesPlugged {
       self.micBooster.gain = 1
     }
-    
+
     // If file path is empty overwriting flag is set to false, "first" new recording
     // otherwise set overwriting flag to true, prepare overwriting from specific point
-    if (fileName != "") {
+    if (filePath != "") {
       self.isOverwriting = true
       self.pointToOverwriteRecordingInSeconds = Double(startTimeInMs) / Double(1000)
-      
-      self.fileToOverwrite = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + (fileName as String)
+      self.fileToOverwrite = filePath as String
     } else {
       self.isOverwriting = false
     }

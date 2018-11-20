@@ -8,12 +8,10 @@
 
 package com.reactlibrary.AudioRecorder;
 
-import android.media.MediaMetadataRetriever;
-import android.net.Uri;
 import android.util.Log;
 import com.facebook.react.bridge.*;
-
 import org.greenrobot.eventbus.EventBus;
+import wseemann.media.FFmpegMediaMetadataRetriever;
 
 import java.io.File;
 
@@ -110,17 +108,15 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
       }
 
       // Read the file duration from the file meta data
-      Uri uri = Uri.parse(recordedFile.getAbsolutePath());
-      MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-      mmr.setDataSource(null,uri);
-      String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+      FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
+      mmr.setDataSource(recordedFile.getAbsolutePath());
+
+      String durationStr = mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION);
 
       // Retry while duration is 0 meaning file was not ready for reading
       while(Float.parseFloat(durationStr) == 0) {
-        uri = Uri.parse(recordedFile.getAbsolutePath());
-        mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(null,uri);
-        durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        mmr.setDataSource(recordedFile.getAbsolutePath());
+        durationStr = mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION);
       }
 
       // Create the promise response

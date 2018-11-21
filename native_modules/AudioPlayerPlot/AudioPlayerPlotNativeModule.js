@@ -11,7 +11,7 @@ export default {
     return AudioPlayerViewManager.passProperties(backgroundColor, lineColor, pixelsPerSecond);
   },
 
-  renderByFile(fileUrl) {
-    return AudioPlayerViewManager.renderByFile(fileUrl);
+  renderByFile(fileName) {
+    return AudioPlayerViewManager.renderByFile(fileName);
   }
 }

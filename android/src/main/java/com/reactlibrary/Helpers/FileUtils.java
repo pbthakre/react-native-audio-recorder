@@ -19,7 +19,7 @@ public class FileUtils {
   static final String TAG = "FileUtils";
 
   // The directory for storing the audio files in
-  static final String OUTPUT_DIR = "Podcasts";
+  static final String OUTPUT_DIR = "";
 
   // Reads the bytes of a file
   public static byte[] fileToBytes(File file) {

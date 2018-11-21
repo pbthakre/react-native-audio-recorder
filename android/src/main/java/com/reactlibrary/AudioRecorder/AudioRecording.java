@@ -125,8 +125,8 @@ public class AudioRecording {
 
       Movie originalFileCut = null;
 
-      String originalCutTape = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS) + "/" + "original-cut.mp4";
-      String originalCurrentMergedTape = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS) + "/" + "original-current-merged.mp4";
+      String originalCutTape = Environment.getExternalStorageDirectory() + "/" + "original-cut.mp4";
+      String originalCurrentMergedTape = Environment.getExternalStorageDirectory() + "/" + "original-current-merged.mp4";
 
       // Init a track list
       List<Track> audioTracks = new LinkedList<Track>();
@@ -142,7 +142,7 @@ public class AudioRecording {
 
         // Write the extracted samples to a temp file
         Container out1 = new DefaultMp4Builder().build(originalFile);
-        FileOutputStream fos1 = new FileOutputStream(String.format(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS) + "/" + "original-cut.mp4", startTime, endTime));
+        FileOutputStream fos1 = new FileOutputStream(String.format(Environment.getExternalStorageDirectory() + "/" + "original-cut.mp4", startTime, endTime));
         FileChannel fc1 = fos1.getChannel();
         out1.writeContainer(fc1);
         fc1.close();
@@ -243,7 +243,7 @@ public class AudioRecording {
         // Create filename from timestamp for the new file
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         String fileName  = dateFormat.format(new Date()) + "--rec.mp4";
-        destinationPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS) + "/" + fileName);
+        destinationPath = new File(Environment.getExternalStorageDirectory() + "/" + fileName);
 
         Container out2 = new DefaultMp4Builder().build(originalCurrentMergedCut);
         FileOutputStream fos2 = new FileOutputStream(String.format(destinationPath.getAbsolutePath()));
@@ -255,7 +255,7 @@ public class AudioRecording {
         // Create filename from timestamp for the new file
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         String fileName  = dateFormat.format(new Date()) + "--rec.mp4";
-        destinationPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS) + "/" + fileName);
+        destinationPath = new File(Environment.getExternalStorageDirectory() + "/" + fileName);
 
         Container out2 = new DefaultMp4Builder().build(originalCurrentMergedFile);
         FileOutputStream fos2 = new FileOutputStream(String.format(destinationPath.getAbsolutePath(), startTime, endTime));

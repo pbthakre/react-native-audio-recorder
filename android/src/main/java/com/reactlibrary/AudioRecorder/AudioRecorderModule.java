@@ -8,6 +8,7 @@
 
 package com.reactlibrary.AudioRecorder;
 
+import android.net.Uri;
 import android.util.Log;
 import com.facebook.react.bridge.*;
 import org.greenrobot.eventbus.EventBus;
@@ -123,7 +124,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
               jsonResponse.putString("error", "");
 
               WritableNativeMap metaDataArray = new WritableNativeMap();
-              metaDataArray.putString("fileName", rf.getAbsolutePath());
+              metaDataArray.putString("fileName", Uri.parse(rf.getAbsolutePath()).getLastPathSegment());
               metaDataArray.putString("fileDurationInMs", String.valueOf(durationStr));
 
               jsonResponse.putMap("value", metaDataArray);

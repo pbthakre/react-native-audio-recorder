@@ -22,7 +22,7 @@ class AudioPlayerViewManager : RCTViewManager {
   private var jsonArray: JSON = [
     "success": false,
     "error": "",
-    "value": ["fileUrl": ""]
+    "value": ["fileName": ""]
   ]
   
   // Instantiates the view
@@ -93,12 +93,21 @@ class AudioPlayerViewManager : RCTViewManager {
   }
   
   // Render a waveform from audio file data
-  @objc public func renderByFile(_ fileUrl:String, resolver resolve:@escaping RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
+  @objc public func renderByFile(_ fileName:String, resolver resolve:@escaping RCTPromiseResolveBlock, rejecter reject:@escaping RCTPromiseRejectBlock) {
+    
+    // Build the file url
+    let fileUrl = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] + "/" + fileName
+    
+    // Remove timestamp from file url
+    var cleanUrl: String = ""
+    if let index = fileUrl.range(of: "?")?.lowerBound {
+      cleanUrl = String(fileUrl[..<index])
+    }
     
     // Try X-times to create waveform from audio file, this retry is necessary since writing the file
     // is not always finished when file access to read is done
     self.retry(10, task: { success, onError in
-      self.currentView?.updateWaveformWithData(fileUrl: URL(string: fileUrl)!, onSuccess: success, onError: onError) },
+      self.currentView?.updateWaveformWithData(fileUrl: URL(string: cleanUrl)!, onSuccess: success, onError: onError) },
       onSuccess: { success in
         self.jsonArray["success"] = true
         resolve(self.jsonArray.rawString());

@@ -23,5 +23,5 @@
   RCT_EXTERN_METHOD(setDimensions: (double)width dimHeight:(double)height);
 
   // Waveform
-  RCT_EXTERN_METHOD(renderByFile: (NSString *)fileUrl resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
+  RCT_EXTERN_METHOD(renderByFile: (NSString *)fileName resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 @end

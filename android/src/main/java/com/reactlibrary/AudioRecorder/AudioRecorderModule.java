@@ -123,7 +123,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
               jsonResponse.putString("error", "");
 
               WritableNativeMap metaDataArray = new WritableNativeMap();
-              metaDataArray.putString("fileUrl", rf.getAbsolutePath());
+              metaDataArray.putString("fileName", rf.getAbsolutePath());
               metaDataArray.putString("fileDurationInMs", String.valueOf(durationStr));
 
               jsonResponse.putMap("value", metaDataArray);

@@ -95,7 +95,7 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
 
   // Stops audio recording and stores the recorded data in a file
   @ReactMethod
-  private void stopRecording(Promise promise) {
+  private void stopRecording(final Promise promise) {
     try {
       File recordedFile = null;
 
@@ -107,30 +107,31 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
         recordedFile = this.audioRecording.stopRecording();
       }
 
-      // Read the file duration from the file meta data
-      FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
-      mmr.setDataSource(recordedFile.getAbsolutePath());
+      // Get the file duration and resolve the promise
+      final File rf = recordedFile;
+      new android.os.Handler().postDelayed(
+          new Runnable() {
+            public void run() {
+              FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
+              mmr.setDataSource(rf.getAbsolutePath());
+              String durationStr = mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION);
+              mmr.release();
 
-      String durationStr = mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION);
+              // Create the promise response
+              jsonResponse = new WritableNativeMap();
+              jsonResponse.putBoolean("success", true);
+              jsonResponse.putString("error", "");
 
-      // Retry while duration is 0 meaning file was not ready for reading
-      while(Float.parseFloat(durationStr) == 0) {
-        mmr.setDataSource(recordedFile.getAbsolutePath());
-        durationStr = mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION);
-      }
+              WritableNativeMap metaDataArray = new WritableNativeMap();
+              metaDataArray.putString("fileUrl", rf.getAbsolutePath());
+              metaDataArray.putString("fileDurationInMs", String.valueOf(durationStr));
 
-      // Create the promise response
-      this.jsonResponse = new WritableNativeMap();
-      this.jsonResponse.putBoolean("success", true);
-      this.jsonResponse.putString("error", "");
+              jsonResponse.putMap("value", metaDataArray);
 
-      WritableNativeMap metaDataArray = new WritableNativeMap();
-      metaDataArray.putString("fileUrl", recordedFile.getAbsolutePath());
-      metaDataArray.putString("fileDurationInMs", durationStr);
-
-      this.jsonResponse.putMap("value", metaDataArray);
-
-      promise.resolve(this.jsonResponse);
+              promise.resolve(jsonResponse);
+            }
+          },
+          500);
     } catch (Exception e) {
       promise.reject("Error", e.getLocalizedMessage(), e);
     }

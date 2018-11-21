@@ -114,7 +114,7 @@ public class AudioEncoder {
 
     // Create filename from timestamp for the new file
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-    String fileName  = dateFormat.format(new Date()) + "--rec.m4a";
+    String fileName  = dateFormat.format(new Date()) + "--rec.mp4";
 
     // Define the destination path/name
     destinationPath = FileUtils.createTempFileInRootAppStorage(fileName);

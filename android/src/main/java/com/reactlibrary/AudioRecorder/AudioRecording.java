@@ -124,8 +124,8 @@ public class AudioRecording {
 
       Movie originalFileCut = null;
 
-      String originalCutTape = "original-cut.mp4";
-      String originalCurrentMergedTape = "original-current-merged.mp4";
+      String originalCutTape = "/storage/emulated/0/Podcasts/original-cut.mp4";
+      String originalCurrentMergedTape = "/storage/emulated/0/Podcasts/original-current-merged.mp4";
 
       // Init a track list
       List<Track> audioTracks = new LinkedList<Track>();
@@ -141,7 +141,7 @@ public class AudioRecording {
 
         // Write the extracted samples to a temp file
         Container out1 = new DefaultMp4Builder().build(originalFile);
-        FileOutputStream fos1 = new FileOutputStream(String.format("original-cut.mp4", startTime, endTime));
+        FileOutputStream fos1 = new FileOutputStream(String.format("/storage/emulated/0/Podcasts/original-cut.mp4", startTime, endTime));
         FileChannel fc1 = fos1.getChannel();
         out1.writeContainer(fc1);
         fc1.close();
@@ -254,7 +254,7 @@ public class AudioRecording {
         // Create filename from timestamp for the new file
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         String fileName  = dateFormat.format(new Date()) + "--rec.mp4";
-        destinationPath = new File(fileName);
+        destinationPath = new File("/storage/emulated/0/Podcasts/" + fileName);
 
         Container out2 = new DefaultMp4Builder().build(originalCurrentMergedFile);
         FileOutputStream fos2 = new FileOutputStream(String.format(destinationPath.getAbsolutePath(), startTime, endTime));

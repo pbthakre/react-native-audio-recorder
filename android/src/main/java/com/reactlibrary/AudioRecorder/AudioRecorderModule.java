@@ -72,11 +72,11 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
 
   // Starts the recording of audio
   @ReactMethod
-  private void startRecording(String filePath, Double startTimeInMs, Promise promise) {
+  private void startRecording(String fileName, Double startTimeInMs, Promise promise) {
     Log.i(TAG, "Start Recording");
 
     try {
-      this.audioRecording.startRecording(filePath, startTimeInMs);
+      this.audioRecording.startRecording(fileName, startTimeInMs);
 
       // Send event for resuming waveform
       EventBus.getDefault().post(new DynamicWaveformEvent(1, null, null));

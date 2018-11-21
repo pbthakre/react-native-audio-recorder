@@ -14,7 +14,7 @@ public class StaticWaveformEvent {
   public final int code;
 
   // The file url to load
-  public final String fileUrl;
+  public final String fileName;
 
   // The background color of the waveform
   public final String backgroundColor;
@@ -26,9 +26,9 @@ public class StaticWaveformEvent {
   public final Double pixelsPerSecond;
 
   // Constructor
-  public StaticWaveformEvent(int code, String fileUrl, String backgroundColor, String lineColor, Double pixelsPerSecond) {
+  public StaticWaveformEvent(int code, String fileName, String backgroundColor, String lineColor, Double pixelsPerSecond) {
     this.code = code;
-    this.fileUrl = fileUrl;
+    this.fileName = fileName;
     this.backgroundColor = backgroundColor;
     this.lineColor = lineColor;
     this.pixelsPerSecond = pixelsPerSecond;

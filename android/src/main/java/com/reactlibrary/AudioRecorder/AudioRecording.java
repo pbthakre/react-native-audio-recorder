@@ -9,6 +9,7 @@
 package com.reactlibrary.AudioRecorder;
 
 import android.icu.text.SimpleDateFormat;
+import android.os.Environment;
 import android.util.Log;
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Container;
@@ -55,19 +56,19 @@ public class AudioRecording {
   AudioRecording() { }
 
   // Initiates the recording by starting a thread
-  public void startRecording(String filePath, Double startTimeInMs) throws IOException {
+  public void startRecording(String fileName, Double startTimeInMs) throws IOException {
     Log.i(TAG, "Recording started");
 
     // If file path is empty overwriting flag is set to false, "first" new recording
     // otherwise set overwriting flag to true, prepare overwriting from specific point
-    if (!filePath.equals("")) {
+    if (!fileName.equals("")) {
       this.isOverwriting = true;
       this.pointToOverwriteRecordingInSeconds = startTimeInMs / 1000;
 
       // Remove timestamp string which is added automatically by Android
-      String filePathCleaned = filePath.substring(0, filePath.indexOf("?"));
+      String fileNameCleaned = fileName.substring(0, fileName.indexOf("?"));
 
-      this.filePath = filePathCleaned;
+      this.filePath = fileNameCleaned;
     } else {
       this.isOverwriting = false;
     }
@@ -103,7 +104,7 @@ public class AudioRecording {
     // If in overwriting mode
     if (isOverwriting) {
       // Get the file which should be overwritten
-      String previousTape = filePath;
+      String previousTape = destinationPath.getAbsolutePath();
       Movie originalFile = MovieCreator.build(previousTape);
       Movie originalFileCopy2 = MovieCreator.build(previousTape);
 
@@ -124,8 +125,8 @@ public class AudioRecording {
 
       Movie originalFileCut = null;
 
-      String originalCutTape = "/storage/emulated/0/Podcasts/original-cut.mp4";
-      String originalCurrentMergedTape = "/storage/emulated/0/Podcasts/original-current-merged.mp4";
+      String originalCutTape = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS) + "/" + "original-cut.mp4";
+      String originalCurrentMergedTape = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS) + "/" + "original-current-merged.mp4";
 
       // Init a track list
       List<Track> audioTracks = new LinkedList<Track>();
@@ -141,7 +142,7 @@ public class AudioRecording {
 
         // Write the extracted samples to a temp file
         Container out1 = new DefaultMp4Builder().build(originalFile);
-        FileOutputStream fos1 = new FileOutputStream(String.format("/storage/emulated/0/Podcasts/original-cut.mp4", startTime, endTime));
+        FileOutputStream fos1 = new FileOutputStream(String.format(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS) + "/" + "original-cut.mp4", startTime, endTime));
         FileChannel fc1 = fos1.getChannel();
         out1.writeContainer(fc1);
         fc1.close();
@@ -242,7 +243,7 @@ public class AudioRecording {
         // Create filename from timestamp for the new file
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         String fileName  = dateFormat.format(new Date()) + "--rec.mp4";
-        destinationPath = new File(fileName);
+        destinationPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS) + "/" + fileName);
 
         Container out2 = new DefaultMp4Builder().build(originalCurrentMergedCut);
         FileOutputStream fos2 = new FileOutputStream(String.format(destinationPath.getAbsolutePath()));
@@ -254,7 +255,7 @@ public class AudioRecording {
         // Create filename from timestamp for the new file
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         String fileName  = dateFormat.format(new Date()) + "--rec.mp4";
-        destinationPath = new File("/storage/emulated/0/Podcasts/" + fileName);
+        destinationPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS) + "/" + fileName);
 
         Container out2 = new DefaultMp4Builder().build(originalCurrentMergedFile);
         FileOutputStream fos2 = new FileOutputStream(String.format(destinationPath.getAbsolutePath(), startTime, endTime));

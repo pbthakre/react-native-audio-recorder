@@ -59,9 +59,10 @@ public class AudioRecorderView: EZAudioPlot {
   @objc internal func refreshWaveformWithAmplitude(_:Timer) {
     // Simply set the amplitude to whatever you need and the view will update itself.
     DispatchQueue.main.async {
-      // Threshold amplitude so that baseline is quite straight
-      var amplitude = self.microphoneTracker.amplitude
-      if (self.microphoneTracker.amplitude < 0.25) {
+      // Threshold amplitude so that baseline is less sensitive against noise
+      // also augment higher amplitude values so that the baseline is more sensitive against speach
+      var amplitude = self.microphoneTracker.amplitude * 5
+      if (self.microphoneTracker.amplitude < 0.020) {
         amplitude = 0
       }
       

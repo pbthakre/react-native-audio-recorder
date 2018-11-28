@@ -13,8 +13,8 @@ export default class AudioPlayerPlot extends Component<Props> {
     super(props);
   }
 
-  renderByFile(fileUrl) {
-    return AudioPlayerNativeModule.renderByFile(fileUrl);
+  renderByFile(file) {
+    return AudioPlayerNativeModule.renderByFile(file);
   };
 
   render() {

@@ -9,16 +9,8 @@
 package com.reactlibrary.AudioRecorder;
 
 import android.icu.text.SimpleDateFormat;
+import android.os.Environment;
 import android.util.Log;
-
-import java.io.*;
-import java.nio.channels.FileChannel;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Container;
 import com.googlecode.mp4parser.authoring.Movie;
@@ -28,6 +20,17 @@ import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
 import com.googlecode.mp4parser.authoring.tracks.CroppedTrack;
 import com.reactlibrary.Helpers.FileUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 // The audio recording engine wrapper
 public class AudioRecording {
@@ -53,19 +56,19 @@ public class AudioRecording {
   AudioRecording() { }
 
   // Initiates the recording by starting a thread
-  public void startRecording(String filePath, Double startTimeInMs) throws IOException {
+  public void startRecording(String fileName, Double startTimeInMs) throws IOException {
     Log.i(TAG, "Recording started");
 
     // If file path is empty overwriting flag is set to false, "first" new recording
     // otherwise set overwriting flag to true, prepare overwriting from specific point
-    if (!filePath.equals("")) {
+    if (!fileName.equals("")) {
       this.isOverwriting = true;
       this.pointToOverwriteRecordingInSeconds = startTimeInMs / 1000;
 
       // Remove timestamp string which is added automatically by Android
-      String filePathCleaned = filePath.substring(0, filePath.indexOf("?"));
+      String fileNameCleaned = fileName.substring(0, fileName.indexOf("?"));
 
-      this.filePath = filePathCleaned;
+      this.filePath = fileNameCleaned;
     } else {
       this.isOverwriting = false;
     }
@@ -101,7 +104,7 @@ public class AudioRecording {
     // If in overwriting mode
     if (isOverwriting) {
       // Get the file which should be overwritten
-      String previousTape = filePath;
+      String previousTape = destinationPath.getAbsolutePath();
       Movie originalFile = MovieCreator.build(previousTape);
       Movie originalFileCopy2 = MovieCreator.build(previousTape);
 
@@ -122,8 +125,8 @@ public class AudioRecording {
 
       Movie originalFileCut = null;
 
-      String originalCutTape = "/storage/emulated/0/Audvice/original-cut.m4a";
-      String originalCurrentMergedTape = "/storage/emulated/0/Audvice/original-current-merged.m4a";
+      String originalCutTape = Environment.getExternalStorageDirectory() + "/" + "original-cut.mp4";
+      String originalCurrentMergedTape = Environment.getExternalStorageDirectory() + "/" + "original-current-merged.mp4";
 
       // Init a track list
       List<Track> audioTracks = new LinkedList<Track>();
@@ -139,7 +142,7 @@ public class AudioRecording {
 
         // Write the extracted samples to a temp file
         Container out1 = new DefaultMp4Builder().build(originalFile);
-        FileOutputStream fos1 = new FileOutputStream(String.format("/storage/emulated/0/Audvice/original-cut.m4a", startTime, endTime));
+        FileOutputStream fos1 = new FileOutputStream(String.format(Environment.getExternalStorageDirectory() + "/" + "original-cut.mp4", startTime, endTime));
         FileChannel fc1 = fos1.getChannel();
         out1.writeContainer(fc1);
         fc1.close();
@@ -239,8 +242,8 @@ public class AudioRecording {
 
         // Create filename from timestamp for the new file
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        String fileName  = dateFormat.format(new Date()) + "--rec.m4a";
-        destinationPath = new File("/storage/emulated/0/Audvice/" + fileName);
+        String fileName  = dateFormat.format(new Date()) + "--rec.mp4";
+        destinationPath = new File(Environment.getExternalStorageDirectory() + "/" + fileName);
 
         Container out2 = new DefaultMp4Builder().build(originalCurrentMergedCut);
         FileOutputStream fos2 = new FileOutputStream(String.format(destinationPath.getAbsolutePath()));
@@ -251,8 +254,8 @@ public class AudioRecording {
       } else {
         // Create filename from timestamp for the new file
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        String fileName  = dateFormat.format(new Date()) + "--rec.m4a";
-        destinationPath = new File("/storage/emulated/0/Audvice/" + fileName);
+        String fileName  = dateFormat.format(new Date()) + "--rec.mp4";
+        destinationPath = new File(Environment.getExternalStorageDirectory() + "/" + fileName);
 
         Container out2 = new DefaultMp4Builder().build(originalCurrentMergedFile);
         FileOutputStream fos2 = new FileOutputStream(String.format(destinationPath.getAbsolutePath(), startTime, endTime));

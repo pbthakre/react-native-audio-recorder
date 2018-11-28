@@ -8,12 +8,11 @@
 
 package com.reactlibrary.AudioRecorder;
 
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.util.Log;
 import com.facebook.react.bridge.*;
-
 import org.greenrobot.eventbus.EventBus;
+import wseemann.media.FFmpegMediaMetadataRetriever;
 
 import java.io.File;
 
@@ -21,6 +20,7 @@ import java.io.File;
 public class AudioRecorderModule extends ReactContextBaseJavaModule {
   // The class identifier
   public static final String TAG = "AudioRecorderModule";
+  public DynamicWaveformEvent dynamicWaveformEvent;
 
   // The audio recording engine wrapper
   private AudioRecording audioRecording;
@@ -45,7 +45,8 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void passProperties(String backgroundColor, String lineColor) {
     // Send event for updating waveform with new parameters
-    EventBus.getDefault().post(new DynamicWaveformEvent(3, backgroundColor, lineColor));
+    dynamicWaveformEvent = new DynamicWaveformEvent(3, backgroundColor, lineColor);
+    EventBus.getDefault().post(dynamicWaveformEvent);
   }
 
   // Instantiates all the things needed for recording
@@ -54,7 +55,8 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
     Log.i(TAG, "Setup Recorder");
 
     // Send event for pausing the waveform
-    EventBus.getDefault().post(new DynamicWaveformEvent(2, null, null));
+    dynamicWaveformEvent = new DynamicWaveformEvent(2, null, null);
+            EventBus.getDefault().post(dynamicWaveformEvent);
 
     try {
       // Instantiate the audio recording engine
@@ -74,14 +76,17 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
 
   // Starts the recording of audio
   @ReactMethod
-  private void startRecording(String filePath, Double startTimeInMs, Promise promise) {
+  private void startRecording(String fileName, Double startTimeInMs, Promise promise) {
     Log.i(TAG, "Start Recording");
 
     try {
-      this.audioRecording.startRecording(filePath, startTimeInMs);
+      this.audioRecording.startRecording(fileName, startTimeInMs);
 
       // Send event for resuming waveform
-      EventBus.getDefault().post(new DynamicWaveformEvent(1, null, null));
+      dynamicWaveformEvent = new DynamicWaveformEvent(1, null, null);
+      dynamicWaveformEvent.setPaused(false);
+
+        EventBus.getDefault().post(dynamicWaveformEvent);
 
       // Create the promise response
       this.jsonResponse = new WritableNativeMap();
@@ -97,44 +102,46 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
 
   // Stops audio recording and stores the recorded data in a file
   @ReactMethod
-  private void stopRecording(Promise promise) {
+  private void stopRecording(final Promise promise) {
     try {
       File recordedFile = null;
 
       if(this.audioRecording != null){
         // Send event for pausing waveform
-        EventBus.getDefault().post(new DynamicWaveformEvent(2, null, null));
+        dynamicWaveformEvent = new DynamicWaveformEvent(2, null, null);
+          dynamicWaveformEvent.setPaused(true);
+
+        EventBus.getDefault().post(dynamicWaveformEvent);
 
         // Get the file location back from the audio recorder
         recordedFile = this.audioRecording.stopRecording();
       }
 
-      // Read the file duration from the file meta data
-      Uri uri = Uri.parse(recordedFile.getAbsolutePath());
-      MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-      mmr.setDataSource(null,uri);
-      String durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+      // Get the file duration and resolve the promise
+      final File rf = recordedFile;
+      new android.os.Handler().postDelayed(
+          new Runnable() {
+            public void run() {
+              FFmpegMediaMetadataRetriever mmr = new FFmpegMediaMetadataRetriever();
+              mmr.setDataSource(rf.getAbsolutePath());
+              String durationStr = mmr.extractMetadata(FFmpegMediaMetadataRetriever.METADATA_KEY_DURATION);
+              mmr.release();
 
-      // Retry while duration is 0 meaning file was not ready for reading
-      while(Float.parseFloat(durationStr) == 0) {
-        uri = Uri.parse(recordedFile.getAbsolutePath());
-        mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(null,uri);
-        durationStr = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-      }
+              // Create the promise response
+              jsonResponse = new WritableNativeMap();
+              jsonResponse.putBoolean("success", true);
+              jsonResponse.putString("error", "");
 
-      // Create the promise response
-      this.jsonResponse = new WritableNativeMap();
-      this.jsonResponse.putBoolean("success", true);
-      this.jsonResponse.putString("error", "");
+              WritableNativeMap metaDataArray = new WritableNativeMap();
+              metaDataArray.putString("fileName", Uri.parse(rf.getAbsolutePath()).getLastPathSegment());
+              metaDataArray.putString("fileDurationInMs", String.valueOf(durationStr));
 
-      WritableNativeMap metaDataArray = new WritableNativeMap();
-      metaDataArray.putString("fileUrl", recordedFile.getAbsolutePath());
-      metaDataArray.putString("fileDurationInMs", durationStr);
+              jsonResponse.putMap("value", metaDataArray);
 
-      this.jsonResponse.putMap("value", metaDataArray);
-
-      promise.resolve(this.jsonResponse);
+              promise.resolve(jsonResponse);
+            }
+          },
+          500);
     } catch (Exception e) {
       promise.reject("Error", e.getLocalizedMessage(), e);
     }

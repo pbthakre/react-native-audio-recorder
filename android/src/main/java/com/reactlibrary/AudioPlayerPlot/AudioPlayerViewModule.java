@@ -41,10 +41,10 @@ public class AudioPlayerViewModule extends ReactContextBaseJavaModule {
 
   // Render a waveform from audio file data
   @ReactMethod
-  private void renderByFile(String filePath, Promise promise) {
+  private void renderByFile(String fileName, Promise promise) {
     try {
       // Send event for updating waveform with new audio file data
-      EventBus.getDefault().post(new StaticWaveformEvent(1, filePath, null, null, null));
+      EventBus.getDefault().post(new StaticWaveformEvent(1, fileName, null, null, null));
 
       // Create the promise response
       this.jsonResponse = new WritableNativeMap();

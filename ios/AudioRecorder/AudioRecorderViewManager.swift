@@ -129,8 +129,10 @@ class AudioRecorderViewManager : RCTViewManager {
     } catch {
       // Aborted with error
       AKLog("Cleanup failed.")
-      self.jsonArray["error"].stringValue = error.localizedDescription + " - Cleanup failed."
-      onError(error)
+      self.jsonArray["error"].stringValue = error.localizedDescription + " - Cleanup not necessary."
+      
+      // Failed cleanup is not necessarily an error, thus success is ok here
+      onSuccess(true)
     }
   }
 

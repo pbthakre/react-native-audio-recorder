@@ -61,8 +61,8 @@ public class AudioRecorderView: EZAudioPlot {
     DispatchQueue.main.async {
       // Threshold amplitude so that baseline is less sensitive against noise
       // also augment higher amplitude values so that the baseline is more sensitive against speach
-      var amplitude = self.microphoneTracker.amplitude * 5
-      if (self.microphoneTracker.amplitude < 0.020) {
+      var amplitude = self.microphoneTracker.amplitude * 4
+      if (self.microphoneTracker.amplitude < 0.02) {
         amplitude = 0
       }
       

@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.reactlibrary.R;
@@ -104,7 +105,7 @@ public class DynamicWaveformView extends View {
     this.path = new Path();
     this.paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     this.paint.setStyle(Paint.Style.STROKE);
-    this.paint.setStrokeWidth(2);
+    this.paint.setStrokeWidth(4);
     this.paint.setColor(this.lineColor);
 
     // Keep our attributes array for later usage
@@ -116,6 +117,8 @@ public class DynamicWaveformView extends View {
   protected void onDraw(Canvas canvas) {
     this.setWaveColor();
     canvas.drawPath(path, paint);
+    //if(isPaused)
+      //return;
     updatePath();
   }
 
@@ -139,7 +142,6 @@ public class DynamicWaveformView extends View {
         float scaling = (float) (-Math.pow(1 / mid * (x - mid), 2) + 1);
 
         float y = (float) (scaling * maxAmplitude * amplitude * Math.sin(2 * Math.PI * (x / width) * frequency + phase + initialPhaseOffset) + halfHeight);
-
         if (x == 0) {
           path.moveTo(x, y);
         } else {
@@ -164,8 +166,14 @@ public class DynamicWaveformView extends View {
   // Setter for frequency
   public void setFrequency(float frequency) {
     this.frequency = frequency;
-    clearAnimation();
-    invalidate();
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        clearAnimation();
+        invalidate();
+      }
+    });
+
   }
 
   // Setter for line color
@@ -188,5 +196,14 @@ public class DynamicWaveformView extends View {
   // Setter for line color
   public void setLineColor(int lineColor) {
     this.lineColor = lineColor;
+  }
+
+
+  private boolean isPaused;
+  public void pause(){
+    isPaused = false;
+  }
+  public void play(){
+    isPaused = true;
   }
 }

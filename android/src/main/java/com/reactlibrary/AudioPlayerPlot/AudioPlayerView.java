@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.RelativeLayout;
 import com.reactlibrary.Helpers.FileUtils;
 import com.reactlibrary.R;
@@ -53,6 +54,7 @@ public class AudioPlayerView extends RelativeLayout {
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onStaticWaveformEvent(StaticWaveformEvent event) {
     // Update the waveform
+    Log.d("event.code",""+ event.code);
     if (event.code == 1) {
       this.updateWaveformWithData(event.fileName);
     }

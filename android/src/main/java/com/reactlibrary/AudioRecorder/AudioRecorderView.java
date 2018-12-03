@@ -11,6 +11,7 @@ package com.reactlibrary.AudioRecorder;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.reactlibrary.R;
@@ -25,6 +26,7 @@ import java.util.TimerTask;
 public class AudioRecorderView extends RelativeLayout {
   // The timer which calls the waveform update method
   private Timer timer;
+  private boolean isPaused;
 
   // The task the timer executes
   private TimerTask refreshWaveformTask;
@@ -70,8 +72,11 @@ public class AudioRecorderView extends RelativeLayout {
   public void onDynamicWaveformEvent(DynamicWaveformEvent event) {
     // Resume the waveform
     if (event.code == 1) {
+      isPaused = event.isPaused;
       resumeWaveform();
+
     } else if (event.code == 2) { // Pause the waveform
+      isPaused = event.isPaused;
       pauseWaveform();
       clearWaveform();
     } else if (event.code == 3) { // Set the properties received from RN
@@ -94,7 +99,14 @@ public class AudioRecorderView extends RelativeLayout {
 
     // Threshold amplitude so that baseline is quite straight
     Float amplitude = (this.trackedAmplitude);
-    if (amplitude > 20.00f) {
+
+    if(!isPaused) {
+      if (amplitude > 10.00f) {
+        amplitude = 10.00f;
+      } else if (amplitude < 6.00f) {
+        amplitude = 0.10f;
+      }
+    } else {
       amplitude = 0.0f;
     }
 

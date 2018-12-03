@@ -20,6 +20,7 @@ import java.io.File;
 public class AudioRecorderModule extends ReactContextBaseJavaModule {
   // The class identifier
   public static final String TAG = "AudioRecorderModule";
+  public DynamicWaveformEvent dynamicWaveformEvent;
 
   // The audio recording engine wrapper
   private AudioRecording audioRecording;
@@ -44,7 +45,8 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void passProperties(String backgroundColor, String lineColor) {
     // Send event for updating waveform with new parameters
-    EventBus.getDefault().post(new DynamicWaveformEvent(3, backgroundColor, lineColor));
+    dynamicWaveformEvent = new DynamicWaveformEvent(3, backgroundColor, lineColor);
+    EventBus.getDefault().post(dynamicWaveformEvent);
   }
 
   // Instantiates all the things needed for recording
@@ -53,7 +55,8 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
     Log.i(TAG, "Setup Recorder");
 
     // Send event for pausing the waveform
-    EventBus.getDefault().post(new DynamicWaveformEvent(2, null, null));
+    dynamicWaveformEvent = new DynamicWaveformEvent(2, null, null);
+            EventBus.getDefault().post(dynamicWaveformEvent);
 
     try {
       // Instantiate the audio recording engine
@@ -80,7 +83,10 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
       this.audioRecording.startRecording(fileName, startTimeInMs);
 
       // Send event for resuming waveform
-      EventBus.getDefault().post(new DynamicWaveformEvent(1, null, null));
+      dynamicWaveformEvent = new DynamicWaveformEvent(1, null, null);
+      dynamicWaveformEvent.setPaused(false);
+
+        EventBus.getDefault().post(dynamicWaveformEvent);
 
       // Create the promise response
       this.jsonResponse = new WritableNativeMap();
@@ -102,7 +108,10 @@ public class AudioRecorderModule extends ReactContextBaseJavaModule {
 
       if(this.audioRecording != null){
         // Send event for pausing waveform
-        EventBus.getDefault().post(new DynamicWaveformEvent(2, null, null));
+        dynamicWaveformEvent = new DynamicWaveformEvent(2, null, null);
+          dynamicWaveformEvent.setPaused(true);
+
+        EventBus.getDefault().post(dynamicWaveformEvent);
 
         // Get the file location back from the audio recorder
         recordedFile = this.audioRecording.stopRecording();

@@ -12,8 +12,8 @@ package com.reactlibrary.AudioRecorder;
 public class DynamicWaveformEvent {
   //1: Resume Waveform
   //2: Pause Waveform
-  public final int code;
-
+  public int code;
+  public boolean isPaused = true;
   // The background color of the waveform
   public final String backgroundColor;
 
@@ -25,5 +25,9 @@ public class DynamicWaveformEvent {
     this.code = code;
     this.backgroundColor = backgroundColor;
     this.lineColor = lineColor;
+  }
+
+  public void setPaused(boolean paused) {
+    this.isPaused = paused;
   }
 }

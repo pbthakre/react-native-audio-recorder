@@ -15,9 +15,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-
 import com.reactlibrary.R;
 
 import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
@@ -117,8 +115,6 @@ public class DynamicWaveformView extends View {
   protected void onDraw(Canvas canvas) {
     this.setWaveColor();
     canvas.drawPath(path, paint);
-    //if(isPaused)
-      //return;
     updatePath();
   }
 
@@ -196,14 +192,5 @@ public class DynamicWaveformView extends View {
   // Setter for line color
   public void setLineColor(int lineColor) {
     this.lineColor = lineColor;
-  }
-
-
-  private boolean isPaused;
-  public void pause(){
-    isPaused = false;
-  }
-  public void play(){
-    isPaused = true;
   }
 }

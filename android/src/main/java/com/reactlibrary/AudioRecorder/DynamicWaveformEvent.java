@@ -13,7 +13,10 @@ public class DynamicWaveformEvent {
   //1: Resume Waveform
   //2: Pause Waveform
   public int code;
+
+  // The pause flag
   public boolean isPaused = true;
+
   // The background color of the waveform
   public final String backgroundColor;
 
@@ -27,6 +30,7 @@ public class DynamicWaveformEvent {
     this.lineColor = lineColor;
   }
 
+  // Setter for pause state
   public void setPaused(boolean paused) {
     this.isPaused = paused;
   }

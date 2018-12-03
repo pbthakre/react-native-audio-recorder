@@ -11,11 +11,8 @@ package com.reactlibrary.AudioRecorder;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.RelativeLayout;
-
 import com.reactlibrary.R;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -99,11 +96,10 @@ public class AudioRecorderView extends RelativeLayout {
 
     // Threshold amplitude so that baseline is quite straight
     Float amplitude = (this.trackedAmplitude);
-
     if(!isPaused) {
-      if (amplitude > 10.00f) {
-        amplitude = 10.00f;
-      } else if (amplitude < 6.00f) {
+      if (amplitude > 8.00f) {
+        amplitude = 8.00f;
+      } else if (amplitude < 1.50f) {
         amplitude = 0.10f;
       }
     } else {

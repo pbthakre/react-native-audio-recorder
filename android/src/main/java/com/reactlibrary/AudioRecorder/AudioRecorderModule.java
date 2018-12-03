@@ -20,6 +20,8 @@ import java.io.File;
 public class AudioRecorderModule extends ReactContextBaseJavaModule {
   // The class identifier
   public static final String TAG = "AudioRecorderModule";
+
+  // The waveform event
   public DynamicWaveformEvent dynamicWaveformEvent;
 
   // The audio recording engine wrapper

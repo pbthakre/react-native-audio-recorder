@@ -105,6 +105,9 @@ public class AudioPlayerView: EZAudioPlot {
       // Cut off lines which go beyond the view bounds
       self.plot.clipsToBounds = true
       
+      // Scale the waveform
+      self.plot.gain = 20.0
+      
       // Add the view
       self.addSubview(self.plot)
     }

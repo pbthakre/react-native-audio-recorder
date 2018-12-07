@@ -68,7 +68,8 @@ public class AudioRecording {
       // Remove timestamp string which is added automatically by Android
       String fileNameCleaned = fileName.substring(0, fileName.indexOf("?"));
 
-      this.filePath = fileNameCleaned;
+      //This should be set here properly  so that it can be later used in case of overwriting.
+      this.filePath = Environment.getExternalStorageDirectory() + "/" + fileNameCleaned;
     } else {
       this.isOverwriting = false;
     }
@@ -104,7 +105,7 @@ public class AudioRecording {
     // If in overwriting mode
     if (isOverwriting) {
       // Get the file which should be overwritten
-      String previousTape = destinationPath.getAbsolutePath();
+      String previousTape = filePath ;
       Movie originalFile = MovieCreator.build(previousTape);
       Movie originalFileCopy2 = MovieCreator.build(previousTape);
 
@@ -270,7 +271,7 @@ public class AudioRecording {
         ///
 
         // Delete temporary files
-        FileUtils.deleteFile(previousTape);
+//      FileUtils.deleteFile(previousTape); // Don't delete the original file (previous file which was given to startRecording).
         FileUtils.deleteFile(currentTape);
         FileUtils.deleteFile(originalCutTape);
         FileUtils.deleteFile(originalCurrentMergedTape);

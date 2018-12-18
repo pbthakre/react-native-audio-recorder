@@ -27,10 +27,10 @@ public class StaticWaveformView extends View {
   private Paint baseLine;
 
   // The file data
-  private byte[] bytes;
+  private short[] shorts;
 
   // The density of the waveform
-  private float density = 257;
+  private float density = 357f;
 
   // The background color of the waveform
   private int backgroundColor = Color.TRANSPARENT;
@@ -43,6 +43,8 @@ public class StaticWaveformView extends View {
 
   // The duration of the audio file to be visualized
   private float fileDuration = 0.0f;
+
+  private short maxAmplitude = 0;
 
   // Constructor
   public StaticWaveformView(Context context) {
@@ -101,21 +103,22 @@ public class StaticWaveformView extends View {
   // Draw the file data as waveform
   @Override
   protected void onDraw(Canvas canvas) {
+
+      //canvas.drawPaint(this.baseLine);
     // Get screen width
     DisplayMetrics metrics = getResources().getDisplayMetrics();
     int widthPixels = metrics.widthPixels;
 
-    // Calculate the plot width based on the number of pixels per second and the file duration
-    float calculatedPlotWidth = this.pixelsPerSecond.floatValue() * (this.fileDuration / 1000);
+   // Check if data is available
+    if (this.shorts != null) {
+        // Calculate the plot width based on the number of pixels per second and the file duration
+        float calculatedPlotWidth = this.shorts.length;
 
-    // Check if data is available
-    if (this.bytes != null) {
-      // Create a straight line before the file waveform so that it starts in the middle of the screen
-      canvas.drawLine(0, getHeight() / 2f, widthPixels / 2f, (getHeight() / 2f), this.baseLine);
+        // Create a straight line before the file waveform so that it starts in the middle of the screen
+     // canvas.drawLine(0, getHeight() / 2f, widthPixels / 2f, (getHeight() / 2f), this.baseLine);
 
       // Calculate the bar width based on the total plot width
-      float barWidth = (calculatedPlotWidth / this.density) * metrics.density;
-      float div = this.bytes.length / this.density;
+      float barWidth = 1.0f;
 
       // Set baseline settings
       this.baseLine.setColor(getResources().getColor(R.color.brandColor));
@@ -124,38 +127,39 @@ public class StaticWaveformView extends View {
       // Set plot settings
       this.waveform.setColor(getResources().getColor(R.color.brandColor));
       this.waveform.setStrokeWidth(5);
-
+        float canvasHeightOneSide = canvas.getHeight()/2f;
       // Calculate the bar position based on the given parameters
-      for (int i = 0; i < this.density; i++) {
-        int bytePosition = (int) Math.ceil(i * div);
-        int top = canvas.getHeight() / 2
-                + (128 - Math.abs(this.bytes[bytePosition]))
-                * (canvas.getHeight() / 2) / 128;
 
-        int bottom = canvas.getHeight() / 2
-                - (128 - Math.abs(this.bytes[bytePosition]))
-                * (canvas.getHeight() / 2) / 128;
+        for (int i = 0; i < this.shorts.length; i++) {
 
-        float barX = (i * barWidth) + (barWidth / 2);
+            float value = (float)(canvasHeightOneSide * (0.65f) * ((float) this.shorts[i]) * (1.0/maxAmplitude));
+            float top = canvasHeightOneSide + value;
+            float bottom = canvasHeightOneSide - value;
 
-        // Draw the waveform (mirrored)
-        canvas.drawLine(barX + widthPixels / 2f, bottom, barX + widthPixels / 2f, canvas.getHeight() / 2f, this.waveform);
-        canvas.drawLine(barX + widthPixels / 2f , top, barX + widthPixels / 2f, canvas.getHeight() / 2f, this.waveform);
-      }
+            float barX = (i * barWidth);
 
-      canvas.drawLine((widthPixels / 2f), (getHeight() / 2f), (widthPixels / 2f) + calculatedPlotWidth, (getHeight() / 2f), this.waveform);
+          // Draw the waveform (mirrored)
+          canvas.drawLine(barX + 0.0f , top + 0.0f, barX + barWidth, canvasHeightOneSide + 0.0f, this.waveform);
+          canvas.drawLine(barX + 0.0f, canvasHeightOneSide + 0.0f, barX + barWidth, bottom + 0.0f, this.waveform);
+        }
+
+      //canvas.drawLine((widthPixels / 2f), (getHeight() / 2f), (widthPixels / 2f) + calculatedPlotWidth, (getHeight() / 2f), this.waveform);
 
       // Draw the second part of the baseline after the waveform
-      canvas.drawLine((widthPixels / 2f) + (calculatedPlotWidth * metrics.density), (getHeight() / 2f), (widthPixels / 2f) + (calculatedPlotWidth * metrics.density) + (widthPixels / 2f), (getHeight() / 2f), this.baseLine);
+     // canvas.drawLine((widthPixels / 2f) + (calculatedPlotWidth * metrics.density), (getHeight() / 2f), (widthPixels / 2f) + (calculatedPlotWidth * metrics.density) + (widthPixels / 2f), (getHeight() / 2f), this.baseLine);
 
       super.onDraw(canvas);
     }
   }
 
   // Setter for file data
-  public void setData(byte[] bytes) {
+  public void setData(short[] bytes) {
     // Set the audio file data and redraw waveform
-    this.bytes = bytes;
+    this.shorts = bytes;
     this.invalidate();
   }
+
+    public void setMaxAmplitude(short maxAmplitude) {
+        this.maxAmplitude = maxAmplitude;
+    }
 }

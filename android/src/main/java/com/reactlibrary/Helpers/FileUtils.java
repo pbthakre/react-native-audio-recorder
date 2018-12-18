@@ -22,24 +22,19 @@ public class FileUtils {
   static final String OUTPUT_DIR = "";
 
   // Reads the bytes of a file
-  public static byte[] fileToBytes(File file) {
+  public static byte[] fileToBytes(File file) throws IOException {
     // Get the file size in bytes
-    int size = (int) file.length();
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));
 
-    // Create the array where the bytes are stored in
-    byte[] bytes = new byte[size];
-
-    try {
-      // Read the bytes and store it in the array
-      BufferedInputStream buf = new BufferedInputStream(new FileInputStream(file));
-      buf.read(bytes, 0, bytes.length);
-      buf.close();
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
+    int read;
+    byte[] buff = new byte[1024];
+    while ((read = in.read(buff)) > 0)
+    {
+      out.write(buff, 0, read);
     }
-    return bytes;
+    out.flush();
+    return out.toByteArray();
   }
 
   // Returns a Java File initialized to a directory of given name
